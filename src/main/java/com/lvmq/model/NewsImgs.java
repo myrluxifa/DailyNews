@@ -1,0 +1,47 @@
+package com.lvmq.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity
+@Table(name="t_news_imgs")
+public class NewsImgs {
+	@Id
+	@GenericGenerator(name="system-uuid",strategy="uuid")
+	@GeneratedValue(generator="system-uuid")
+	private String id;
+	
+	private String url;
+	
+	private String newsId;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getNewsId() {
+		return newsId;
+	}
+
+	public void setNewsId(String newsId) {
+		this.newsId = newsId;
+	}
+	
+	
+}
