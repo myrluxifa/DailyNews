@@ -16,7 +16,9 @@ import com.google.gson.Gson;
 import com.lvmq.idata.IdataAPI;
 import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.UserLogin;
+import com.lvmq.service.NewsService;
 import com.lvmq.service.UserLoginService;
+import com.lvmq.service.VideosService;
 
 @RestController
 @RequestMapping("/api/user")
@@ -25,6 +27,11 @@ public class UserAPI {
 	@Autowired
 	private UserLoginService userLoginService;
 	
+	@Autowired
+	private NewsService newsService;
+	
+	@Autowired
+	private VideosService videosService;
 	
 	private static final Logger log = LoggerFactory.getLogger(UserAPI.class);
 
@@ -32,12 +39,8 @@ public class UserAPI {
 	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public UserLogin login(String id) {
 		try {
-			// 请求示例 url 默认请求参数已经做URL编码
-			String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid=news_society";
-			String json = IdataAPI.getRequestFromUrl(url);
-			log.info(json);
-			Gson gson=new Gson();
-			ToutiaoResponseDto toutiaoResponseDto=gson.fromJson(json, ToutiaoResponseDto.class);
+			
+			videosService.getVideosFromIDataAPI();
 		}catch(Exception e) {
 			log.info(e.getMessage());
 			return new UserLogin();

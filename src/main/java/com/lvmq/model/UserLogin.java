@@ -20,6 +20,8 @@ public class UserLogin {
 	
 	private String passwd;
 	
+	private int flag;
+	
 	public UserLogin() {
 		// TODO Auto-generated constructor stub
 	}
@@ -53,6 +55,16 @@ public class UserLogin {
 
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
+	}
+
+
+	public int getFlag() {
+		return flag;
+	}
+
+
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 	
 	
