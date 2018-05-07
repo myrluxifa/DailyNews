@@ -20,16 +20,39 @@ public class UserLogin {
 	
 	private String passwd;
 	
+	private String headPortrait;
+	
+	private Long gold;
+	
 	private int flag;
+	
+	private String inviteCode;
+	
+	
+	private String myInviteCode;
+	
+	private int inviteCount;
+	
+	private long balance;
+	
+	private long earnings;
 	
 	public UserLogin() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-	public UserLogin(String id) {
+	public UserLogin(String userName,String passwd,String inviteCode) {
 		// TODO Auto-generated constructor stub
-		this.id=id;
+		this.userName=userName;
+		this.passwd=passwd;
+		this.inviteCode=inviteCode;
+	}
+	
+	
+	public UserLogin(String userName,String passwd) {
+		// TODO Auto-generated constructor stub
+		this.userName=userName;
+		this.passwd=passwd;
 	}
 	
 
@@ -65,6 +88,66 @@ public class UserLogin {
 
 	public void setFlag(int flag) {
 		this.flag = flag;
+	}
+
+
+	public String getHeadPortrait() {
+		return headPortrait;
+	}
+
+
+	public void setHeadPortrait(String headPortrait) {
+		this.headPortrait = headPortrait;
+	}
+
+
+	public Long getGold() {
+		return gold;
+	}
+
+
+	public void setGold(Long gold) {
+		this.gold = gold;
+	}
+
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
+
+	public String getMyInviteCode() {
+		return myInviteCode;
+	}
+
+	public void setMyInviteCode(String myInviteCode) {
+		this.myInviteCode = myInviteCode;
+	}
+
+	public int getInviteCount() {
+		return inviteCount;
+	}
+
+	public void setInviteCount(int inviteCount) {
+		this.inviteCount = inviteCount;
+	}
+
+	public long getBalance() {
+		return balance;
+	}
+
+	public void setBalance(long balance) {
+		this.balance = balance;
+	}
+
+	public long getEarnings() {
+		return earnings;
+	}
+
+	public void setEarnings(long earnings) {
+		this.earnings = earnings;
 	}
 	
 	
