@@ -58,7 +58,7 @@ public class UserAPI {
 			@ApiImplicitParam(paramType = "query", name = "passwd", value = "密码", required = true, dataType = "String")
 	})
 	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public ResponseBean login(String userName,String passwd) {
+	public ResponseBean<LoginRes> login(String userName,String passwd) {
 		
 		if(userLoginService.countByUserName(userName)==0) return new ResponseBean(Code.FAIL,Code.USER_UNFINDABLE,"账号不存在"); 
 		
@@ -67,7 +67,7 @@ public class UserAPI {
 		if(userLoginOpt.isPresent()) {
 			UserLogin userLogin=userLoginOpt.get();
 		
-			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin));
+			return new ResponseBean<LoginRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin));
 		}else {
 			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"账号或密码错误"); 
 		}

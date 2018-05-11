@@ -37,6 +37,8 @@ public class UserLogin {
 	
 	private long earnings;
 	
+	private String name;
+	
 	public UserLogin() {
 		// TODO Auto-generated constructor stub
 	}
@@ -148,6 +150,14 @@ public class UserLogin {
 
 	public void setEarnings(long earnings) {
 		this.earnings = earnings;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

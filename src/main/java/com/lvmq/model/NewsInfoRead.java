@@ -8,19 +8,16 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="t_sys_news_type")
-public class NewsType {
-	
+@Table(name="t_news_info_read")
+public class NewsInfoRead {
 	@Id
 	@GenericGenerator(name="system-uuid",strategy="uuid")
 	@GeneratedValue(generator="system-uuid")
 	private String id;
 	
-	private String catId;
+	private String userId;
 	
-	private String catValue;
-	
-	private int flag;
+	private String newsId;
 
 	public String getId() {
 		return id;
@@ -30,28 +27,20 @@ public class NewsType {
 		this.id = id;
 	}
 
-	public String getCatId() {
-		return catId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setCatId(String catId) {
-		this.catId = catId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getCatValue() {
-		return catValue;
+	public String getNewsId() {
+		return newsId;
 	}
 
-	public void setCatValue(String catValue) {
-		this.catValue = catValue;
-	}
-
-	public int getFlag() {
-		return flag;
-	}
-
-	public void setFlag(int flag) {
-		this.flag = flag;
+	public void setNewsId(String newsId) {
+		this.newsId = newsId;
 	}
 	
 	
