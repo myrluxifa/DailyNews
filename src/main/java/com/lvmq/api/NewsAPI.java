@@ -48,7 +48,7 @@ public class NewsAPI {
 			@ApiImplicitParam(paramType = "query", name = "page", value = "页数", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "pageLevel2", value = "二级评论页数", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "pageSizeLevel2", value = "二级评论每页条数", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "pageSizeLevel2", value = "二级评论每页条数", required = true, dataType = "String")
 			})
 	@RequestMapping(value="/getComment",method=RequestMethod.POST)
 	public ResponseBean<NewsCommentArrayRes> getComment(String newsId,String page,String pageSize,String pageLevel2,String pageSizeLevel2) {
@@ -64,7 +64,7 @@ public class NewsAPI {
 			@ApiImplicitParam(paramType = "query", name = "page", value = "页数", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "parentId", value = "父级评论（一级评论时写0, 二级则写上一级的id）", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "level", value = "评论等级（1:一级,2:二级）", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "comment", value = "评论", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "comment", value = "评论", required = true, dataType = "String")
 			})
 	//第一层评论parentId=0
 	@RequestMapping(value="/setComment",method=RequestMethod.POST)

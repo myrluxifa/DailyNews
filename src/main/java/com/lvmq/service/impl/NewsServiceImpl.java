@@ -18,7 +18,7 @@ import com.lvmq.api.res.NewsCommentLevel2Res;
 import com.lvmq.api.res.NewsCommentRes;
 import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
-import com.lvmq.idata.IdataAPI;
+import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
 import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.AdvertInfo;
@@ -68,7 +68,7 @@ public class NewsServiceImpl implements NewsService {
 				try {
 					String catId=n.getCatId();
 					String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid="+n.getCatId();
-					String json = IdataAPI.getRequestFromUrl(url);
+					String json = IDataAPI.getRequestFromUrl(url);
 					log.info(json);
 					Gson gson=new Gson();
 					ToutiaoResponseDto toutiaoResponseDto=gson.fromJson(json, ToutiaoResponseDto.class);

@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.lvmq.api.res.LoginRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
-import com.lvmq.idata.IdataAPI;
+import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
@@ -138,10 +138,10 @@ public class UserAPI {
 	
 	@ApiOperation(value = "注册", notes = "")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "userName", value = "电话", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "passwd", value = "密码", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "code", value = "验证码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = true, dataType = "String")
+			@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = false, dataType = "String")
 	})
 	@RequestMapping(value="/register",method=RequestMethod.POST)
 	public ResponseBean register(String userName,String passwd,String code,String inviteCode) {

@@ -6,10 +6,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
-import com.lvmq.idata.IdataAPI;
+import com.lvmq.api.res.VideosArrayRes;
+import com.lvmq.api.res.VideosRes;
+import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
 import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.idata.res.VideosDataResponseDto;
@@ -36,7 +39,7 @@ public class VideosServiceImpl implements VideosService {
 			
 			
 				String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&id=3757989448";
-				String json = IdataAPI.getRequestFromUrl(url);
+				String json = IDataAPI.getRequestFromUrl(url);
 				log.info(json);
 				Gson gson=new Gson();
 				
@@ -63,4 +66,18 @@ public class VideosServiceImpl implements VideosService {
 			log.info(e.getMessage());
 		}
 	}
+	
+	
+	@Override
+	public VideosArrayRes getVideosArray(int page,int pageSize) {
+		try {
+			List<VideosInfo> videosArray=videosInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"), 0);
+			List<VideosRes> videosResArray=new ArrayList<VideosRes>();
+			videosArray.forEach(x->videosResArray.add(new VideosRes(x)));
+			return new VideosArrayRes(videosResArray);
+		}catch(Exception e) {
+			return new VideosArrayRes();
+		}
+	}
+	
 }
