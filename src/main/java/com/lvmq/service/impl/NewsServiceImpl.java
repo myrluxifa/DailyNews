@@ -24,7 +24,6 @@ import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.AdvertInfo;
 import com.lvmq.model.NewsComment;
 import com.lvmq.model.NewsInfo;
-import com.lvmq.model.NewsInfoRead;
 import com.lvmq.model.NewsType;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.AdvertInfoRepository;
@@ -124,7 +123,7 @@ public class NewsServiceImpl implements NewsService {
 		}
 	}
 	
-	public NewsCommentArrayRes getComment(String newsId,String loginId,int page,int pageSize,int pageLevel2,int pageSizeLevel2) {
+	public NewsCommentArrayRes getComment(String newsId,int page,int pageSize,int pageLevel2,int pageSizeLevel2) {
 		
 		List<NewsComment> newsComments=newsCommentRepository.findByNewsIdAndFlagAndLevel(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "createTime") , newsId, 0, 1);
 		List<NewsCommentRes> newsCommentRes=new ArrayList<NewsCommentRes>();
@@ -141,10 +140,10 @@ public class NewsServiceImpl implements NewsService {
 		return new NewsCommentArrayRes(newsCommentRes);
 	}
 	
-	public NewsCommentRes setComment(String newsId,String loginId,String parentId,String comment,String level) {
+	public NewsCommentRes setComment(String newsId,String userId,String parentId,String comment,String level) {
 		
-		NewsComment n=newsCommentRepository.saveAndFlush(new NewsComment(newsId,loginId,parentId,level,comment));
-		Optional<UserLogin> u=userLoginRepository.findById(loginId);		
+		NewsComment n=newsCommentRepository.saveAndFlush(new NewsComment(newsId,userId,parentId,level,comment));
+		Optional<UserLogin> u=userLoginRepository.findById(userId);		
 		return new NewsCommentRes(n,u.get().getHeadPortrait(),u.get().getName());
 	}
 

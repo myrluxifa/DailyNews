@@ -49,11 +49,11 @@ public class NewsComment {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public NewsComment(String newsId,String loginId,String parentId,String level,String comment) {
+	public NewsComment(String newsId,String userId,String parentId,String level,String comment) {
 		// TODO Auto-generated constructor stub
 		
 		this.newsId=newsId;
-		this.createUser=loginId;
+		this.createUser=userId;
 		this.comment=comment;
 		this.flag=0;
 		this.level=Integer.valueOf(level);

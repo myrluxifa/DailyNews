@@ -38,11 +38,6 @@ public class UserAPI {
 	@Autowired
 	private UserLoginService userLoginService;
 	
-	@Autowired
-	private NewsService newsService;
-	
-	@Autowired
-	private VideosService videosService;
 	
 	private static final Logger log = LoggerFactory.getLogger(UserAPI.class);
 	
@@ -74,25 +69,32 @@ public class UserAPI {
 	}
 	
 	
+	@ApiOperation(value = "发送验证码", notes = "临时验证码123456")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String")
+	})
 	@RequestMapping(value="/sendRegisterCode",method=RequestMethod.POST)
 	public ResponseBean sendRegisterCode(String phone) {
 		try {
 			if(userLoginService.countByUserName(phone)>0) return new ResponseBean(Code.FAIL,Code.USER_ALREADY_EXISTS,"账号已存在"); 
 			
-			messageCodeMap.put(phone, new MessageCode("66666"));
+			messageCodeMap.put(phone, new MessageCode("123456"));
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
 		}catch(Exception e) {
 			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"失败");
 		}
 	}
 	
-	
+	@ApiOperation(value = "发送忘记密码验证码", notes = "")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String")
+	})
 	@RequestMapping(value="/sendForgetCode",method=RequestMethod.POST)
 	public ResponseBean sendForgetCode(String phone) {
 		try {
 			if(userLoginService.countByUserName(phone)==0) return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"账号不存在"); 
 			
-			messageCodeMap.put(phone, new MessageCode("66666"));
+			messageCodeMap.put(phone, new MessageCode("123456"));
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
 		}catch(Exception e) {
 			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"失败");
@@ -100,6 +102,12 @@ public class UserAPI {
 	}
 	
 	
+	@ApiOperation(value = "修改密码", notes = "")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "newPasswd", value = "新密码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "验证码", required = true, dataType = "String")
+	})
 	@RequestMapping(value="/updatePasswd",method=RequestMethod.POST)
 	public ResponseBean updatePasswd(String userName,String newPasswd,String code) {
 		
@@ -128,7 +136,13 @@ public class UserAPI {
 		
 	}
 	
-	
+	@ApiOperation(value = "注册", notes = "")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "passwd", value = "密码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "code", value = "验证码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = true, dataType = "String")
+	})
 	@RequestMapping(value="/register",method=RequestMethod.POST)
 	public ResponseBean register(String userName,String passwd,String code,String inviteCode) {
 		try {

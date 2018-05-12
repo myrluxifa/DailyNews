@@ -15,8 +15,8 @@ public interface NewsService {
 	NewsRes home(String userId);
 	
 	
-	NewsCommentArrayRes getComment(String newsId,String loginId,int page,int pageSize,int pageLevel2,int pageSizeLevel2);
+	NewsCommentArrayRes getComment(String newsId,int page,int pageSize,int pageLevel2,int pageSizeLevel2);
 	
-	NewsCommentRes setComment(String newsId,String loginId,String parentId,String comment,String level);
+	NewsCommentRes setComment(String newsId,String userId,String parentId,String comment,String level);
 
 }
