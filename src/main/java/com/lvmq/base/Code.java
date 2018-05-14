@@ -28,7 +28,7 @@ public class Code {
 		/**每天最多分享次数**/
 		public static int MAX_TIMES = 5;
 		/**分享间隔时间 秒**/
-		public static long INTERVAL_TIME = 3600;
+		public static long INTERVAL_TIME = 60;
 		/**分享奖励金币数**/
 		public static int REWARD_NUMBER = 5;
 		
