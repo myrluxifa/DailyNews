@@ -16,7 +16,11 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="t_gold_log")
 public class GoldLog implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4685595757727804409L;
 
 	@Id
 	@GenericGenerator(name="system-uuid",strategy="uuid")

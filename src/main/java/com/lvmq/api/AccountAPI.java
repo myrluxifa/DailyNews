@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,14 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
+import com.lvmq.model.AccessLog;
 import com.lvmq.model.GoldLog;
+import com.lvmq.repository.AccessLogRepository;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.util.PagePlugin;
 import com.lvmq.util.TimeUtil;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("api/account")
@@ -28,28 +33,60 @@ public class AccountAPI extends BaseAPI {
 
 	@Autowired
 	private GoldLogRepository goldLogRepository;
+	
+	@Autowired
+	private AccessLogRepository accessLogRepository;
 
-	@ApiOperation(value="账户明细，金币分页", notes="", httpMethod = "POST")
+	@ApiOperation(value = "账户明细，金币分页", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
-		@ApiImplicitParam(paramType = "query", name = "curPage", value = "当前页，从0开始", required = true, dataType = "String"),
-		@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String")
-	})
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "curPage", value = "当前页，从0开始", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String") })
 	@PostMapping("detail/page")
 	public ResponseBean<Object> page(String curPage, String pageSize, String userId) {
 		try {
-			Page<GoldLog> page = goldLogRepository.findByUserId(PagePlugin.pagePluginSort(Integer.valueOf(curPage), Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId);
-			
+			Page<GoldLog> page = goldLogRepository.findByUserId(PagePlugin.pagePluginSort(Integer.valueOf(curPage),
+					Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId);
+
 			List<AccountPageRes> result = new ArrayList<>();
-			for (GoldLog gl : page) { 
+			for (GoldLog gl : page) {
 				AccountPageRes res = new AccountPageRes();
 				res.setName(Consts.GoldLog.getTypeName(gl.getType()));
 				res.setCnt(gl.getNum());
 				res.setTime(TimeUtil.format(gl.getCreateTime()));
 				result.add(res);
 			}
-			
-			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, page.getTotalPages()+"", result);
+
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, page.getTotalPages() + "", result);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseBean<>(Code.FAIL, Code.FAIL, e.getMessage());
+		}
+	}
+	
+	@ApiOperation(value = "账户明细，提现和提现状态分页", notes = "", httpMethod = "POST", response = AccountPageRes.class)
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "curPage", value = "当前页，从0开始", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String") })
+	@PostMapping("withdraw/page")
+	public ResponseBean<Object> withdraw(String curPage, String pageSize, String userId) {
+		try {
+			Page<AccessLog> page = accessLogRepository.findByUserId(PagePlugin.pagePluginSort(Integer.valueOf(curPage),
+					Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId);
+
+			List<AccountPageRes> result = new ArrayList<>();
+			for (AccessLog al : page) {
+				AccountPageRes res = new AccountPageRes();
+				res.setName(Consts.AccessLog.getTypeName(al.getType()) + Consts.AccessLog.getStateName(al.getState()));
+				res.setType(Consts.AccessLog.getTypeName(al.getType()));
+				res.setCnt(Math.round(al.getFee()));
+				res.setState(Consts.AccessLog.getStateName(al.getState()));
+				res.setTime(TimeUtil.format(al.getCreateTime()));
+				result.add(res);
+			}
+
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, page.getTotalPages() + "", result);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseBean<>(Code.FAIL, Code.FAIL, e.getMessage());
@@ -57,10 +94,35 @@ public class AccountAPI extends BaseAPI {
 	}
 }
 
+@ApiModel("账户明细 金币/提现/提现状态 返回类")
 class AccountPageRes {
+	
+	@ApiParam(name = "名称")
 	private String name;
+	@ApiParam(name = "时间")
 	private String time;
+	@ApiParam(name = "数量或金额")
 	private long cnt;
+	@ApiParam(name = "状态")
+	private String state;
+	@ApiParam(name = "类型")
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 
 	public String getName() {
 		return name;
