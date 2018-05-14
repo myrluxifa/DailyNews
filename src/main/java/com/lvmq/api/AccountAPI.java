@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.util.NumberUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +20,6 @@ import com.lvmq.repository.AccessLogRepository;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.util.PagePlugin;
 import com.lvmq.util.TimeUtil;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiModel;
@@ -68,12 +67,19 @@ public class AccountAPI extends BaseAPI {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "curPage", value = "当前页，从0开始", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String") })
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "state", value = "只查提现成功的传1,查所有传空", required = true, dataType = "String") })
 	@PostMapping("withdraw/page")
-	public ResponseBean<Object> withdraw(String curPage, String pageSize, String userId) {
+	public ResponseBean<Object> withdraw(String curPage, String pageSize, String userId, String state) {
 		try {
-			Page<AccessLog> page = accessLogRepository.findByUserId(PagePlugin.pagePluginSort(Integer.valueOf(curPage),
-					Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId);
+			Page<AccessLog> page;
+			if(StringUtils.isEmpty(state)) {
+				page = accessLogRepository.findByUserId(PagePlugin.pagePluginSort(Integer.valueOf(curPage),
+						Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId);
+			} else {
+				page = accessLogRepository.findByUserIdAndState(PagePlugin.pagePluginSort(Integer.valueOf(curPage),
+						Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId, state);
+			}
 
 			List<AccountPageRes> result = new ArrayList<>();
 			for (AccessLog al : page) {

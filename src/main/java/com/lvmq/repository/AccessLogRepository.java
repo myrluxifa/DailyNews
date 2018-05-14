@@ -10,4 +10,6 @@ public interface AccessLogRepository extends CrudRepository<AccessLog, String> {
 
 	Page<AccessLog> findByUserId(Pageable pagePluginSort, String userId);
 
+	Page<AccessLog> findByUserIdAndState(Pageable pagePluginSort, String userId, String state);
+
 }
