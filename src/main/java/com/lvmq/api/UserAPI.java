@@ -11,19 +11,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.lvmq.api.res.LoginRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
+import com.lvmq.idata.IDataAPI;
+import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
-import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.service.NewsService;
 import com.lvmq.service.UserLoginService;
+import com.lvmq.service.VideosService;
 import com.lvmq.util.MD5;
 import com.lvmq.util.TimeUtil;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/user")
@@ -31,9 +37,6 @@ public class UserAPI {
 	
 	@Autowired
 	private UserLoginService userLoginService;
-	
-	@Autowired
-	private GoldLogRepository goldLogRepository;
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(UserAPI.class);
@@ -168,14 +171,5 @@ public class UserAPI {
 		}
 	}
 	
-	@ApiOperation(value="分享成功后调用", notes="分享成功后调用该接口，增加用户金币")
-	public ResponseBean successShare(String userId) {
-		try {
-			
-			
-			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, null);
-		} catch (Exception e) {
-			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,e.getMessage());
-		}
-	}
+	
 }

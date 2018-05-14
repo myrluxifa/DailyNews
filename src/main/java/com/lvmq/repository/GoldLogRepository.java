@@ -1,8 +1,17 @@
 package com.lvmq.repository;
 
-import com.lvmq.model.GoldLog;
-import com.lvmq.repository.base.BaseRepository;
+import java.util.Date;
+import java.util.List;
 
-public interface GoldLogRepository extends BaseRepository<GoldLog> {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.lvmq.model.GoldLog;
+
+public interface GoldLogRepository extends JpaRepository<GoldLog, Long> {
+
+	int countByTypeAndUserIdAndCreateTimeBetween(String share, String userId, Date startTime, Date endTime);
+
+	List<GoldLog> countByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(String share, String userId, Date startTime,
+			Date endTime);
 
 }

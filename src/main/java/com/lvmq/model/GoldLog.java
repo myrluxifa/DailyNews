@@ -31,12 +31,12 @@ public class GoldLog implements Serializable {
 	private String createUser;
 
 	@Column(name="new_num")
-	private int newNum;
+	private long newNum;
 
-	private int num;
+	private long num;
 
 	@Column(name="old_num")
-	private int oldNum;
+	private long oldNum;
 
 	private String remark;
 
@@ -75,27 +75,27 @@ public class GoldLog implements Serializable {
 		this.createUser = createUser;
 	}
 
-	public int getNewNum() {
+	public long getNewNum() {
 		return this.newNum;
 	}
 
-	public void setNewNum(int newNum) {
+	public void setNewNum(long newNum) {
 		this.newNum = newNum;
 	}
 
-	public int getNum() {
+	public long getNum() {
 		return this.num;
 	}
 
-	public void setNum(int num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
-	public int getOldNum() {
+	public long getOldNum() {
 		return this.oldNum;
 	}
 
-	public void setOldNum(int oldNum) {
+	public void setOldNum(long oldNum) {
 		this.oldNum = oldNum;
 	}
 

@@ -9,7 +9,7 @@ package com.lvmq.base;
 public class Consts {
 
 	public static class GoldLog {
-		public static class GoldLogType{
+		public static class Type{
 			/**分享**/
 			public static final String SHARE = "100";
 		}
