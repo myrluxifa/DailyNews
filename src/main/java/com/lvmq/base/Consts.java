@@ -16,5 +16,14 @@ public class Consts {
 		
 		/**分享奖励个数**/
 		public static final int SHARE_REWARD_NUMBER = 5;
+		
+		public static String getTypeName(String id) {
+			switch(id) {
+			case Type.SHARE:
+				return "分享奖励";
+				default:
+					return "神秘奖励";
+			}
+		}
 	}
 }
