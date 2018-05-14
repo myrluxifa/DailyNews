@@ -108,7 +108,7 @@ public class SignAPI extends BaseAPI {
 			gl.setUserId(userId);
 			goldLogRepository.save(gl);
 			
-			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, null);
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, "恭喜您，签到成功！");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseBean<>(Code.FAIL, Code.FAIL, e.getMessage());
