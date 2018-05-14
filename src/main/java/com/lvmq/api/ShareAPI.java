@@ -2,7 +2,9 @@ package com.lvmq.api;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +26,55 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("api/share")
-public class ShareAPI {
+public class ShareAPI extends BaseAPI{
 	
 	@Autowired
 	private UserLoginRepository userLoginRepository;
 	
 	@Autowired
 	private GoldLogRepository goldLogRepository;
+	
+	@ApiOperation(value="进入分享页面初始化", notes="", httpMethod = "POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
+	})
+	@PostMapping("init")
+	public ResponseBean init(String userId) {
+		try {
+			//截止时间
+			Calendar calendar = Calendar.getInstance();
+			Date endTime = calendar.getTime();
+			
+			//设置当天00:00:00点
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			Date startTime = calendar.getTime();
+			
+			//获取当天分享次数
+			List<GoldLog> logs = goldLogRepository.findByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(Consts.GoldLog.Type.SHARE, userId, startTime, endTime);
+			
+			int count = null == logs ? 0 : logs.size();
+			long lastTime = null == logs ? 0 : logs.get(0).getCreateTime().getTime();
+			
+			Map<String, Object> result = new HashMap<>();
+			result.put("count", count);
+			result.put("lastTime", lastTime);
+			
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, result);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseBean<>(Code.FAIL,Code.UNKOWN_CODE,e.getMessage());
+		}
+	}
 
-	@ApiOperation(value="分享成功后调用", notes="分享成功后调用该接口，增加用户金币")
+	@ApiOperation(value="分享成功后调用", notes="分享成功后调用该接口，增加用户金币", httpMethod = "POST")
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
 	})
 	@PostMapping("success")
-	public ResponseBean successShare(String userId) {
+	public ResponseBean success(String userId) {
 		try {
 			//截止时间
 			Calendar calendar = Calendar.getInstance();
@@ -50,7 +87,7 @@ public class ShareAPI {
 			calendar.set(Calendar.SECOND, 0);
 			Date startTime = calendar.getTime();
 			//获取当天分享次数
-			List<GoldLog> logs = goldLogRepository.countByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(Consts.GoldLog.Type.SHARE, userId, startTime, endTime);
+			List<GoldLog> logs = goldLogRepository.findByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(Consts.GoldLog.Type.SHARE, userId, startTime, endTime);
 			
 			//分享次数判断
 			if(null != logs && logs.size() >= Code.SHARE.MAX_TIMES) {
@@ -58,7 +95,7 @@ public class ShareAPI {
 			}
 			
 			//分享间隔判断
-			if(null != logs) {
+			if(null != logs && logs.size() > 0) {
 				if(Calendar.getInstance().getTimeInMillis() - logs.get(0).getCreateTime().getTime() < Code.SHARE.INTERVAL_TIME * 1000) {
 					return new ResponseBean(Code.FAIL, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.code, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.msg);
 				}
@@ -84,6 +121,7 @@ public class ShareAPI {
 			
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, null);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,e.getMessage());
 		}
 	}

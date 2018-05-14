@@ -11,7 +11,7 @@ public interface GoldLogRepository extends JpaRepository<GoldLog, Long> {
 
 	int countByTypeAndUserIdAndCreateTimeBetween(String share, String userId, Date startTime, Date endTime);
 
-	List<GoldLog> countByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(String share, String userId, Date startTime,
-			Date endTime);
+	List<GoldLog> findByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(String share, String userId,
+			Date startTime, Date endTime);
 
 }
