@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@Api("签到相关")
+@Api(tags = {"签到"})
 @RestController
 @RequestMapping("api/sign")
 public class SignAPI extends BaseAPI {

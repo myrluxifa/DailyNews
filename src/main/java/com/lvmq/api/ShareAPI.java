@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  * @author Easy
  *
  */
-@Api(value = "分享相关")
+@Api(tags = {"分享"})
 @RestController
 @RequestMapping("api/share")
 public class ShareAPI extends BaseAPI{

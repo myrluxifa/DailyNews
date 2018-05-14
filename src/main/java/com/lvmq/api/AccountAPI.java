@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 
-@Api("账户相关")
+@Api(tags = {"账户"})
 @RestController
 @RequestMapping("api/account")
 public class AccountAPI extends BaseAPI {
@@ -66,7 +66,7 @@ public class AccountAPI extends BaseAPI {
 		}
 	}
 	
-	@ApiOperation(value = "账户明细，提现和提现状态分页", notes = "", httpMethod = "POST", response = AccountPageRes.class)
+	@ApiOperation(value = "账户明细，提现和提现状态分页", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "curPage", value = "当前页，从0开始", required = true, dataType = "String"),
