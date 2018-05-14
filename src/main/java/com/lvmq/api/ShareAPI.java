@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * 
+ * @author Easy
+ *
+ */
 @RestController
 @RequestMapping("api/share")
 public class ShareAPI extends BaseAPI{
@@ -39,7 +45,7 @@ public class ShareAPI extends BaseAPI{
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
 	})
 	@PostMapping("init")
-	public ResponseBean init(String userId) {
+	public ResponseBean<Object> init(String userId) {
 		try {
 			//截止时间
 			Calendar calendar = Calendar.getInstance();
@@ -59,7 +65,7 @@ public class ShareAPI extends BaseAPI{
 			long lastTime = null == logs ? 0 : logs.get(0).getCreateTime().getTime();
 			
 			Map<String, Object> result = new HashMap<>();
-			result.put("count", count);
+			result.put("count", Code.SHARE.MAX_TIMES - count);
 			result.put("lastTime", lastTime);
 			
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, result);
@@ -74,7 +80,8 @@ public class ShareAPI extends BaseAPI{
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
 	})
 	@PostMapping("success")
-	public ResponseBean success(String userId) {
+	@Transactional
+	public ResponseBean<Object> success(String userId) {
 		try {
 			//截止时间
 			Calendar calendar = Calendar.getInstance();
@@ -91,13 +98,13 @@ public class ShareAPI extends BaseAPI{
 			
 			//分享次数判断
 			if(null != logs && logs.size() >= Code.SHARE.MAX_TIMES) {
-				return new ResponseBean(Code.FAIL, Code.SHARE.MORE_THAN_LIMITED_TIMES.code, Code.SHARE.MORE_THAN_LIMITED_TIMES.msg);
+				return new ResponseBean<>(Code.FAIL, Code.SHARE.MORE_THAN_LIMITED_TIMES.code, Code.SHARE.MORE_THAN_LIMITED_TIMES.msg);
 			}
 			
 			//分享间隔判断
 			if(null != logs && logs.size() > 0) {
 				if(Calendar.getInstance().getTimeInMillis() - logs.get(0).getCreateTime().getTime() < Code.SHARE.INTERVAL_TIME * 1000) {
-					return new ResponseBean(Code.FAIL, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.code, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.msg);
+					return new ResponseBean<>(Code.FAIL, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.code, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.msg);
 				}
 			}
 			
@@ -119,10 +126,10 @@ public class ShareAPI extends BaseAPI{
 			gl.setUserId(userId);
 			goldLogRepository.save(gl);
 			
-			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, null);
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, null);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,e.getMessage());
+			return new ResponseBean<>(Code.FAIL,Code.UNKOWN_CODE,e.getMessage());
 		}
 	}
 }
