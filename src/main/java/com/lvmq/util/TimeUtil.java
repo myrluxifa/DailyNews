@@ -1,7 +1,6 @@
 package com.lvmq.util;
 
-import java.text.DateFormat;
-import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
@@ -35,5 +34,13 @@ public class TimeUtil {
 	
 	public static String format(long date) {
 		return format(new Date(date), null);
+	}
+
+	public static String format(Calendar instance, String pattern) {
+		return format(instance.getTime(), pattern);
+	}
+	
+	public static String format(Calendar instance) {
+		return format(instance.getTime(), null);
 	}
 }
