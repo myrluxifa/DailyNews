@@ -12,6 +12,8 @@ public class Consts {
 		public static final class Type{
 			/**分享**/
 			public static final String SHARE = "100";
+			/**签到**/
+			public static final String SIGN = "101";
 		}
 		
 		/**分享奖励个数**/
@@ -21,6 +23,8 @@ public class Consts {
 			switch(id) {
 			case Type.SHARE:
 				return "分享奖励";
+			case Type.SIGN: 
+				return "签到奖励";
 				default:
 					return "神秘奖励";
 			}
@@ -56,5 +60,9 @@ public class Consts {
 			default: return "神秘提现";
 			}
 		}
+	}
+	
+	public static final class Sign{
+		public static final String COIN = "4,6,10,15,20,25,30";
 	}
 }

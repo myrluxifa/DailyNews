@@ -21,6 +21,7 @@ import com.lvmq.model.UserLogin;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.UserLoginRepository;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiOperation;
  * @author Easy
  *
  */
+@Api(value = "分享相关")
 @RestController
 @RequestMapping("api/share")
 public class ShareAPI extends BaseAPI{

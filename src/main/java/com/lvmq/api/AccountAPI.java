@@ -20,12 +20,15 @@ import com.lvmq.repository.AccessLogRepository;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.util.PagePlugin;
 import com.lvmq.util.TimeUtil;
+
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
+@Api("账户相关")
 @RestController
 @RequestMapping("api/account")
 public class AccountAPI extends BaseAPI {
@@ -103,15 +106,15 @@ public class AccountAPI extends BaseAPI {
 @ApiModel("账户明细 金币/提现/提现状态 返回类")
 class AccountPageRes {
 	
-	@ApiParam(name = "名称")
+	@ApiModelProperty(name = "名称")
 	private String name;
-	@ApiParam(name = "时间")
+	@ApiModelProperty(name = "时间")
 	private String time;
-	@ApiParam(name = "数量或金额")
+	@ApiModelProperty(name = "数量或金额")
 	private long cnt;
-	@ApiParam(name = "状态")
+	@ApiModelProperty(name = "状态")
 	private String state;
-	@ApiParam(name = "类型")
+	@ApiModelProperty(name = "类型")
 	private String type;
 
 	public String getType() {
