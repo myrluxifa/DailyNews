@@ -104,9 +104,9 @@ public class UserAPI {
 	
 	@ApiOperation(value = "修改密码", notes = "")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "userName", value = "电话", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "newPasswd", value = "新密码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "phone", value = "验证码", required = true, dataType = "String")
+			@ApiImplicitParam(paramType = "query", name = "code", value = "验证码", required = true, dataType = "String")
 	})
 	@RequestMapping(value="/updatePasswd",method=RequestMethod.POST)
 	public ResponseBean updatePasswd(String userName,String newPasswd,String code) {

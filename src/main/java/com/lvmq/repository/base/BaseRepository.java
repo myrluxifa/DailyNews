@@ -17,5 +17,4 @@ public interface BaseRepository<T> extends CrudRepository<T,String> {
 
 	List<T> findAllByFlag(int i);
 	
-	
 }

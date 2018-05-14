@@ -51,9 +51,9 @@ public class NewsAPI {
 			@ApiImplicitParam(paramType = "query", name = "pageSizeLevel2", value = "二级评论每页条数", required = true, dataType = "String")
 			})
 	@RequestMapping(value="/getComment",method=RequestMethod.POST)
-	public ResponseBean<NewsCommentArrayRes> getComment(String newsId,String page,String pageSize,String pageLevel2,String pageSizeLevel2) {
+	public ResponseBean<NewsCommentArrayRes> getComment(String newsId,String userId,String page,String pageSize,String pageLevel2,String pageSizeLevel2) {
 	
-		return new ResponseBean<NewsCommentArrayRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.getComment(newsId,
+		return new ResponseBean<NewsCommentArrayRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.getComment(newsId,userId,
 				 Integer.valueOf(page),Integer.valueOf( pageSize),Integer.valueOf( pageLevel2), Integer.valueOf(pageSizeLevel2)));
 	}
 	

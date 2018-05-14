@@ -57,6 +57,7 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private UserLoginRepository userLoginRepository;
 	
+	
 	@Override
 	public void getNewsFromIDataAPI() {
 		// TODO Auto-generated method stub
@@ -123,7 +124,7 @@ public class NewsServiceImpl implements NewsService {
 		}
 	}
 	
-	public NewsCommentArrayRes getComment(String newsId,int page,int pageSize,int pageLevel2,int pageSizeLevel2) {
+	public NewsCommentArrayRes getComment(String newsId,String userId,int page,int pageSize,int pageLevel2,int pageSizeLevel2) {
 		
 		List<NewsComment> newsComments=newsCommentRepository.findByNewsIdAndFlagAndLevel(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "createTime") , newsId, 0, 1);
 		List<NewsCommentRes> newsCommentRes=new ArrayList<NewsCommentRes>();
