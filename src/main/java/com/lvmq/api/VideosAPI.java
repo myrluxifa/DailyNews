@@ -13,7 +13,7 @@ import com.lvmq.service.VideosService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "/api/videos", description = "视频")
+@Api(tags = {"视频"})
 @RestController
 @RequestMapping("/api/videos")
 public class VideosAPI {

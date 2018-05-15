@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "/api/news", description = "新闻")
+@Api(tags = {"新闻"})
 @RestController
 @RequestMapping("/api/news")
 public class NewsAPI {
