@@ -18,12 +18,15 @@ import com.lvmq.api.res.NewsCommentLevel2Res;
 import com.lvmq.api.res.NewsCommentRes;
 import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
+import com.lvmq.api.res.NewsTypeArray;
+import com.lvmq.api.res.NewsTypeRes;
 import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
 import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.AdvertInfo;
 import com.lvmq.model.NewsComment;
 import com.lvmq.model.NewsInfo;
+import com.lvmq.model.NewsInfoRead;
 import com.lvmq.model.NewsType;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.AdvertInfoRepository;
@@ -90,24 +93,32 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	
-	public NewsRes home(String userId){
+	public NewsTypeArray types() {
+		List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
+		List<NewsTypeRes> typeArray=new ArrayList<NewsTypeRes>();
+		newsTypeArray.forEach(x->typeArray.add(new NewsTypeRes(x.getCatId(),x.getCatValue())));
+		return new NewsTypeArray(typeArray);
+	}
+	
+	
+	public NewsRes home(String userId,int page,int pageSize,String catId,int adPage,int adPageSize){
 		try {
-			List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
-			
+//			List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
+//			
 			List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
-			
-			for(NewsType n:newsTypeArray) {
+//			
+//			for(NewsType n:newsTypeArray) {
 				
 				List<NewsInfoRes> newsInfoResArray=new ArrayList<NewsInfoRes>();
 				
-				List<NewsInfo> newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(1, 10,Direction.DESC, "publishDate"),n.getCatId());
+				List<NewsInfo> newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
 				
 				newsInfoArray.forEach(x->newsInfoResArray.add(new NewsInfoRes(x,newsInfoReadRepository.countByuserIdAndNewsId(userId,x.getId()))));
 				
-				newsByTypeArray.add(new NewsByTypeRes(n.getCatId(),n.getCatValue(),newsInfoResArray));
-			}
+				newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
+//			}
 			
-			List<AdvertInfo> advertInfo=advertInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(1, 10,Direction.DESC, "createTime"),0);
+			List<AdvertInfo> advertInfo=advertInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(adPage, adPageSize,Direction.DESC, "createTime"),0);
 			
 			List<AdvertRes> ads=new ArrayList<AdvertRes>();
 			for(AdvertInfo ai:advertInfo) {
@@ -148,4 +159,11 @@ public class NewsServiceImpl implements NewsService {
 		return new NewsCommentRes(n,u.get().getHeadPortrait(),u.get().getName());
 	}
 
+	public void readNews(String userId,String newsId){
+		int count=newsInfoReadRepository.countByuserIdAndNewsId(userId, newsId);
+		if(count>0) {
+			newsInfoReadRepository.save(new NewsInfoRead(userId,newsId));
+		}
+		
+	}
 }

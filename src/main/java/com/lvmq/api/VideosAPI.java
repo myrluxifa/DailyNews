@@ -26,4 +26,10 @@ public class VideosAPI {
 	public ResponseBean<VideosArrayRes> getComment(String page,String pageSize) {
 		return new ResponseBean<VideosArrayRes>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", videosService.getVideosArray(Integer.valueOf(page), Integer.valueOf(pageSize)));
 	}
+	
+	
+	@RequestMapping(value="/getVideosFromIDataAPI",method=RequestMethod.POST)
+	public void getVideosFromIDataAPI() {
+		videosService.getVideosFromIDataAPI();
+	}
 }
