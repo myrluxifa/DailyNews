@@ -39,6 +39,45 @@ public class SignAPI extends BaseAPI {
 
 	@Autowired
 	private GoldLogRepository goldLogRepository;
+	
+	@ApiOperation(value = "签到状态查询", notes = "", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String") })
+	@PostMapping("init")
+	public ResponseBean<Object> init(String userId) {
+		try {
+			Calendar cal = Calendar.getInstance();
+
+			String today = TimeUtil.format(cal, "yyyyMMdd");
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+			String yesterday = TimeUtil.format(cal, "yyyyMMdd");
+
+			List<SignLog> logs = signLogRepository
+					.findByCreateDateInAndUserIdOrderByCreateDateDesc(new String[] { today, yesterday }, userId);
+			// 计算连续时间
+			int coun = 0;
+			if (null != logs) {
+				for (SignLog sl : logs) {
+					if (sl.getCreateDate().equals(today)) {
+						return new ResponseBean<>(Code.FAIL, Code.FAIL, new SignRes(sl.getCountinuous(), true, "请明天再来签到吧~"));
+					}
+					if (sl.getCreateDate().equals(yesterday)) {
+						if (sl.getCountinuous() + 1 > 7) {
+							coun = 7;
+						} else {
+							coun = sl.getCountinuous();
+						}
+					}else {
+						coun = 0;
+					}
+				}
+			}
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, new SignRes(coun, false, "可以签到~"));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseBean<>(Code.FAIL, Code.FAIL, e.getMessage());
+		}
+	}
 
 	@ApiOperation(value = "签到", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
