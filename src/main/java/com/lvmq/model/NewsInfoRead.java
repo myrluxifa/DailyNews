@@ -18,6 +18,17 @@ public class NewsInfoRead {
 	private String userId;
 	
 	private String newsId;
+	
+	
+	public NewsInfoRead() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public NewsInfoRead(String userId,String newsId) {
+		// TODO Auto-generated constructor stub
+		this.userId=userId;
+		this.newsId=newsId;
+	}
 
 	public String getId() {
 		return id;

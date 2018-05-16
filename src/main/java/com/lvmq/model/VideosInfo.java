@@ -11,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.lvmq.idata.res.VideosDataResponseDto;
 import com.lvmq.util.ArrayUtil;
+import com.lvmq.util.Util;
 
 
 @Entity
@@ -55,7 +56,7 @@ public class VideosInfo {
 	
 	public VideosInfo(VideosDataResponseDto videosDataResponseDto) {
 		// TODO Auto-generated constructor stub
-		this.title=videosDataResponseDto.getTitle();
+		this.title=Util.decodeUnicode(videosDataResponseDto.getTitle());
 		this.idataId=videosDataResponseDto.getId();
 		this.coverUrl=videosDataResponseDto.getCoverUrl();
 		this.posterId=videosDataResponseDto.getPosterId();

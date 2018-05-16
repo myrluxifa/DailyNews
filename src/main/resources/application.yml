@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://47.104.73.127:3306/daily_news
+    url: jdbc:mysql://47.104.73.127:3306/daily_news?useUnicode=true&characterEncoding=utf8
     username: root
     password: Lvmq123456!
     type: com.zaxxer.hikari.HikariDataSource
