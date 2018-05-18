@@ -161,7 +161,7 @@ public class NewsServiceImpl implements NewsService {
 			
 			String ilike="false";
 			if(Util.isBlank(userId)) {
-				if(likeCommentRepository.countByOutIdAndUserIdAndType(newsId, userId, Consts.LikeLog.Type.COMMENT)>0) {
+				if(likeCommentRepository.countByOutIdAndUserIdAndType(necs.getId(), userId, Consts.LikeLog.Type.COMMENT)>0) {
 					ilike="true";
 				}
 				
