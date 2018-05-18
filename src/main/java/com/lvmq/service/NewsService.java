@@ -23,6 +23,10 @@ public interface NewsService {
 	NewsCommentRes setComment(String newsId,String userId,String parentId,String comment,String level);
 	
 	
-	void readNews(String userId,String newsId);
+	boolean readNews(String userId,String newsId);
 
+	
+	boolean getReward(String newsId,String userId);
+	
+	 boolean likeComment(String newsId,String userId) ;
 }
