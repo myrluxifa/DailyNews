@@ -1,9 +1,10 @@
 package com.lvmq.repository;
 
-import com.lvmq.model.LikeLog;
-import com.lvmq.repository.base.BaseRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface LikeCommentRepository extends BaseRepository<LikeLog> {
+import com.lvmq.model.LikeLog;
+
+public interface LikeCommentRepository extends CrudRepository<LikeLog,String> {
 	int countByOutIdAndUserIdAndType(String outId,String userId,String type);
 	
 }
