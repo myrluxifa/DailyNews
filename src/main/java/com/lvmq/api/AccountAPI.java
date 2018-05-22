@@ -107,15 +107,15 @@ public class AccountAPI extends BaseAPI {
 class AccountPageRes {
 	
 	@ApiModelProperty(name = "名称")
-	private String name;
+	private String name = "";
 	@ApiModelProperty(name = "时间")
-	private String time;
+	private String time = "";
 	@ApiModelProperty(name = "数量或金额")
 	private long cnt;
 	@ApiModelProperty(name = "状态")
-	private String state;
+	private String state = "";
 	@ApiModelProperty(name = "类型")
-	private String type;
+	private String type = "";
 
 	public String getType() {
 		return type;
