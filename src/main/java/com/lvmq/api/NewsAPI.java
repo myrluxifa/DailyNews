@@ -89,8 +89,46 @@ public class NewsAPI {
 			 return new ResponseBean<NewsCommentRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.setComment(newsId,userId,parentId,comment,level)); 
 	}
 	
-//	@RequestMapping(value="/readNews",method=RequestMethod.POST)
-//	public ResponseBean readNews(String userId,String newsId) {
-//		
-//	}
+	
+	@ApiOperation(value="点赞",notes="")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "commentId", value = "评论编号", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户编号", required = true, dataType = "String")
+	})
+	@RequestMapping(value="/likeComment",method=RequestMethod.POST)
+	public ResponseBean likeComment(String commentId,String userId){
+		if(newsService.likeComment(commentId, userId)) {
+			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
+		}else {
+			return new ResponseBean(Code.FAIL,Code.LIKE_FAIL,"已点赞");
+		}
+	}
+	
+	@ApiOperation(value="阅读新闻",notes="")
+	@RequestMapping(value="/readNews",method=RequestMethod.POST)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "newsId", value = "新闻编号", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "登陆人编号", required = true, dataType = "String")
+		})
+	public ResponseBean readNews(String userId,String newsId) {
+		if(newsService.readNews(userId, newsId)) {
+			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
+		}else {
+			return new ResponseBean(Code.FAIL,Code.READ_CODE_FAIL,"失败");
+		}
+	}
+	
+	@ApiOperation(value="获得奖励",notes="")
+	@RequestMapping(value="/getReward",method=RequestMethod.POST)
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "newsId", value = "新闻编号", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "登陆人编号", required = true, dataType = "String")
+		})
+	public ResponseBean getReward(String userId,String newsId) {
+		if(newsService.getReward(userId, newsId)) {
+			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
+		}else {
+			return new ResponseBean(Code.FAIL,Code.READ_CODE_FAIL,"失败");
+		}
+	}
 }

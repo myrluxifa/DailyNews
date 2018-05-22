@@ -17,6 +17,8 @@ public class NewsCommentRes {
 	
 	private String comment;
 	
+	private String ilike;
+	
 	private List<NewsCommentLevel2Res> newsCommentLevel2Array;
 	
 	
@@ -30,7 +32,7 @@ public class NewsCommentRes {
 		this.name=name;
 	}
 	
-	public NewsCommentRes(NewsComment newsComment,List<NewsCommentLevel2Res> newsCommentLevel2Array) {
+	public NewsCommentRes(NewsComment newsComment,List<NewsCommentLevel2Res> newsCommentLevel2Array,String ilike) {
 		// TODO Auto-generated constructor stub
 		this.id=newsComment.getId();
 		this.headPortrait=newsComment.getUserLogin().getHeadPortrait();
@@ -39,6 +41,7 @@ public class NewsCommentRes {
 		this.time=String.valueOf(newsComment.getCreateTime().getTime());
 		this.comment=newsComment.getComment();
 		this.newsCommentLevel2Array=newsCommentLevel2Array;
+		this.ilike=ilike;
 	}
 
 	public String getId() {
@@ -95,6 +98,14 @@ public class NewsCommentRes {
 
 	public void setNewsCommentLevel2Array(List<NewsCommentLevel2Res> newsCommentLevel2Array) {
 		this.newsCommentLevel2Array = newsCommentLevel2Array;
+	}
+
+	public String getIlike() {
+		return ilike;
+	}
+
+	public void setIlike(String ilike) {
+		this.ilike = ilike;
 	}
 	
 	

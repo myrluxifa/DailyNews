@@ -1,9 +1,11 @@
 package com.lvmq.util;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.springframework.format.datetime.DateFormatter;
 
@@ -17,6 +19,20 @@ public class TimeUtil {
 		//2764860000l是5分钟😸
 		return (now-time)>2764860000l; 
 	}
+	
+	
+	public static Date zeroForToday() {
+		long current=System.currentTimeMillis();
+		long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset();
+		return new Timestamp(zero);
+	}
+	
+	public static Date twelveForToday() {
+		long current=System.currentTimeMillis();
+		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+24*60*60*1000-1;
+		return new Timestamp(twelve);
+	}
+	
 	
 	public static String format(Date date, String pattern) {
 		pattern = Optional.ofNullable(pattern).orElse(DEFAULT_TIME_PATTERN);

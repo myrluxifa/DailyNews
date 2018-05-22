@@ -10,33 +10,34 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="t_news_info_read")
-public class NewsInfoRead {
+@Table(name="t_like_log")
+public class LikeLog {
+	
 	@Id
 	@GenericGenerator(name="system-uuid",strategy="uuid")
 	@GeneratedValue(generator="system-uuid")
 	private String id;
 	
+	private String type;
+	
 	private String userId;
 	
-	private String newsId;
+	
+	private String outId;
 	
 	private Date createTime;
 	
-	private int flag;
-	
-	
-	public NewsInfoRead() {
+	public LikeLog() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public NewsInfoRead(String userId,String newsId,int flag) {
+	public LikeLog(String outId,String userId,String type) {
 		// TODO Auto-generated constructor stub
+		this.type=type;
 		this.userId=userId;
-		this.newsId=newsId;
-		this.createTime=new Date();
-		this.flag=flag;
+		this.outId=outId;
 	}
+	
 
 	public String getId() {
 		return id;
@@ -44,6 +45,14 @@ public class NewsInfoRead {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getUserId() {
@@ -54,12 +63,12 @@ public class NewsInfoRead {
 		this.userId = userId;
 	}
 
-	public String getNewsId() {
-		return newsId;
+	public String getOutId() {
+		return outId;
 	}
 
-	public void setNewsId(String newsId) {
-		this.newsId = newsId;
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 
 	public Date getCreateTime() {
@@ -69,14 +78,7 @@ public class NewsInfoRead {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-
-	public int getFlag() {
-		return flag;
-	}
-
-	public void setFlag(int flag) {
-		this.flag = flag;
-	}
+	
 	
 	
 }

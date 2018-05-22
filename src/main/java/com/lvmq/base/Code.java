@@ -24,6 +24,12 @@ public class Code {
 	//验证码过期
 	public static final String MESSAGE_CODE_MISTAKE="0006";
 	
+	//阅读错误
+	public static final String READ_CODE_FAIL="0007";
+	
+	//点赞失败
+	public static final String LIKE_FAIL="0008";
+	
 	public static class SHARE {
 		/**每天最多分享次数**/
 		public static int MAX_TIMES = 5;
