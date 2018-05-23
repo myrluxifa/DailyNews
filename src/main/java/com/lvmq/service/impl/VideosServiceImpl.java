@@ -80,4 +80,22 @@ public class VideosServiceImpl implements VideosService {
 		}
 	}
 	
+	@Override
+	public VideosArrayRes getWonderfulVideosArray(int pageSize) {
+		try {
+			java.util.Random r=new java.util.Random();
+			long c=videosInfoRepository.count();
+			r.nextInt();
+			List<VideosRes> videosResArray=new ArrayList<VideosRes>();
+			for(int i=0;i<pageSize;i++) {
+				int p=r.nextInt(Integer.valueOf(String.valueOf(c)));
+				List<VideosInfo> videosArray=videosInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(p, 1,Direction.DESC, "publishDate"), 0);
+				videosResArray.add(new VideosRes(videosArray.get(0)));
+			}
+			return new VideosArrayRes(videosResArray);
+		}catch(Exception e) {
+			return new VideosArrayRes();
+		}
+	}
+	
 }

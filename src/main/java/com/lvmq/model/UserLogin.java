@@ -33,11 +33,13 @@ public class UserLogin {
 	
 	private int inviteCount;
 	
-	private long balance;
+	private String balance;
 	
 	private long earnings;
 	
 	private String name;
+	
+	private String firstInvite;
 	
 	public UserLogin() {
 		// TODO Auto-generated constructor stub
@@ -136,11 +138,11 @@ public class UserLogin {
 		this.inviteCount = inviteCount;
 	}
 
-	public long getBalance() {
+	public String getBalance() {
 		return balance;
 	}
 
-	public void setBalance(long balance) {
+	public void setBalance(String balance) {
 		this.balance = balance;
 	}
 
@@ -158,6 +160,14 @@ public class UserLogin {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getFirstInvite() {
+		return firstInvite;
+	}
+
+	public void setFirstInvite(String firstInvite) {
+		this.firstInvite = firstInvite;
 	}
 	
 	

@@ -30,4 +30,15 @@ public class ArrayUtil {
 		return sArray;
 	}
 	
+	public static String getNewsTypeOrAdType(String s) {
+		if(Util.isBlank(s)) {
+			return "0";
+		}
+		String[] ss=s.split("\\$lvmq\\$");
+		int size=(s.length()-s.replace(separator, "").length())/6+1;
+		
+		if(size>=3) return "3"; 
+		else return "1";
+	}
+	
 }

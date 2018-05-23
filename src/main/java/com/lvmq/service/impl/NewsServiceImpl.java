@@ -142,7 +142,16 @@ public class NewsServiceImpl implements NewsService {
 			for(AdvertInfo ai:advertInfo) {
 				List<String> imgs=new ArrayList<String>();
 				ai.getAdvertImgs().forEach(x->imgs.add(x.getImg()));
-				ads.add(new AdvertRes(ai,imgs));
+				String adType="0";
+				if(imgs.size()>3) {
+					adType="3";
+				}else if(imgs.size()==0) {
+					adType="0";
+				}else {
+					adType="1";
+				}
+				ads.add(new AdvertRes(ai,imgs,adType));
+				
 			}
 			
 			return new NewsRes(newsByTypeArray,ads);

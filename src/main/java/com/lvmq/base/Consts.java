@@ -16,6 +16,9 @@ public class Consts {
 			public static final String SIGN = "101";
 			/**阅读奖励**/
 			public static final String READ = "102";
+			
+			/**注册奖励**/
+			public static final String REGISTER = "105";
 		}
 		
 		/**分享奖励个数**/
@@ -27,10 +30,22 @@ public class Consts {
 				return "分享奖励";
 			case Type.SIGN: 
 				return "签到奖励";
+			case Type.READ: 
+				return "阅读奖励";
+			case Type.REGISTER: 
+				return "注册奖励";
 				default:
 					return "神秘奖励";
 			}
 		}
+	}
+	
+	
+	public static class BalanceLog{
+		public static final class Type{
+			public static final String FIRST_INVITE="106";
+		}
+		
 	}
 	
 	public static class LikeLog{
