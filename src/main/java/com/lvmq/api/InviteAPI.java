@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lvmq.api.res.BannerRes;
+import com.lvmq.api.res.InviteInfoRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.service.InviteService;
@@ -29,5 +30,11 @@ public class InviteAPI {
 	public ResponseBean<BannerRes> getBanner() {
 		inviteService.getBanner();
 		return new ResponseBean<BannerRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功", inviteService.getBanner());
+	}
+	
+	@ApiOperation(value="轮播下面邀请信息（所获得收益，邀请人数，我的邀请码）",notes="")
+	@RequestMapping(value="/getInviteInfo",method=RequestMethod.POST)
+	public ResponseBean<InviteInfoRes> getInviteInfo(String userId){
+		return new ResponseBean<InviteInfoRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功", inviteService.getInviteInfo(userId));
 	}
 }

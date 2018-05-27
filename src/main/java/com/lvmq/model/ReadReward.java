@@ -19,7 +19,11 @@ public class ReadReward {
 
 	private int gold;
 
+	private int hour;
 	
+	private int horCnt;
+	
+	private String explain;
 
 	public String getId() {
 		return id;
@@ -43,6 +47,30 @@ public class ReadReward {
 
 	public void setGold(int gold) {
 		this.gold = gold;
+	}
+
+	public int getHour() {
+		return hour;
+	}
+
+	public void setHour(int hour) {
+		this.hour = hour;
+	}
+
+	public int getHorCnt() {
+		return horCnt;
+	}
+
+	public void setHorCnt(int horCnt) {
+		this.horCnt = horCnt;
+	}
+
+	public String getExplain() {
+		return explain;
+	}
+
+	public void setExplain(String explain) {
+		this.explain = explain;
 	}
 	
 	

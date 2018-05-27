@@ -55,6 +55,8 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		userLogin.setFirstInvite("0");
 		
+		userLogin.setCreateTime(new Date());
+		
 		String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getGold();
 		
 		userLogin.setGold(Long.valueOf(gold));
@@ -78,7 +80,7 @@ public class UserLoginServiceImpl implements UserLoginService{
 		goldLog.setNewNum(Integer.valueOf(gold));
 		goldLog.setCreateUser(user.getId());
 		goldLog.setCreateTime(new Date());
-		goldLogRepository.save(new GoldLog());
+		goldLogRepository.save(goldLog);
 		
 		if(!Util.isBlank(userLogin.getInviteCode())) {
 			
@@ -93,7 +95,16 @@ public class UserLoginServiceImpl implements UserLoginService{
 				balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,"0.00",money,Consts.BalanceLog.Type.FIRST_INVITE));
 			}
 			inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
+			if(!Util.isBlank(inviteUser.getInviteCode())) {
+				UserLogin masterMasetUser=userLoginRepository.findByMyInviteCode(inviteUser.getInviteCode());
+				if(masterMasetUser.getGrandCnt()<2) {
+					masterMasetUser.setGrandCnt(masterMasetUser.getGrandCnt()+1);
+					user.setMasterMaster(masterMasetUser.getId());
+					userLoginRepository.save(user);
+				}
+			}
 			userLoginRepository.save(inviteUser);
+			
 		}
 		
 		return user;

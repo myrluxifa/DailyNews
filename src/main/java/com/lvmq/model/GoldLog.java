@@ -51,8 +51,31 @@ public class GoldLog implements Serializable {
 
 	@Column(name="user_id")
 	private String userId;
+	
+	private String triggerUserId;
 
 	public GoldLog() {
+	}
+	
+	public GoldLog(String createUser,long newNum,long num,long oldNum,String type) {
+		this.createUser=createUser;
+		this.newNum=newNum;
+		this.num=num;
+		this.oldNum=oldNum;
+		this.type=type;
+		this.userId=createUser;
+		this.createTime=new Date();
+	}
+	
+	public GoldLog(String createUser,long newNum,long num,long oldNum,String type,String triggerUserId) {
+		this.createUser=createUser;
+		this.newNum=newNum;
+		this.num=num;
+		this.oldNum=oldNum;
+		this.type=type;
+		this.triggerUserId=triggerUserId;
+		this.userId=createUser;
+		this.createTime=new Date();
 	}
 
 	public String getId() {
@@ -133,6 +156,14 @@ public class GoldLog implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getTriggerUserId() {
+		return triggerUserId;
+	}
+
+	public void setTriggerUserId(String triggerUserId) {
+		this.triggerUserId = triggerUserId;
 	}
 
 }

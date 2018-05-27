@@ -46,6 +46,8 @@ public class BalanceLog {
 	@Column(name="user_id")
 	private String userId;
 	
+	private String triggerUserId;
+	
 	public BalanceLog() {
 		// TODO Auto-generated constructor stub
 	}
@@ -59,6 +61,19 @@ public class BalanceLog {
 		this.type=type;
 		this.createTime=new Date();
 		this.createUser=userId;
+		
+	}
+	
+	public BalanceLog(String userId,String num,String oldNum,String newNum,String type,String triggerUserId) {
+		// TODO Auto-generated constructor stub
+		this.userId=userId;
+		this.num=num;
+		this.oldNum=oldNum;
+		this.newNum=newNum;
+		this.type=type;
+		this.createTime=new Date();
+		this.createUser=userId;
+		this.triggerUserId=triggerUserId;
 		
 	}
 
@@ -144,6 +159,14 @@ public class BalanceLog {
 
 	public void setOldNum(String oldNum) {
 		this.oldNum = oldNum;
+	}
+
+	public String getTriggerUserId() {
+		return triggerUserId;
+	}
+
+	public void setTriggerUserId(String triggerUserId) {
+		this.triggerUserId = triggerUserId;
 	}
 	
 	

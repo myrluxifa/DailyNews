@@ -13,4 +13,6 @@ public interface NewsInfoReadRepository extends CrudRepository<NewsInfoRead,Stri
 	int countByuserIdAndNewsId(String userId,String newsId);
 	
 	Optional<NewsInfoRead> findByNewsIdAndUserId(String newsId,String userId);
+	
+	int countByNewsIdAndUserId(String newsId,String userId);
 }

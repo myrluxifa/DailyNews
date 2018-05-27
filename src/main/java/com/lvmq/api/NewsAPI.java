@@ -57,7 +57,7 @@ public class NewsAPI {
 //	public void getNewsFromIDataAPI(){
 //		newsService.getNewsFromIDataAPI();
 //	}
-	
+//	
 	
 	@ApiOperation(value = "获得评论列表", notes = "")
 	@ApiImplicitParams({
@@ -125,7 +125,7 @@ public class NewsAPI {
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "登陆人编号", required = true, dataType = "String")
 		})
 	public ResponseBean getReward(String userId,String newsId) {
-		if(newsService.getReward(userId, newsId)) {
+		if(newsService.getReward(newsId, userId)) {
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
 		}else {
 			return new ResponseBean(Code.FAIL,Code.READ_CODE_FAIL,"失败");

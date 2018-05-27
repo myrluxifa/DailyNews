@@ -19,6 +19,16 @@ public class Consts {
 			
 			/**注册奖励**/
 			public static final String REGISTER = "105";
+			
+			/**师傅获得阅读奖励**/
+			public static final String MASTER_READ_REWARDS="109";
+			
+			//师爷在前徒孙注册前5天获得奖励类型
+			public static final String FIVE_MASTER_MASTER_READ_REWARDS="108";
+			//师爷在前徒孙注册前5天后获得奖励类型
+			public static final String MASTER_MASTER_READ_REWARDS="110";
+			
+			public static final String LOGIN="111";
 		}
 		
 		/**分享奖励个数**/
@@ -34,6 +44,14 @@ public class Consts {
 				return "阅读奖励";
 			case Type.REGISTER: 
 				return "注册奖励";
+			case Type.MASTER_READ_REWARDS: 
+				return "师傅获得阅读奖励";
+			case Type.FIVE_MASTER_MASTER_READ_REWARDS: 
+				return "师爷在前徒孙注册前5天获得奖励类型";
+			case Type.MASTER_MASTER_READ_REWARDS: 
+				return "师爷在前徒孙注册前5天后获得奖励类型";
+			case Type.LOGIN:
+				return "登录奖励";
 				default:
 					return "神秘奖励";
 			}
@@ -44,6 +62,9 @@ public class Consts {
 	public static class BalanceLog{
 		public static final class Type{
 			public static final String FIRST_INVITE="106";
+			
+			//徒弟前8天师傅奖励
+			public static final String EIGHT_DAY_REWARDS="107";
 		}
 		
 	}
@@ -89,4 +110,6 @@ public class Consts {
 	public static final class Sign{
 		public static final String COIN = "4,6,10,15,20,25,30";
 	}
+	
+	public static final long GOLD_RATIO=1000;
 }
