@@ -26,6 +26,9 @@ public class NewsInfoRes {
 	
 	private String ifRead;
 	
+	private String newsType;
+	
+	
 	public NewsInfoRes() {
 		// TODO Auto-generated constructor stub
 	}
@@ -42,6 +45,7 @@ public class NewsInfoRes {
 		this.content=newsInfo.getContent();
 		this.imgsUrl=ArrayUtil.stringToList(newsInfo.getImgsUrl());
 		this.ifRead=String.valueOf(ifRead);
+		this.newsType=ArrayUtil.getNewsTypeOrAdType(newsInfo.getImgsUrl());
 	}
 
 	public String getId() {
@@ -122,6 +126,14 @@ public class NewsInfoRes {
 
 	public void setIfRead(String ifRead) {
 		this.ifRead = ifRead;
+	}
+
+	public String getNewsType() {
+		return newsType;
+	}
+
+	public void setNewsType(String newsType) {
+		this.newsType = newsType;
 	}
 	
 	

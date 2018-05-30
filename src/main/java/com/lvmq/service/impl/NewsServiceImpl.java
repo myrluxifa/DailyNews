@@ -1,9 +1,13 @@
 package com.lvmq.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +30,9 @@ import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
 import com.lvmq.idata.res.ToutiaoResponseDto;
 import com.lvmq.model.AdvertInfo;
+import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
+import com.lvmq.model.GoldRewards;
 import com.lvmq.model.LikeLog;
 import com.lvmq.model.NewsComment;
 import com.lvmq.model.NewsInfo;
@@ -35,7 +41,9 @@ import com.lvmq.model.NewsType;
 import com.lvmq.model.ReadReward;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.AdvertInfoRepository;
+import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.LikeCommentRepository;
 import com.lvmq.repository.NewsCommentRepository;
 import com.lvmq.repository.NewsInfoReadRepository;
@@ -79,6 +87,12 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private LikeCommentRepository likeCommentRepository;
 	
+	@Autowired
+	private GoldRewardsRepository goldRewardsRepository;
+	
+	@Autowired
+	private BalanceLogRepository balanceLogRepository;
+	
 	@Override
 	public void getNewsFromIDataAPI() {
 		// TODO Auto-generated method stub
@@ -121,6 +135,28 @@ public class NewsServiceImpl implements NewsService {
 	
 	public NewsRes home(String userId,int page,int pageSize,String catId,int adPage,int adPageSize){
 		try {
+			
+			if(!Util.isBlank(userId)) {
+				if(goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.LOGIN, userId,TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
+					Optional<UserLogin> ou=userLoginRepository.findById(userId);
+					if(ou.isPresent()) {
+						UserLogin u=ou.get();
+						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.LOGIN).getGold());
+						GoldLog goldLog=new GoldLog();
+						goldLog.setNum(gold);
+						goldLog.setNewNum(gold+u.getGold());
+						goldLog.setOldNum(u.getGold());
+						goldLog.setType(Consts.GoldLog.Type.LOGIN);
+						goldLog.setUserId(userId);
+						goldLog.setCreateUser(userId);
+						goldLog.setCreateTime(new Date());
+						goldLogRepository.save(goldLog);
+						u.setGold(gold+u.getGold());
+						userLoginRepository.save(u);
+					}
+				}
+			}
+			
 //			List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
 //			
 			List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
@@ -142,7 +178,16 @@ public class NewsServiceImpl implements NewsService {
 			for(AdvertInfo ai:advertInfo) {
 				List<String> imgs=new ArrayList<String>();
 				ai.getAdvertImgs().forEach(x->imgs.add(x.getImg()));
-				ads.add(new AdvertRes(ai,imgs));
+				String adType="0";
+				if(imgs.size()>3) {
+					adType="3";
+				}else if(imgs.size()==0) {
+					adType="0";
+				}else {
+					adType="1";
+				}
+				ads.add(new AdvertRes(ai,imgs,adType));
+				
 			}
 			
 			return new NewsRes(newsByTypeArray,ads);
@@ -198,14 +243,31 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	
+	@Transactional
 	public boolean getReward(String newsId,String userId) {
 		try {
+			Optional<NewsInfoRead> o=newsInfoReadRepository.findByNewsIdAndUserId(newsId, userId);
+			if(o.isPresent()) {
+				if(o.get().getFlag()==1) {
+					return false;
+				}
+			}else {
+				return false;
+			}
 			
+			//当天阅读奖励
 			int readGoldCnt=goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.READ, userId, TimeUtil.zeroForToday(), TimeUtil.twelveForToday());
+			//配置的阅读奖励 条数 和 奖励金币数量
 			Optional<ReadReward> opt=readRewardsRepository.findById("1");
 			ReadReward r=opt.get();
 			int flag=0;
-			if((r.getDailyCnt()-readGoldCnt)>0) {
+			
+			//计算当前时间
+			Calendar calendar=Calendar.getInstance();
+			int hour=calendar.get(Calendar.HOUR_OF_DAY);
+			
+			
+			if((r.getDailyCnt()+(hour/r.getHour()*r.getHorCnt())-readGoldCnt)>0) {
 				UserLogin u=userLoginRepository.findById(userId).get();
 				GoldLog g=new GoldLog();
 				g.setType(Consts.GoldLog.Type.READ);
@@ -219,14 +281,142 @@ public class NewsServiceImpl implements NewsService {
 				
 				u.setGold(r.getGold()+u.getGold());
 				userLoginRepository.save(u);
+				//判断是否有师傅
+				if(!Util.isBlank(u.getInviteCode())) {
+					//师傅
+					UserLogin masterUser=userLoginRepository.findByMyInviteCode(u.getInviteCode());
+					if(masterUser!=null) {
+						Date today=new Date();
+						//注册与当前相差天数
+						Long day=(today.getTime()-u.getCreateTime().getTime())/(1000*3600*24);
+						
+						SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						
+						//判断注册时间
+						if(day<8) {
+							//判断当天获得阅读奖励是否超过50
+							if(goldLogRepository.sumNumByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.READ, userId, dateFormat.format(TimeUtil.zeroForToday()), dateFormat.format(TimeUtil.twelveForToday()))>=50) {
+								log.info(userId);
+								log.info(masterUser.getId());
+								log.info(dateFormat.format(TimeUtil.zeroForToday()));
+								log.info(dateFormat.format(TimeUtil.twelveForToday()));
+								//判断当天奖励是否已经领取过了
+								if(balanceLogRepository.countByTypeAndUserIdAndTriggerUserIdAndCreateTimeBetween(Consts.BalanceLog.Type.EIGHT_DAY_REWARDS, masterUser.getId(),userId, TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
+									//如果在奖励范围  触发奖励机制
+									String[] rewards=goldRewardsRepository.findByType(Consts.BalanceLog.Type.EIGHT_DAY_REWARDS).getMoney().split(",");
+									int count=balanceLogRepository.countByTypeAndUserIdAndTriggerUserIdAndCreateTimeBetween(Consts.BalanceLog.Type.EIGHT_DAY_REWARDS, masterUser.getId(),u.getId(), u.getCreateTime(), today);
+									
+									String rewardsMoney="0.00";
+									
+									//如果注册天数应得次数-当前满足条件次数大于0则证明其为断签状态  那么则取第一天签到的奖励金额
+									if((day+1-count)>0) rewardsMoney=rewards[0];
+									//满签直接取当天应奖励现金
+									else rewardsMoney=rewards[Integer.valueOf(day.toString())];
+									
+									masterUser.setBalance(String.valueOf(Double.parseDouble(rewardsMoney)+Double.parseDouble(masterUser.getBalance())));
+									
+									//插入奖励
+									balanceLogRepository.save(new BalanceLog(masterUser.getId(),
+											rewardsMoney,
+											masterUser.getBalance(),
+											String.valueOf(Double.parseDouble(rewardsMoney)+Double.parseDouble(masterUser.getBalance())),
+											Consts.BalanceLog.Type.EIGHT_DAY_REWARDS,
+											u.getId()
+											));
+								
+								}
+								
+								
+								
+							}
+							
+							
+						}else {
+							//超过8天奖励
+							String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.MASTER_READ_REWARDS).getGold();
+							
+							masterUser.setGold((masterUser.getGold()+Long.valueOf(gold)));
+							userLoginRepository.save(masterUser);
+							
+							goldLogRepository.save(new GoldLog(masterUser.getId(),
+									(masterUser.getGold()+Long.valueOf(gold)),
+									Long.valueOf(gold),
+									masterUser.getGold(),
+									Consts.GoldLog.Type.MASTER_READ_REWARDS,
+									u.getId()
+									));
+						}
+						
+						
+						//判断是否有师爷
+						if(!Util.isBlank(u.getMasterMaster())) {
+							//师傅
+							Optional<UserLogin> opMasterMasterUser=userLoginRepository.findById(u.getMasterMaster());
+							if(opMasterMasterUser.isPresent()) {
+								UserLogin masterMasterUser=opMasterMasterUser.get();
+								if(day<5) {
+									log.info(Consts.GoldLog.Type.READ);
+									log.info(userId);
+									log.info(dateFormat.format(TimeUtil.zeroForToday()));
+									log.info(dateFormat.format(TimeUtil.twelveForToday()));
+									//判断当天获得阅读奖励是否超过50
+									if(goldLogRepository.sumNumByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.READ, userId, dateFormat.format(TimeUtil.zeroForToday()), dateFormat.format(TimeUtil.twelveForToday()))>=50) {
+										if(goldLogRepository.countByTypeAndUserIdAndTriggerUserIdAndCreateTimeBetween(Consts.GoldLog.Type.FIVE_MASTER_MASTER_READ_REWARDS, masterMasterUser.getId(),userId, TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
+											//如果在奖励范围  触发奖励机制
+											String[] rewards=goldRewardsRepository.findByType(Consts.GoldLog.Type.FIVE_MASTER_MASTER_READ_REWARDS).getGold().split(",");
+											int count=goldLogRepository.countByTypeAndUserIdAndTriggerUserIdAndCreateTimeBetween(Consts.GoldLog.Type.FIVE_MASTER_MASTER_READ_REWARDS, masterMasterUser.getId(),u.getId(), u.getCreateTime(), today);
+											
+											String rewardsGold="0";
+											
+											//如果注册天数应得次数-当前满足条件次数大于0则证明其为断签状态  那么则取第一天签到的奖励金额
+											if((day+1-count)>0) rewardsGold=rewards[0];
+											//满签直接取当天应奖励现金
+											else rewardsGold=rewards[Integer.valueOf(day.toString())];
+											
+											masterMasterUser.setGold((masterMasterUser.getGold()+Long.valueOf(rewardsGold)));
+											//更新用户表
+											userLoginRepository.save(masterMasterUser);
+											
+											//插入奖励
+											goldLogRepository.save(new GoldLog(masterMasterUser.getId(),
+													(masterMasterUser.getGold()+Long.valueOf(rewardsGold)),
+													Long.valueOf(rewardsGold),
+													masterMasterUser.getGold(),
+													Consts.GoldLog.Type.FIVE_MASTER_MASTER_READ_REWARDS,
+													u.getId()
+													));
+										}
+										
+									}
+								}else {
+									//徒孙阅读超过5天奖励
+									String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.MASTER_MASTER_READ_REWARDS).getGold();
+									
+									masterMasterUser.setGold((masterMasterUser.getGold()+Long.valueOf(gold)));
+									//更新用户表
+									userLoginRepository.save(masterMasterUser);
+									
+									goldLogRepository.save(new GoldLog(masterMasterUser.getId(),
+											(masterMasterUser.getGold()+Long.valueOf(gold)),
+											Long.valueOf(gold),
+											masterMasterUser.getGold(),
+											Consts.GoldLog.Type.MASTER_READ_REWARDS,
+											u.getId()
+											));
+								}
+							}
+							
+							
+						}
+					}
+					
+					
+				}
 				flag=1;
 			}
-			Optional<NewsInfoRead> o=newsInfoReadRepository.findByNewsIdAndUserId(newsId, userId);
-			if(o.isPresent()) {
 				NewsInfoRead nr=o.get();
 				nr.setFlag(1);
 				newsInfoReadRepository.save(nr);
-			}
 			return true;
 		}catch (Exception e) {
 			// TODO: handle exception

@@ -1,27 +1,21 @@
 package com.lvmq.model;
 
-import java.io.Serializable;
-import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Date;
-import java.sql.Timestamp;
-
-
-/**
- * The persistent class for the t_gold_log database table.
- * 
- */
 @Entity
-@Table(name="t_gold_log")
-public class GoldLog implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4685595757727804409L;
-
+@Table(name="t_balance_log")
+public class BalanceLog {
 	@Id
 	@GenericGenerator(name="system-uuid",strategy="uuid")
 	@GeneratedValue(generator="system-uuid")
@@ -35,12 +29,12 @@ public class GoldLog implements Serializable {
 	private String createUser;
 
 	@Column(name="new_num")
-	private long newNum;
+	private String newNum;
 
-	private long num;
+	private String num;
 
 	@Column(name="old_num")
-	private long oldNum;
+	private String oldNum;
 
 	private String remark;
 
@@ -53,30 +47,37 @@ public class GoldLog implements Serializable {
 	private String userId;
 	
 	private String triggerUserId;
-
-	public GoldLog() {
+	
+	public BalanceLog() {
+		// TODO Auto-generated constructor stub
 	}
 	
-	public GoldLog(String createUser,long newNum,long num,long oldNum,String type) {
-		this.createUser=createUser;
-		this.newNum=newNum;
+	public BalanceLog(String userId,String num,String oldNum,String newNum,String type) {
+		// TODO Auto-generated constructor stub
+		this.userId=userId;
 		this.num=num;
 		this.oldNum=oldNum;
+		this.newNum=newNum;
 		this.type=type;
-		this.userId=createUser;
 		this.createTime=new Date();
+		this.createUser=userId;
+		
 	}
 	
-	public GoldLog(String createUser,long newNum,long num,long oldNum,String type,String triggerUserId) {
-		this.createUser=createUser;
-		this.newNum=newNum;
+	public BalanceLog(String userId,String num,String oldNum,String newNum,String type,String triggerUserId) {
+		// TODO Auto-generated constructor stub
+		this.userId=userId;
 		this.num=num;
 		this.oldNum=oldNum;
+		this.newNum=newNum;
 		this.type=type;
+		this.createTime=new Date();
+		this.createUser=userId;
 		this.triggerUserId=triggerUserId;
-		this.userId=createUser;
-		this.createTime=new Date();
+		
 	}
+
+	
 
 	public String getId() {
 		return this.id;
@@ -102,29 +103,7 @@ public class GoldLog implements Serializable {
 		this.createUser = createUser;
 	}
 
-	public long getNewNum() {
-		return this.newNum;
-	}
 
-	public void setNewNum(long newNum) {
-		this.newNum = newNum;
-	}
-
-	public long getNum() {
-		return this.num;
-	}
-
-	public void setNum(long num) {
-		this.num = num;
-	}
-
-	public long getOldNum() {
-		return this.oldNum;
-	}
-
-	public void setOldNum(long oldNum) {
-		this.oldNum = oldNum;
-	}
 
 	public String getRemark() {
 		return this.remark;
@@ -158,6 +137,30 @@ public class GoldLog implements Serializable {
 		this.userId = userId;
 	}
 
+	public String getNewNum() {
+		return newNum;
+	}
+
+	public void setNewNum(String newNum) {
+		this.newNum = newNum;
+	}
+
+	public String getNum() {
+		return num;
+	}
+
+	public void setNum(String num) {
+		this.num = num;
+	}
+
+	public String getOldNum() {
+		return oldNum;
+	}
+
+	public void setOldNum(String oldNum) {
+		this.oldNum = oldNum;
+	}
+
 	public String getTriggerUserId() {
 		return triggerUserId;
 	}
@@ -165,5 +168,6 @@ public class GoldLog implements Serializable {
 	public void setTriggerUserId(String triggerUserId) {
 		this.triggerUserId = triggerUserId;
 	}
-
+	
+	
 }

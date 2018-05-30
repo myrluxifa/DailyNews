@@ -1,6 +1,7 @@
 package com.lvmq.util;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -19,6 +20,9 @@ public class TimeUtil {
 		//2764860000l是5分钟😸
 		return (now-time)>2764860000l; 
 	}
+	
+	
+	
 	
 	
 	public static Date zeroForToday() {
@@ -58,5 +62,11 @@ public class TimeUtil {
 	
 	public static String format(Calendar instance) {
 		return format(instance.getTime(), null);
+	}
+	
+	
+	public static void main(String[] args) {
+		SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(date.format(zeroForToday()));
 	}
 }

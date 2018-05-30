@@ -28,8 +28,14 @@ public class VideosAPI {
 	}
 	
 	
-	@RequestMapping(value="/getVideosFromIDataAPI",method=RequestMethod.POST)
-	public void getVideosFromIDataAPI() {
-		videosService.getVideosFromIDataAPI();
+//	@RequestMapping(value="/getVideosFromIDataAPI",method=RequestMethod.POST)
+//	public void getVideosFromIDataAPI() {
+//		videosService.getVideosFromIDataAPI();
+//	}
+	
+	@ApiOperation(value = "精彩视频", notes = "")
+	@RequestMapping(value="/getWonderfulVideo",method=RequestMethod.POST)
+	public ResponseBean<VideosArrayRes> getWonderfulVideo(String pageSize) {
+		return new ResponseBean<VideosArrayRes>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", videosService.getWonderfulVideosArray(Integer.valueOf(pageSize)));
 	}
 }

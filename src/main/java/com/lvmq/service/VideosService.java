@@ -10,5 +10,7 @@ public interface VideosService {
 	void getVideosFromIDataAPI();
 	
 	VideosArrayRes getVideosArray(int page,int pageSize);
+
+	VideosArrayRes getWonderfulVideosArray(int pageSize);
 	
 }

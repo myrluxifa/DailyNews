@@ -15,19 +15,21 @@ public class AdvertRes {
 	
 	private List<String> imgs;
 	
+	private String adType;
+	
 	
 	public AdvertRes() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public AdvertRes(AdvertInfo advertInfo,List<String> imgs ) {
+	public AdvertRes(AdvertInfo advertInfo,List<String> imgs,String adType ) {
 		// TODO Auto-generated constructor stub
 		this.id=advertInfo.getId();
 		this.title=advertInfo.getTitle();
 		this.url=advertInfo.getUrl();
 		this.readNum=advertInfo.getReadNum();
 		this.imgs=imgs;
-		
+		this.adType=adType;
 	}
 
 	public String getId() {
@@ -68,6 +70,14 @@ public class AdvertRes {
 
 	public void setImgs(List<String> imgs) {
 		this.imgs = imgs;
+	}
+
+	public String getAdType() {
+		return adType;
+	}
+
+	public void setAdType(String adType) {
+		this.adType = adType;
 	}
 	
 	
