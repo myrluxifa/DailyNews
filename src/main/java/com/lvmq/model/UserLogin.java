@@ -10,63 +10,76 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="t_user_login")
+@Table(name = "t_user_login")
 public class UserLogin {
 	@Id
-	@GenericGenerator(name="system-uuid",strategy="uuid")
-	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@GeneratedValue(generator = "system-uuid")
 	private String id;
-	
-	
+
 	private String userName;
-	
+
 	private String passwd;
-	
+
+	private String openid;
+
 	private String headPortrait;
-	
+
 	private Long gold;
-	
+
 	private int flag;
-	
+
 	private String inviteCode;
-	
-	
+
 	private String myInviteCode;
-	
+
 	private int inviteCount;
-	
+
 	private String balance;
-	
+
 	private long earnings;
-	
+
 	private String name;
-	
+
 	private String firstInvite;
-	
+
 	private String masterMaster;
-	
+
 	private int grandCnt;
-	
+
 	private Date createTime;
-	
+
 	public UserLogin() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public UserLogin(String userName,String passwd,String inviteCode) {
+
+	public UserLogin(String userName, String passwd, String inviteCode) {
 		// TODO Auto-generated constructor stub
-		this.userName=userName;
-		this.passwd=passwd;
-		this.inviteCode=inviteCode;
+		this.userName = userName;
+		this.passwd = passwd;
+		this.inviteCode = inviteCode;
 	}
-	
-	
-	public UserLogin(String userName,String passwd) {
+
+	public UserLogin(String userName, String passwd) {
 		// TODO Auto-generated constructor stub
-		this.userName=userName;
-		this.passwd=passwd;
+		this.userName = userName;
+		this.passwd = passwd;
 	}
-	
+
+	/**
+	 * @return the openid
+	 */
+	public String getOpenid() {
+		return openid;
+	}
+
+	/**
+	 * @param openid
+	 *            the openid to set
+	 */
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
 
 	public String getId() {
 		return id;
@@ -92,31 +105,25 @@ public class UserLogin {
 		this.passwd = passwd;
 	}
 
-
 	public int getFlag() {
 		return flag;
 	}
-
 
 	public void setFlag(int flag) {
 		this.flag = flag;
 	}
 
-
 	public String getHeadPortrait() {
 		return headPortrait;
 	}
-
 
 	public void setHeadPortrait(String headPortrait) {
 		this.headPortrait = headPortrait;
 	}
 
-
 	public Long getGold() {
 		return gold;
 	}
-
 
 	public void setGold(Long gold) {
 		this.gold = gold;
@@ -201,6 +208,5 @@ public class UserLogin {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
-	
+
 }
