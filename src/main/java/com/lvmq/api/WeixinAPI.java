@@ -30,7 +30,7 @@ public class WeixinAPI {
 
 	@ApiOperation(value = "绑定微信", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "code", value = "用户授权后返回的Code", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "code", value = "用户授权后返回的Code", required = true, dataType = "String[]"),
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户Id", required = true, dataType = "String")
 			})
 	@PostMapping("bind")
