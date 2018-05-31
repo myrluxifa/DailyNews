@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lvmq.api.res.NewsCommentArrayRes;
 import com.lvmq.api.res.NewsCommentRes;
+import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
 import com.lvmq.api.res.NewsTypeArray;
+import com.lvmq.api.res.RewardsRes;
+import com.lvmq.api.res.VideosArrayRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.model.NewsComment;
@@ -90,6 +93,8 @@ public class NewsAPI {
 	}
 	
 	
+	
+	
 	@ApiOperation(value="点赞",notes="")
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "commentId", value = "评论编号", required = true, dataType = "String"),
@@ -103,6 +108,20 @@ public class NewsAPI {
 			return new ResponseBean(Code.FAIL,Code.LIKE_FAIL,"已点赞");
 		}
 	}
+	
+	
+	
+	@ApiOperation(value="")
+	public ResponseBean getRewardsCnt(String userId) {
+		try {
+			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功",newsService.getRewardsCnt(userId));
+		}catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseBean(Code.FAIL,Code.REWARDS_CNT_FAIL,"失败",new RewardsRes("0","0"));
+		}
+		
+	}
+	
 	
 	@ApiOperation(value="阅读新闻",notes="")
 	@RequestMapping(value="/readNews",method=RequestMethod.POST)
@@ -130,5 +149,12 @@ public class NewsAPI {
 		}else {
 			return new ResponseBean(Code.FAIL,Code.READ_CODE_FAIL,"失败");
 		}
+	}
+	
+	
+	@ApiOperation(value = "新闻推荐", notes = "")
+	@RequestMapping(value="/getWonderfulNews",method=RequestMethod.POST)
+	public ResponseBean<NewsRes> getWonderfulNews(String newsPageSize,String adPageSize) {
+		return new ResponseBean<NewsRes>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", newsService.getWanderFulNews(newsPageSize,adPageSize));
 	}
 }

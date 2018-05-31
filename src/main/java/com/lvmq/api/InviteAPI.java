@@ -37,4 +37,7 @@ public class InviteAPI {
 	public ResponseBean<InviteInfoRes> getInviteInfo(String userId){
 		return new ResponseBean<InviteInfoRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功", inviteService.getInviteInfo(userId));
 	}
+	
+	
+	
 }

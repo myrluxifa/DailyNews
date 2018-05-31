@@ -1,6 +1,7 @@
 package com.lvmq.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,5 +118,11 @@ public class UserLoginServiceImpl implements UserLoginService{
 		userLogin.setPasswd(MD5.getMD5(passwd));
 		userLogin=userLoginRepository.save(userLogin);
 		return userLogin;
+	}
+
+	@Override
+	public List<UserLogin> findByInviteCode(String inviteCode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

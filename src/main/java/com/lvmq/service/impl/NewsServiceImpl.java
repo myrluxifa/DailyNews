@@ -25,6 +25,8 @@ import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
 import com.lvmq.api.res.NewsTypeArray;
 import com.lvmq.api.res.NewsTypeRes;
+import com.lvmq.api.res.RewardsRes;
+import com.lvmq.api.res.VideosRes;
 import com.lvmq.base.Consts;
 import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
@@ -40,6 +42,7 @@ import com.lvmq.model.NewsInfoRead;
 import com.lvmq.model.NewsType;
 import com.lvmq.model.ReadReward;
 import com.lvmq.model.UserLogin;
+import com.lvmq.model.VideosInfo;
 import com.lvmq.repository.AdvertInfoRepository;
 import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
@@ -167,7 +170,7 @@ public class NewsServiceImpl implements NewsService {
 				
 				List<NewsInfo> newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
 				
-				newsInfoArray.forEach(x->newsInfoResArray.add(new NewsInfoRes(x,newsInfoReadRepository.countByuserIdAndNewsId(userId,x.getId()))));
+				newsInfoArray.forEach(x->newsInfoResArray.add(new NewsInfoRes(x,Util.isBlank(userId)==true?0:newsInfoReadRepository.countByuserIdAndNewsId(userId,x.getId()))));
 				
 				newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
 //			}
@@ -226,7 +229,7 @@ public class NewsServiceImpl implements NewsService {
 		
 		NewsComment n=newsCommentRepository.saveAndFlush(new NewsComment(newsId,userId,parentId,level,comment));
 		Optional<UserLogin> u=userLoginRepository.findById(userId);		
-		return new NewsCommentRes(n,u.get().getHeadPortrait(),u.get().getName());
+		return new NewsCommentRes(n,u.get().getHeadPortrait(),u.get().getName(),u.get().getUserName());
 	}
 
 	public boolean readNews(String userId,String newsId){
@@ -440,6 +443,62 @@ public class NewsServiceImpl implements NewsService {
 			}else {
 				return false;
 			}
+	}
+	
+	
+	public RewardsRes getRewardsCnt(String userId) {
+		//当天阅读奖励
+		int readGoldCnt=goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.READ, userId, TimeUtil.zeroForToday(), TimeUtil.twelveForToday());
+		//配置的阅读奖励 条数 和 奖励金币数量
+		Optional<ReadReward> opt=readRewardsRepository.findById("1");
+		ReadReward r=opt.get();
+		int flag=0;
 		
+		//计算当前时间
+		Calendar calendar=Calendar.getInstance();
+		int hour=calendar.get(Calendar.HOUR_OF_DAY);
+		int cnt=r.getDailyCnt()+(hour/r.getHour()*r.getHorCnt());
+		
+		return new RewardsRes(String.valueOf(readGoldCnt),String.valueOf(cnt));
+	}
+	
+	
+	public NewsRes getWanderFulNews(String newsPageSize,String adPageSize) {
+		
+		java.util.Random r=new java.util.Random();
+		long c=newsInfoRepository.count();
+		r.nextInt();
+		
+		List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
+		
+		List<NewsInfoRes> newsInfoResArray=new ArrayList<NewsInfoRes>();
+		
+		for(int i=0;i<Integer.valueOf(newsPageSize);i++) {
+			int p=r.nextInt(Integer.valueOf(String.valueOf(c)));
+			List<NewsInfo> newsInfoArray=newsInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(p, 1,Direction.DESC, "publishDate"), 0);
+			newsInfoResArray.add(new NewsInfoRes(newsInfoArray.get(0),0));
+		}
+		newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
+		
+		long adcount=advertInfoRepository.count();
+		
+		List<AdvertRes> ads=new ArrayList<AdvertRes>();
+		for(int i=0;i<Integer.valueOf(adPageSize);i++) {
+			int p=r.nextInt(Integer.valueOf(String.valueOf(adcount)));
+			List<AdvertInfo> advertInfo=advertInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(p, 1,Direction.DESC, "createTime"), 0);
+			List<String> imgs=new ArrayList<String>();
+			advertInfo.get(0).getAdvertImgs().forEach(x->imgs.add(x.getImg()));
+			String adType="0";
+			if(imgs.size()>3) {
+				adType="3";
+			}else if(imgs.size()==0) {
+				adType="0";
+			}else {
+				adType="1";
+			}
+			ads.add(new AdvertRes(advertInfo.get(0),imgs,adType));
+		}
+		
+		return new NewsRes(newsByTypeArray,ads);
 	}
 }

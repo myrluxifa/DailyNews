@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 
 import com.lvmq.api.res.NewsCommentArrayRes;
 import com.lvmq.api.res.NewsCommentRes;
+import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
 import com.lvmq.api.res.NewsTypeArray;
+import com.lvmq.api.res.RewardsRes;
 import com.lvmq.model.NewsComment;
 
 @Service
@@ -29,4 +31,8 @@ public interface NewsService {
 	boolean getReward(String newsId,String userId);
 	
 	 boolean likeComment(String newsId,String userId) ;
+	 
+	 RewardsRes getRewardsCnt(String userId);
+	 
+	 NewsRes getWanderFulNews(String newsPageSize,String adPageSize);
 }
