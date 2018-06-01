@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lvmq.api.res.BannerRes;
 import com.lvmq.api.res.InviteInfoRes;
+import com.lvmq.api.res.RecallRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.service.InviteService;
@@ -39,5 +40,17 @@ public class InviteAPI {
 	}
 	
 	
+	@ApiOperation(value="召回徒弟列表")
+	@RequestMapping(value="/recallList",method=RequestMethod.POST)
+	public ResponseBean<RecallRes> recallList(String userId){
+		return new ResponseBean<RecallRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功", inviteService.recallList(userId));
+	}
+	
+	
+	@ApiOperation(value="召回")
+	@RequestMapping(value="/recall",method=RequestMethod.POST)
+	public ResponseBean recall(String userId,String recallUser){
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", inviteService.recall(userId,recallUser));
+	}
 	
 }

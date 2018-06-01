@@ -111,7 +111,8 @@ public class NewsAPI {
 	
 	
 	
-	@ApiOperation(value="")
+	@ApiOperation(value="当前奖励数量",notes="")
+	@RequestMapping(value="/getRewardsCnt",method=RequestMethod.POST)
 	public ResponseBean getRewardsCnt(String userId) {
 		try {
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功",newsService.getRewardsCnt(userId));
@@ -151,6 +152,7 @@ public class NewsAPI {
 		}
 	}
 	
+
 	
 	@ApiOperation(value = "新闻推荐", notes = "")
 	@RequestMapping(value="/getWonderfulNews",method=RequestMethod.POST)

@@ -2,27 +2,36 @@ package com.lvmq.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.lvmq.api.res.BannerRes;
 import com.lvmq.api.res.ImgBanner;
 import com.lvmq.api.res.InviteInfoRes;
+import com.lvmq.api.res.RecallListRes;
+import com.lvmq.api.res.RecallRes;
 import com.lvmq.base.Consts;
+import com.lvmq.model.GoldLog;
 import com.lvmq.model.InviteCharBanner;
 import com.lvmq.model.InviteImgBanner;
+import com.lvmq.model.RecallLog;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.InviteCharBannerRepository;
 import com.lvmq.repository.InviteImgBannerRepository;
+import com.lvmq.repository.RecallLogRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.InviteService;
+import com.lvmq.util.TimeUtil;
 import com.lvmq.util.Util;
 
 
@@ -43,6 +52,12 @@ public class InviteServiceImpl implements InviteService {
 	
 	@Autowired
 	private UserLoginRepository userLoginRepository;
+	
+	@Autowired
+	private GoldRewardsRepository goldRewardsRepository;
+	
+	@Autowired
+	private RecallLogRepository recallLogRepository;
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(InviteServiceImpl.class);
@@ -93,6 +108,48 @@ public class InviteServiceImpl implements InviteService {
 		
 		return new InviteInfoRes(income,inviteCount,inviteCode);
 		
+	}
+	
+	
+	public RecallRes  recallList(String userId) {
+		Optional<UserLogin> opt=userLoginRepository.findById(userId);
+		
+		List<RecallListRes> recallList=new ArrayList<RecallListRes>();
+		
+		if(opt.isPresent()) {
+			List<UserLogin> userLoginArray=userLoginRepository.findByInviteCode(opt.get().getMyInviteCode());
+			for(UserLogin u:userLoginArray) {
+				List<GoldLog> goldLog=goldLogRepository.findByTypeAndUserId(com.lvmq.util.PagePlugin.pagePluginSort(0, 1,Direction.DESC, "createTime"), Consts.GoldLog.Type.LOGIN, u.getId());
+				if(goldLog.size()>0) {
+					if(TimeUtil.ifNeedReCall(goldLog.get(0).getCreateTime().getTime())){
+						if(recallLogRepository.countByUserIdAndRecallUserAndCreateTimeBetween(userId, u.getId(), TimeUtil.getHistoryDay(new Date(),3), new Date())==0) {
+							recallList.add(new RecallListRes(u.getId(),u.getUserName(),u.getName()));
+						}
+					}
+				}else {
+					if(TimeUtil.ifNeedReCall(u.getCreateTime().getTime())) {
+						if(recallLogRepository.countByUserIdAndRecallUserAndCreateTimeBetween(userId, u.getId(), TimeUtil.getHistoryDay(new Date(),3), new Date())==0) {
+							recallList.add(new RecallListRes(u.getId(),u.getUserName(),u.getName()));
+						}
+					}
+				}
+			
+			}
+			
+		}
+		return new RecallRes(recallList);
+		
+	}
+	
+	
+	public boolean recall(String userId,String recallUser){
+		try {
+			RecallLog recallLog=recallLogRepository.save(new RecallLog(userId,recallUser));
+			return true;
+		}catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 	}
 	
 }

@@ -13,6 +13,8 @@ public class RewardsRes {
 	
 	public RewardsRes(String used,String cnt) {
 		// TODO Auto-generated constructor stub
+		this.used=used;
+		this.cnt=cnt;
 	}
 	
 	public String getUsed() {

@@ -28,5 +28,7 @@ public interface GoldLogRepository extends JpaRepository<GoldLog, Long> {
 	
 	@Query(value="select ifnull(sum(num),0) from t_gold_log where type in ?1 and user_id=?2",nativeQuery=true)
 	int sumNumByTypeInAndUserId(List<String> type,String userId );
+	
+	List<GoldLog> findByTypeAndUserId(Pageable pageable,String type,String userId);
 
 }

@@ -41,6 +41,7 @@ import com.lvmq.model.NewsInfo;
 import com.lvmq.model.NewsInfoRead;
 import com.lvmq.model.NewsType;
 import com.lvmq.model.ReadReward;
+import com.lvmq.model.RecallLog;
 import com.lvmq.model.UserLogin;
 import com.lvmq.model.VideosInfo;
 import com.lvmq.repository.AdvertInfoRepository;
@@ -53,6 +54,7 @@ import com.lvmq.repository.NewsInfoReadRepository;
 import com.lvmq.repository.NewsInfoRepository;
 import com.lvmq.repository.NewsTypeRepository;
 import com.lvmq.repository.ReadRewardsRepository;
+import com.lvmq.repository.RecallLogRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.NewsService;
 import com.lvmq.util.TimeUtil;
@@ -96,6 +98,9 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private BalanceLogRepository balanceLogRepository;
 	
+	@Autowired
+	private RecallLogRepository recallLogRepository;
+	
 	@Override
 	public void getNewsFromIDataAPI() {
 		// TODO Auto-generated method stub
@@ -138,7 +143,7 @@ public class NewsServiceImpl implements NewsService {
 	
 	public NewsRes home(String userId,int page,int pageSize,String catId,int adPage,int adPageSize){
 		try {
-			
+			try {
 			if(!Util.isBlank(userId)) {
 				if(goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.LOGIN, userId,TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
 					Optional<UserLogin> ou=userLoginRepository.findById(userId);
@@ -158,6 +163,53 @@ public class NewsServiceImpl implements NewsService {
 						userLoginRepository.save(u);
 					}
 				}
+				
+				if(recallLogRepository.countByRecallUserAndFlagAndCreateTimeBetween(userId, 0,TimeUtil.getHistoryDay(new Date(), 3), new Date())>0) {
+					List<RecallLog> recallLogArray=recallLogRepository.findByRecallUserAndFlagAndCreateTimeBetween(com.lvmq.util.PagePlugin.pagePluginSort(0, 1,Direction.DESC, "createTime"), userId,0, TimeUtil.getHistoryDay(new Date(), 3), new Date());
+					String masterId=recallLogArray.get(0).getUserId();
+					//师傅获得奖励
+					Optional<UserLogin> master=userLoginRepository.findById(masterId);
+					if(master.isPresent()) {
+						UserLogin u=master.get();
+						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.RECALL).getGold());
+						GoldLog goldLog=new GoldLog();
+						goldLog.setNum(gold);
+						goldLog.setNewNum(gold+u.getGold());
+						goldLog.setOldNum(u.getGold());
+						goldLog.setType(Consts.GoldLog.Type.RECALL);
+						goldLog.setUserId(userId);
+						goldLog.setCreateUser(userId);
+						goldLog.setCreateTime(new Date());
+						goldLogRepository.save(goldLog);
+						u.setGold(gold+u.getGold());
+						userLoginRepository.save(u);
+					}
+					
+					//师傅获得奖励
+					Optional<UserLogin> us=userLoginRepository.findById(userId);
+					if(us.isPresent()) {
+						UserLogin u=us.get();
+						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.RECALL_BACK).getGold());
+						GoldLog goldLog=new GoldLog();
+						goldLog.setNum(gold);
+						goldLog.setNewNum(gold+u.getGold());
+						goldLog.setOldNum(u.getGold());
+						goldLog.setType(Consts.GoldLog.Type.RECALL_BACK);
+						goldLog.setUserId(userId);
+						goldLog.setCreateUser(userId);
+						goldLog.setCreateTime(new Date());
+						goldLogRepository.save(goldLog);
+						u.setGold(gold+u.getGold());
+						userLoginRepository.save(u);
+					}
+					
+					recallLogRepository.updateByRecallUser(userId);
+				}
+				
+			}
+			}catch (Exception e) {
+				// TODO: handle exception
+				log.info(e.getMessage());
 			}
 			
 //			List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
@@ -217,7 +269,7 @@ public class NewsServiceImpl implements NewsService {
 			
 			List<NewsComment> newsCommentLevel2=newsCommentRepository.findByParentIdAndFlag(com.lvmq.util.PagePlugin.pagePluginSort(pageLevel2, pageSizeLevel2,Direction.DESC, "createTime"),necs.getId(),0);
 			List<NewsCommentLevel2Res> comentLevel2=new ArrayList<NewsCommentLevel2Res>();
-			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2Res(x.getUserLogin().getName(),x.getComment())));
+			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2Res(x.getUserLogin().getName(),x.getComment(),x.getUserLogin().getUserName())));
 			
 			newsCommentRes.add(new NewsCommentRes(necs,comentLevel2,ilike));
 		}

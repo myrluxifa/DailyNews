@@ -29,6 +29,12 @@ public class Consts {
 			public static final String MASTER_MASTER_READ_REWARDS="110";
 			
 			public static final String LOGIN="111";
+			
+			//召回徒弟奖励
+			public static final String RECALL="112";
+			
+			//被召回奖励
+			public static final String RECALL_BACK="113";
 		}
 		
 		/**分享奖励个数**/
@@ -52,6 +58,10 @@ public class Consts {
 				return "师爷在前徒孙注册前5天后获得奖励类型";
 			case Type.LOGIN:
 				return "登录奖励";
+			case Type.RECALL:
+				return "召回奖励";
+			case Type.RECALL_BACK:
+				return "被召回奖励";
 				default:
 					return "神秘奖励";
 			}
