@@ -277,6 +277,25 @@ public class NewsServiceImpl implements NewsService {
 		return new NewsCommentArrayRes(newsCommentRes);
 	}
 	
+	public NewsCommentRes getCommentDetail(String commentId,String userId,int page,int pageSize) {
+		
+		Optional<NewsComment> newsComment=newsCommentRepository.findById(commentId);
+			
+			String ilike="false";
+			if(Util.isBlank(userId)) {
+				if(likeCommentRepository.countByOutIdAndUserIdAndType(commentId, userId, Consts.LikeLog.Type.COMMENT)>0) {
+					ilike="true";
+				}
+			}
+			
+			List<NewsComment> newsCommentLevel2=newsCommentRepository.findByParentIdAndFlag(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "createTime"),commentId,0);
+			List<NewsCommentLevel2Res> comentLevel2=new ArrayList<NewsCommentLevel2Res>();
+			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2Res(x.getUserLogin().getName(),x.getComment(),x.getUserLogin().getUserName())));
+			
+		return new NewsCommentRes(newsComment.get(),comentLevel2,ilike);
+		
+	}
+	
 	public NewsCommentRes setComment(String newsId,String userId,String parentId,String comment,String level) {
 		
 		NewsComment n=newsCommentRepository.saveAndFlush(new NewsComment(newsId,userId,parentId,level,comment));

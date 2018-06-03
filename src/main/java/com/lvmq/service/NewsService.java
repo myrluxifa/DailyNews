@@ -35,4 +35,6 @@ public interface NewsService {
 	 RewardsRes getRewardsCnt(String userId);
 	 
 	 NewsRes getWanderFulNews(String newsPageSize,String adPageSize);
+	 
+	 NewsCommentRes getCommentDetail(String commentId,String userId,int page,int pageSize);
 }

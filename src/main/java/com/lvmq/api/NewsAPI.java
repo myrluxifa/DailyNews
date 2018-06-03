@@ -78,10 +78,21 @@ public class NewsAPI {
 	}
 	
 	
+	@ApiOperation(value = "评论详情", notes = "")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "commentId", value = "评论编号", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户编号", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "page", value = "页数", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String")
+			})
+	@RequestMapping(value="/getCommentDetail",method=RequestMethod.POST)
+	public ResponseBean<NewsCommentRes> getCommentDetail(String commentId,String userId,String page,String pageSize){
+		return new ResponseBean<NewsCommentRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.getCommentDetail(commentId, userId, Integer.valueOf(page), Integer.valueOf(pageSize)));
+	}
+	
 	@ApiOperation(value = "添加评论", notes = "")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "newsId", value = "新闻编号", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "page", value = "页数", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "parentId", value = "父级评论（一级评论时写0, 二级则写上一级的id）", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "level", value = "评论等级（1:一级,2:二级）", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "comment", value = "评论", required = true, dataType = "String")
@@ -159,4 +170,6 @@ public class NewsAPI {
 	public ResponseBean<NewsRes> getWonderfulNews(String newsPageSize,String adPageSize) {
 		return new ResponseBean<NewsRes>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", newsService.getWanderFulNews(newsPageSize,adPageSize));
 	}
+	
+	
 }
