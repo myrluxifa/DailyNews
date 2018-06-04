@@ -130,7 +130,7 @@ public class NewsAPI {
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功",newsService.getRewardsCnt(userId));
 		}catch (Exception e) {
 			// TODO: handle exception
-			return new ResponseBean(Code.FAIL,Code.REWARDS_CNT_FAIL,"失败",new RewardsRes("0","0"));
+			return new ResponseBean(Code.FAIL,Code.REWARDS_CNT_FAIL,"失败",new RewardsRes("0","0","0"));
 		}
 		
 	}

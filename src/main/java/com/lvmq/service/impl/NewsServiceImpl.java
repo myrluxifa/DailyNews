@@ -535,7 +535,10 @@ public class NewsServiceImpl implements NewsService {
 		int hour=calendar.get(Calendar.HOUR_OF_DAY);
 		int cnt=r.getDailyCnt()+(hour/r.getHour()*r.getHorCnt());
 		
-		return new RewardsRes(String.valueOf(readGoldCnt),String.valueOf(cnt));
+		Optional<ReadReward> op=readRewardsRepository.findById("1");
+		
+		
+		return new RewardsRes(String.valueOf(readGoldCnt),String.valueOf(cnt),String.valueOf(op.get().getGold()));
 	}
 	
 	

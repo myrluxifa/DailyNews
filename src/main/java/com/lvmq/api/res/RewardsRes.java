@@ -5,16 +5,17 @@ public class RewardsRes {
 	
 	private String cnt;
 
-	
+	private String gold;
 	
 	public RewardsRes() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public RewardsRes(String used,String cnt) {
+	public RewardsRes(String used,String cnt,String gold) {
 		// TODO Auto-generated constructor stub
 		this.used=used;
 		this.cnt=cnt;
+		this.gold=gold;
 	}
 	
 	public String getUsed() {
@@ -31,6 +32,14 @@ public class RewardsRes {
 
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
+	}
+
+	public String getGold() {
+		return gold;
+	}
+
+	public void setGold(String gold) {
+		this.gold = gold;
 	}
 	
 	
