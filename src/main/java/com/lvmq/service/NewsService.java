@@ -3,6 +3,7 @@ package com.lvmq.service;
 import org.springframework.stereotype.Service;
 
 import com.lvmq.api.res.NewsCommentArrayRes;
+import com.lvmq.api.res.NewsCommentForDetailRes;
 import com.lvmq.api.res.NewsCommentRes;
 import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
@@ -36,5 +37,5 @@ public interface NewsService {
 	 
 	 NewsRes getWanderFulNews(String newsPageSize,String adPageSize);
 	 
-	 NewsCommentRes getCommentDetail(String commentId,String userId,int page,int pageSize);
+	 NewsCommentForDetailRes getCommentDetail(String commentId,String userId,int page,int pageSize);
 }

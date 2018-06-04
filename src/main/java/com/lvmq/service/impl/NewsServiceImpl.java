@@ -19,7 +19,9 @@ import com.google.gson.Gson;
 import com.lvmq.api.res.AdvertRes;
 import com.lvmq.api.res.NewsByTypeRes;
 import com.lvmq.api.res.NewsCommentArrayRes;
+import com.lvmq.api.res.NewsCommentForDetailRes;
 import com.lvmq.api.res.NewsCommentLevel2Res;
+import com.lvmq.api.res.NewsCommentLevel2ResForDetail;
 import com.lvmq.api.res.NewsCommentRes;
 import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
@@ -277,7 +279,9 @@ public class NewsServiceImpl implements NewsService {
 		return new NewsCommentArrayRes(newsCommentRes);
 	}
 	
-	public NewsCommentRes getCommentDetail(String commentId,String userId,int page,int pageSize) {
+	public NewsCommentForDetailRes getCommentDetail(String commentId,String userId,int page,int pageSize) {
+		
+		SimpleDateFormat formt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		Optional<NewsComment> newsComment=newsCommentRepository.findById(commentId);
 			
@@ -288,11 +292,12 @@ public class NewsServiceImpl implements NewsService {
 				}
 			}
 			
-			List<NewsComment> newsCommentLevel2=newsCommentRepository.findByParentIdAndFlag(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "createTime"),commentId,0);
-			List<NewsCommentLevel2Res> comentLevel2=new ArrayList<NewsCommentLevel2Res>();
-			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2Res(x.getUserLogin().getName(),x.getComment(),x.getUserLogin().getUserName())));
 			
-		return new NewsCommentRes(newsComment.get(),comentLevel2,ilike);
+			List<NewsComment> newsCommentLevel2=newsCommentRepository.findByParentIdAndFlag(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "createTime"),commentId,0);
+			List<NewsCommentLevel2ResForDetail> comentLevel2=new ArrayList<NewsCommentLevel2ResForDetail>();
+			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2ResForDetail(x.getUserLogin().getName(),x.getComment(),x.getUserLogin().getUserName(),x.getUserLogin().getHeadPortrait(),formt.format(x.getUserLogin().getCreateTime()))));
+			
+		return new NewsCommentForDetailRes(newsComment.get(),comentLevel2,ilike);
 		
 	}
 	

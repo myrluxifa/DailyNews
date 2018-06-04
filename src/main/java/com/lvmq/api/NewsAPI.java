@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lvmq.api.res.NewsCommentArrayRes;
+import com.lvmq.api.res.NewsCommentForDetailRes;
 import com.lvmq.api.res.NewsCommentRes;
 import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
@@ -86,8 +87,8 @@ public class NewsAPI {
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "String")
 			})
 	@RequestMapping(value="/getCommentDetail",method=RequestMethod.POST)
-	public ResponseBean<NewsCommentRes> getCommentDetail(String commentId,String userId,String page,String pageSize){
-		return new ResponseBean<NewsCommentRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.getCommentDetail(commentId, userId, Integer.valueOf(page), Integer.valueOf(pageSize)));
+	public ResponseBean<NewsCommentForDetailRes> getCommentDetail(String commentId,String userId,String page,String pageSize){
+		return new ResponseBean<NewsCommentForDetailRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.getCommentDetail(commentId, userId, Integer.valueOf(page), Integer.valueOf(pageSize)));
 	}
 	
 	@ApiOperation(value = "添加评论", notes = "")
