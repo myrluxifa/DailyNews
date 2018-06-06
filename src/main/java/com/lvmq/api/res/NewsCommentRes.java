@@ -1,5 +1,6 @@
 package com.lvmq.api.res;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.lvmq.model.NewsComment;
@@ -26,9 +27,10 @@ public class NewsCommentRes {
 	
 	public NewsCommentRes(NewsComment newsComment,String headPortrait,String name,String userName) {
 		// TODO Auto-generated constructor stub
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		this.id=newsComment.getId();
 		this.like=String.valueOf(newsComment.getLikeCnt());
-		this.time=String.valueOf(newsComment.getCreateTime().getTime());
+		this.time=dateFormat.format(newsComment.getCreateTime());
 		this.comment=newsComment.getComment();
 		this.headPortrait=headPortrait;
 		this.name=name;
@@ -37,11 +39,12 @@ public class NewsCommentRes {
 	
 	public NewsCommentRes(NewsComment newsComment,List<NewsCommentLevel2Res> newsCommentLevel2Array,String ilike) {
 		// TODO Auto-generated constructor stub
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		this.id=newsComment.getId();
 		this.headPortrait=newsComment.getUserLogin().getHeadPortrait();
 		this.name=newsComment.getUserLogin().getName();
 		this.like=String.valueOf(newsComment.getLikeCnt());
-		this.time=String.valueOf(newsComment.getCreateTime().getTime());
+		this.time=dateFormat.format(newsComment.getCreateTime());
 		this.comment=newsComment.getComment();
 		this.newsCommentLevel2Array=newsCommentLevel2Array;
 		this.ilike=ilike;

@@ -262,7 +262,7 @@ public class NewsServiceImpl implements NewsService {
 		for(NewsComment necs:newsComments) {
 			
 			String ilike="false";
-			if(Util.isBlank(userId)) {
+			if(!Util.isBlank(userId)) {
 				if(likeCommentRepository.countByOutIdAndUserIdAndType(necs.getId(), userId, Consts.LikeLog.Type.COMMENT)>0) {
 					ilike="true";
 				}
@@ -286,7 +286,7 @@ public class NewsServiceImpl implements NewsService {
 		Optional<NewsComment> newsComment=newsCommentRepository.findById(commentId);
 			
 			String ilike="false";
-			if(Util.isBlank(userId)) {
+			if(!Util.isBlank(userId)) {
 				if(likeCommentRepository.countByOutIdAndUserIdAndType(commentId, userId, Consts.LikeLog.Type.COMMENT)>0) {
 					ilike="true";
 				}
