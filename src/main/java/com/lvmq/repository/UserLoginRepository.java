@@ -1,6 +1,7 @@
 package com.lvmq.repository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,6 @@ public interface UserLoginRepository extends BaseRepository<UserLogin> {
 	Optional<UserLogin> findByUserNameAndPasswd(String userName,String passwd);
 	
 	UserLogin findByUserName(String userName);
+	
+	List<UserLogin> findByInviteCode(String inviteCode);
 }

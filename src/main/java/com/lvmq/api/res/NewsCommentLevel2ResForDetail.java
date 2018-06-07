@@ -1,21 +1,27 @@
 package com.lvmq.api.res;
 
-public class NewsCommentLevel2Res {
-	private String name;
+public class NewsCommentLevel2ResForDetail {
+private String name;
 	
 	private String userName;
 	
 	private String comment;
 	
-	public NewsCommentLevel2Res() {
+	private String headPortrait;
+	
+	private String time;
+	
+	public NewsCommentLevel2ResForDetail() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public NewsCommentLevel2Res(String name,String comment,String userName) {
+	public NewsCommentLevel2ResForDetail(String name,String comment,String userName,String headPortrait,String time) {
 		// TODO Auto-generated constructor stub
 		this.name=name;
 		this.comment=comment;
 		this.userName=userName;
+		this.headPortrait=headPortrait;
+		this.time=time;
 	}
 
 	public String getName() {
@@ -41,6 +47,21 @@ public class NewsCommentLevel2Res {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
+
+	public String getHeadPortrait() {
+		return headPortrait;
+	}
+
+	public void setHeadPortrait(String headPortrait) {
+		this.headPortrait = headPortrait;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
 	
 }

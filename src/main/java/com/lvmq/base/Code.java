@@ -30,6 +30,8 @@ public class Code {
 	//点赞失败
 	public static final String LIKE_FAIL="0008";
 	
+	public static final String REWARDS_CNT_FAIL="0009";
+	
 	public static class SHARE {
 		/**每天最多分享次数**/
 		public static int MAX_TIMES = 5;

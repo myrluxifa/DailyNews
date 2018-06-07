@@ -1,5 +1,6 @@
 package com.lvmq.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -15,4 +16,6 @@ public interface UserLoginService {
 	int countByUserName(String userName);
 	
 	UserLogin updatePasswd(String userName,String passwd);
+	
+	List<UserLogin> findByInviteCode(String inviteCode);
 }

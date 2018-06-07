@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.lvmq.model.NewsComment;
 
-public class NewsCommentRes {
-	private String id;
+public class NewsCommentForDetailRes {
+private String id;
 	
 	private String headPortrait;
 	
@@ -22,29 +22,28 @@ public class NewsCommentRes {
 	
 	private String userName;
 	
-	private List<NewsCommentLevel2Res> newsCommentLevel2Array;
+	private List<NewsCommentLevel2ResForDetail> newsCommentLevel2Array;
 	
 	
-	public NewsCommentRes(NewsComment newsComment,String headPortrait,String name,String userName) {
+	public NewsCommentForDetailRes(NewsComment newsComment,String headPortrait,String name,String userName) {
 		// TODO Auto-generated constructor stub
-		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		this.id=newsComment.getId();
 		this.like=String.valueOf(newsComment.getLikeCnt());
-		this.time=dateFormat.format(newsComment.getCreateTime());
+		this.time=String.valueOf(newsComment.getCreateTime().getTime());
 		this.comment=newsComment.getComment();
 		this.headPortrait=headPortrait;
 		this.name=name;
 		this.userName=userName;
 	}
 	
-	public NewsCommentRes(NewsComment newsComment,List<NewsCommentLevel2Res> newsCommentLevel2Array,String ilike) {
+	public NewsCommentForDetailRes(NewsComment newsComment,List<NewsCommentLevel2ResForDetail> newsCommentLevel2Array,String ilike) {
 		// TODO Auto-generated constructor stub
-		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat formt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		this.id=newsComment.getId();
 		this.headPortrait=newsComment.getUserLogin().getHeadPortrait();
 		this.name=newsComment.getUserLogin().getName();
 		this.like=String.valueOf(newsComment.getLikeCnt());
-		this.time=dateFormat.format(newsComment.getCreateTime());
+		this.time=String.valueOf(formt.format(newsComment.getCreateTime()));
 		this.comment=newsComment.getComment();
 		this.newsCommentLevel2Array=newsCommentLevel2Array;
 		this.ilike=ilike;
@@ -99,11 +98,11 @@ public class NewsCommentRes {
 		this.comment = comment;
 	}
 
-	public List<NewsCommentLevel2Res> getNewsCommentLevel2Array() {
+	public List<NewsCommentLevel2ResForDetail> getNewsCommentLevel2Array() {
 		return newsCommentLevel2Array;
 	}
 
-	public void setNewsCommentLevel2Array(List<NewsCommentLevel2Res> newsCommentLevel2Array) {
+	public void setNewsCommentLevel2Array(List<NewsCommentLevel2ResForDetail> newsCommentLevel2Array) {
 		this.newsCommentLevel2Array = newsCommentLevel2Array;
 	}
 
@@ -122,8 +121,6 @@ public class NewsCommentRes {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
-	
 	
 	
 }

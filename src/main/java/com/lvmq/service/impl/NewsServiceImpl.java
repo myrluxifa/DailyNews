@@ -97,6 +97,9 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private NewerMissionAPI newerMission;
 	
+	@Autowired
+	private RecallLogRepository recallLogRepository;
+	
 	@Override
 	public void getNewsFromIDataAPI() {
 		// TODO Auto-generated method stub

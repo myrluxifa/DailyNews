@@ -1,6 +1,7 @@
 package com.lvmq.util;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +22,13 @@ public class TimeUtil {
 		return (now-time)>2764860000l; 
 	}
 	
+	//判断用户是不是三天未上线
+	public static Boolean ifNeedReCall(Long time) {
+			Long now=new Date().getTime();
+			//三天未上线
+			return (now-time)>259200000l; 
+	}
+	
 	
 	
 	
@@ -37,6 +45,14 @@ public class TimeUtil {
 		return new Timestamp(twelve);
 	}
 	
+	
+	public static Date getHistoryDay(Date date,int day) {  
+        Calendar calendar = Calendar.getInstance();  
+        calendar.setTime(date);  
+        calendar.add(Calendar.DAY_OF_MONTH, -day);  
+        date = calendar.getTime();  
+        return date;  
+    }  
 	
 	public static String format(Date date, String pattern) {
 		pattern = Optional.ofNullable(pattern).orElse(DEFAULT_TIME_PATTERN);
@@ -65,8 +81,5 @@ public class TimeUtil {
 	}
 	
 	
-	public static void main(String[] args) {
-		SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		System.out.println(date.format(zeroForToday()));
-	}
+	
 }
