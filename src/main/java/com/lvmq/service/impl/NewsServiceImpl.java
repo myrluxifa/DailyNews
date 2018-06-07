@@ -20,12 +20,16 @@ import com.lvmq.api.NewerMissionAPI;
 import com.lvmq.api.res.AdvertRes;
 import com.lvmq.api.res.NewsByTypeRes;
 import com.lvmq.api.res.NewsCommentArrayRes;
+import com.lvmq.api.res.NewsCommentForDetailRes;
 import com.lvmq.api.res.NewsCommentLevel2Res;
+import com.lvmq.api.res.NewsCommentLevel2ResForDetail;
 import com.lvmq.api.res.NewsCommentRes;
 import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
 import com.lvmq.api.res.NewsTypeArray;
 import com.lvmq.api.res.NewsTypeRes;
+import com.lvmq.api.res.RewardsRes;
+import com.lvmq.api.res.VideosRes;
 import com.lvmq.base.Consts;
 import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
@@ -40,7 +44,9 @@ import com.lvmq.model.NewsInfo;
 import com.lvmq.model.NewsInfoRead;
 import com.lvmq.model.NewsType;
 import com.lvmq.model.ReadReward;
+import com.lvmq.model.RecallLog;
 import com.lvmq.model.UserLogin;
+import com.lvmq.model.VideosInfo;
 import com.lvmq.repository.AdvertInfoRepository;
 import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
@@ -51,6 +57,7 @@ import com.lvmq.repository.NewsInfoReadRepository;
 import com.lvmq.repository.NewsInfoRepository;
 import com.lvmq.repository.NewsTypeRepository;
 import com.lvmq.repository.ReadRewardsRepository;
+import com.lvmq.repository.RecallLogRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.NewsService;
 import com.lvmq.util.TimeUtil;
@@ -95,10 +102,10 @@ public class NewsServiceImpl implements NewsService {
 	private BalanceLogRepository balanceLogRepository;
 	
 	@Autowired
-	private NewerMissionAPI newerMission;
+	private RecallLogRepository recallLogRepository;
 	
 	@Autowired
-	private RecallLogRepository recallLogRepository;
+	private NewerMissionAPI newerMission;
 	
 	@Override
 	public void getNewsFromIDataAPI() {
@@ -142,7 +149,7 @@ public class NewsServiceImpl implements NewsService {
 	
 	public NewsRes home(String userId,int page,int pageSize,String catId,int adPage,int adPageSize){
 		try {
-			
+			try {
 			if(!Util.isBlank(userId)) {
 				if(goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.LOGIN, userId,TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
 					Optional<UserLogin> ou=userLoginRepository.findById(userId);
@@ -162,6 +169,53 @@ public class NewsServiceImpl implements NewsService {
 						userLoginRepository.save(u);
 					}
 				}
+				
+				if(recallLogRepository.countByRecallUserAndFlagAndCreateTimeBetween(userId, 0,TimeUtil.getHistoryDay(new Date(), 3), new Date())>0) {
+					List<RecallLog> recallLogArray=recallLogRepository.findByRecallUserAndFlagAndCreateTimeBetween(com.lvmq.util.PagePlugin.pagePluginSort(0, 1,Direction.DESC, "createTime"), userId,0, TimeUtil.getHistoryDay(new Date(), 3), new Date());
+					String masterId=recallLogArray.get(0).getUserId();
+					//师傅获得奖励
+					Optional<UserLogin> master=userLoginRepository.findById(masterId);
+					if(master.isPresent()) {
+						UserLogin u=master.get();
+						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.RECALL).getGold());
+						GoldLog goldLog=new GoldLog();
+						goldLog.setNum(gold);
+						goldLog.setNewNum(gold+u.getGold());
+						goldLog.setOldNum(u.getGold());
+						goldLog.setType(Consts.GoldLog.Type.RECALL);
+						goldLog.setUserId(userId);
+						goldLog.setCreateUser(userId);
+						goldLog.setCreateTime(new Date());
+						goldLogRepository.save(goldLog);
+						u.setGold(gold+u.getGold());
+						userLoginRepository.save(u);
+					}
+					
+					//师傅获得奖励
+					Optional<UserLogin> us=userLoginRepository.findById(userId);
+					if(us.isPresent()) {
+						UserLogin u=us.get();
+						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.RECALL_BACK).getGold());
+						GoldLog goldLog=new GoldLog();
+						goldLog.setNum(gold);
+						goldLog.setNewNum(gold+u.getGold());
+						goldLog.setOldNum(u.getGold());
+						goldLog.setType(Consts.GoldLog.Type.RECALL_BACK);
+						goldLog.setUserId(userId);
+						goldLog.setCreateUser(userId);
+						goldLog.setCreateTime(new Date());
+						goldLogRepository.save(goldLog);
+						u.setGold(gold+u.getGold());
+						userLoginRepository.save(u);
+					}
+					
+					recallLogRepository.updateByRecallUser(userId);
+				}
+				
+			}
+			}catch (Exception e) {
+				// TODO: handle exception
+				log.info(e.getMessage());
 			}
 			
 //			List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
@@ -174,7 +228,7 @@ public class NewsServiceImpl implements NewsService {
 				
 				List<NewsInfo> newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
 				
-				newsInfoArray.forEach(x->newsInfoResArray.add(new NewsInfoRes(x,newsInfoReadRepository.countByuserIdAndNewsId(userId,x.getId()))));
+				newsInfoArray.forEach(x->newsInfoResArray.add(new NewsInfoRes(x,Util.isBlank(userId)==true?0:newsInfoReadRepository.countByuserIdAndNewsId(userId,x.getId()))));
 				
 				newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
 //			}
@@ -212,7 +266,7 @@ public class NewsServiceImpl implements NewsService {
 		for(NewsComment necs:newsComments) {
 			
 			String ilike="false";
-			if(Util.isBlank(userId)) {
+			if(!Util.isBlank(userId)) {
 				if(likeCommentRepository.countByOutIdAndUserIdAndType(necs.getId(), userId, Consts.LikeLog.Type.COMMENT)>0) {
 					ilike="true";
 				}
@@ -221,7 +275,7 @@ public class NewsServiceImpl implements NewsService {
 			
 			List<NewsComment> newsCommentLevel2=newsCommentRepository.findByParentIdAndFlag(com.lvmq.util.PagePlugin.pagePluginSort(pageLevel2, pageSizeLevel2,Direction.DESC, "createTime"),necs.getId(),0);
 			List<NewsCommentLevel2Res> comentLevel2=new ArrayList<NewsCommentLevel2Res>();
-			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2Res(x.getUserLogin().getName(),x.getComment())));
+			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2Res(x.getUserLogin().getName(),x.getComment(),x.getUserLogin().getUserName())));
 			
 			newsCommentRes.add(new NewsCommentRes(necs,comentLevel2,ilike));
 		}
@@ -229,11 +283,33 @@ public class NewsServiceImpl implements NewsService {
 		return new NewsCommentArrayRes(newsCommentRes);
 	}
 	
+	public NewsCommentForDetailRes getCommentDetail(String commentId,String userId,int page,int pageSize) {
+		
+		SimpleDateFormat formt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Optional<NewsComment> newsComment=newsCommentRepository.findById(commentId);
+			
+			String ilike="false";
+			if(!Util.isBlank(userId)) {
+				if(likeCommentRepository.countByOutIdAndUserIdAndType(commentId, userId, Consts.LikeLog.Type.COMMENT)>0) {
+					ilike="true";
+				}
+			}
+			
+			
+			List<NewsComment> newsCommentLevel2=newsCommentRepository.findByParentIdAndFlag(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "createTime"),commentId,0);
+			List<NewsCommentLevel2ResForDetail> comentLevel2=new ArrayList<NewsCommentLevel2ResForDetail>();
+			newsCommentLevel2.forEach(x->comentLevel2.add(new NewsCommentLevel2ResForDetail(x.getUserLogin().getName(),x.getComment(),x.getUserLogin().getUserName(),x.getUserLogin().getHeadPortrait(),formt.format(x.getUserLogin().getCreateTime()))));
+			
+		return new NewsCommentForDetailRes(newsComment.get(),comentLevel2,ilike);
+		
+	}
+	
 	public NewsCommentRes setComment(String newsId,String userId,String parentId,String comment,String level) {
 		
 		NewsComment n=newsCommentRepository.saveAndFlush(new NewsComment(newsId,userId,parentId,level,comment));
 		Optional<UserLogin> u=userLoginRepository.findById(userId);		
-		return new NewsCommentRes(n,u.get().getHeadPortrait(),u.get().getName());
+		return new NewsCommentRes(n,u.get().getHeadPortrait(),u.get().getName(),u.get().getUserName());
 	}
 
 	public boolean readNews(String userId,String newsId){
@@ -450,6 +526,65 @@ public class NewsServiceImpl implements NewsService {
 			}else {
 				return false;
 			}
+	}
+	
+	
+	public RewardsRes getRewardsCnt(String userId) {
+		//当天阅读奖励
+		int readGoldCnt=goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.READ, userId, TimeUtil.zeroForToday(), TimeUtil.twelveForToday());
+		//配置的阅读奖励 条数 和 奖励金币数量
+		Optional<ReadReward> opt=readRewardsRepository.findById("1");
+		ReadReward r=opt.get();
+		int flag=0;
 		
+		//计算当前时间
+		Calendar calendar=Calendar.getInstance();
+		int hour=calendar.get(Calendar.HOUR_OF_DAY);
+		int cnt=r.getDailyCnt()+(hour/r.getHour()*r.getHorCnt());
+		
+		Optional<ReadReward> op=readRewardsRepository.findById("1");
+		
+		
+		return new RewardsRes(String.valueOf(readGoldCnt),String.valueOf(cnt),String.valueOf(op.get().getGold()));
+	}
+	
+	
+	public NewsRes getWanderFulNews(String newsPageSize,String adPageSize) {
+		
+		java.util.Random r=new java.util.Random();
+		long c=newsInfoRepository.count();
+		r.nextInt();
+		
+		List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
+		
+		List<NewsInfoRes> newsInfoResArray=new ArrayList<NewsInfoRes>();
+		
+		for(int i=0;i<Integer.valueOf(newsPageSize);i++) {
+			int p=r.nextInt(Integer.valueOf(String.valueOf(c)));
+			List<NewsInfo> newsInfoArray=newsInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(p, 1,Direction.DESC, "publishDate"), 0);
+			newsInfoResArray.add(new NewsInfoRes(newsInfoArray.get(0),0));
+		}
+		newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
+		
+		long adcount=advertInfoRepository.count();
+		
+		List<AdvertRes> ads=new ArrayList<AdvertRes>();
+		for(int i=0;i<Integer.valueOf(adPageSize);i++) {
+			int p=r.nextInt(Integer.valueOf(String.valueOf(adcount)));
+			List<AdvertInfo> advertInfo=advertInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(p, 1,Direction.DESC, "createTime"), 0);
+			List<String> imgs=new ArrayList<String>();
+			advertInfo.get(0).getAdvertImgs().forEach(x->imgs.add(x.getImg()));
+			String adType="0";
+			if(imgs.size()>3) {
+				adType="3";
+			}else if(imgs.size()==0) {
+				adType="0";
+			}else {
+				adType="1";
+			}
+			ads.add(new AdvertRes(advertInfo.get(0),imgs,adType));
+		}
+		
+		return new NewsRes(newsByTypeArray,ads);
 	}
 }
