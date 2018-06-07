@@ -40,6 +40,9 @@ public class SignAPI extends BaseAPI {
 	@Autowired
 	private GoldLogRepository goldLogRepository;
 	
+	@Autowired
+	private NewerMissionAPI newerMission;
+	
 	@ApiOperation(value = "签到状态查询", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String") })
@@ -138,6 +141,9 @@ public class SignAPI extends BaseAPI {
 			s.setCreateDate(today);
 			s.setUserId(userId);
 			signLogRepository.save(s);
+			
+			// 新手任务
+			newerMission.entry(Consts.NewerMission.Type.SIGN, userId);
 
 			// 写入金币流水
 			gl.setCreateTime(Calendar.getInstance().getTime());

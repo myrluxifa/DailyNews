@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.lvmq.api.NewerMissionAPI;
 import com.lvmq.api.res.AdvertRes;
 import com.lvmq.api.res.NewsByTypeRes;
 import com.lvmq.api.res.NewsCommentArrayRes;
@@ -92,6 +93,9 @@ public class NewsServiceImpl implements NewsService {
 	
 	@Autowired
 	private BalanceLogRepository balanceLogRepository;
+	
+	@Autowired
+	private NewerMissionAPI newerMission;
 	
 	@Override
 	public void getNewsFromIDataAPI() {
@@ -417,6 +421,9 @@ public class NewsServiceImpl implements NewsService {
 				NewsInfoRead nr=o.get();
 				nr.setFlag(1);
 				newsInfoReadRepository.save(nr);
+				
+				//新手任务
+				newerMission.entry(Consts.NewerMission.Type.READ, userId);
 			return true;
 		}catch (Exception e) {
 			// TODO: handle exception
