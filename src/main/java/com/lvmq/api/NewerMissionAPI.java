@@ -90,7 +90,7 @@ public class NewerMissionAPI extends BaseAPI {
 			break;
 		}
 		
-		newerMissonRepository.save(mission);
+		newerMissonRepository.saveAndFlush(mission);
 		
 		return mission;
 	}
