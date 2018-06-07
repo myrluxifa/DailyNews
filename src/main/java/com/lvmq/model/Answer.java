@@ -2,6 +2,9 @@ package com.lvmq.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.hibernate.annotations.GenericGenerator;
+
 import java.util.Date;
 
 
@@ -11,12 +14,12 @@ import java.util.Date;
  */
 @Entity
 @Table(name="t_answer")
-@NamedQuery(name="Answer.findAll", query="SELECT a FROM Answer a")
 public class Answer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GenericGenerator(name="system-uuid",strategy="uuid")
+	@GeneratedValue(generator="system-uuid")
 	private String id;
 
 	@Lob

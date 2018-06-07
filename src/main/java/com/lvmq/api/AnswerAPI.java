@@ -30,7 +30,7 @@ public class AnswerAPI extends BaseAPI {
 	@ApiOperation(value = "答案提交", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "type", value = "0问卷调查 1新手答题", required = true, dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "type", value = "0问卷调查 1新手答题", required = true, dataType = "int"),
 			@ApiImplicitParam(paramType = "query", name = "answers", value = "答案，按顺序竖线|分隔", required = true, dataType = "String")
 	})
 	@PostMapping("mission")

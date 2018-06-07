@@ -22,22 +22,27 @@ public class NewerMission implements Serializable {
 	 */
 	private static final long serialVersionUID = 8845965875335841043L;
 
-	@Column(name="create_time")
-	private Date createTime;
-
 	@Id
 	@GenericGenerator(name="system-uuid",strategy="uuid")
 	@GeneratedValue(generator="system-uuid")
 	private String id;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="create_time")
+	private Date createTime;
 
+	@Column(name = "mread")
 	private int read;
 
 	private String remark;
 
+	@Column(name = "msearch")
 	private int search;
 
+	@Column(name = "mshare")
 	private int share;
 
+	@Column(name = "msign")
 	private int sign;
 
 	@Column(name="update_time")
