@@ -42,6 +42,9 @@ public class ShareAPI extends BaseAPI{
 	@Autowired
 	private GoldLogRepository goldLogRepository;
 	
+	@Autowired
+	private NewerMissionAPI newerMission;
+	
 	@ApiOperation(value="进入分享页面初始化", notes="", httpMethod = "POST")
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
@@ -127,6 +130,9 @@ public class ShareAPI extends BaseAPI{
 			gl.setType(Consts.GoldLog.Type.SHARE);
 			gl.setUserId(userId);
 			goldLogRepository.save(gl);
+			
+			//新手任务
+			newerMission.entry(Consts.NewerMission.Type.SHARE, userId);
 			
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, null);
 		} catch (Exception e) {

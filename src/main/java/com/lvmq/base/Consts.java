@@ -41,7 +41,13 @@ public class Consts {
 		}
 		
 		/**分享奖励个数**/
-		public static final int SHARE_REWARD_NUMBER = 5;
+		public static final int REWARD_SHARE_NUMBER = 5;
+		/** 每日登录奖励 **/
+		public static final int REWARD_LOGIN = 100;
+		/** 2.【推荐】展示红包次数：展示用户可用阅读领取奖励总次数，基本次数25次+每小时提供次数3次，后台都可设置 **/
+		public static final int REWARD_SHOW_REDPACKAGE = 1;
+
+		
 		
 		public static final String getTypeName(String id) {
 			switch(id) {
@@ -128,4 +134,14 @@ public class Consts {
 	}
 	
 	public static final long GOLD_RATIO=1000;
+
+	public static class NewerMission{
+		
+		public static final class Type {
+			public static final String READ = "read";
+			public static final String SHARE = "share";
+			public static final String SIGN = "sign";
+			public static final String SEARCH= "search";
+		}
+	}
 }
