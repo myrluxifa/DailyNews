@@ -18,6 +18,7 @@ import com.lvmq.api.res.InviteInfoRes;
 import com.lvmq.api.res.RecallListRes;
 import com.lvmq.api.res.RecallRes;
 import com.lvmq.base.Consts;
+import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.InviteCharBanner;
 import com.lvmq.model.InviteImgBanner;
@@ -149,6 +150,61 @@ public class InviteServiceImpl implements InviteService {
 		}catch (Exception e) {
 			// TODO: handle exception
 			return false;
+		}
+	}
+	
+	public int setInviteCode(String userId,String inviteCode) {
+		try {
+			Optional<UserLogin> opt=userLoginRepository.findById(userId);
+			if(opt.isPresent()) {
+				UserLogin userLogin=opt.get();
+				//给邀请人添加邀请数量
+				UserLogin inviteUser=userLoginRepository.findByMyInviteCode(inviteCode);
+				if(inviteUser!=null) {
+					if(inviteUser.getFirstInvite().equals("0")) {
+						String money=goldRewardsRepository.findByType(Consts.BalanceLog.Type.FIRST_INVITE).getMoney();
+						
+						inviteUser.setBalance(String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)));
+						//首次召徒获得现金奖励
+						inviteUser.setFirstInvite("1");
+						
+						balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
+					}
+					inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
+					if(!Util.isBlank(inviteUser.getInviteCode())) {
+						UserLogin masterMasetUser=userLoginRepository.findByMyInviteCode(inviteUser.getInviteCode());
+						if(masterMasetUser.getGrandCnt()<2) {
+							masterMasetUser.setGrandCnt(masterMasetUser.getGrandCnt()+1);
+							userLogin.setMasterMaster(masterMasetUser.getId());
+							userLoginRepository.save(userLogin);
+						}
+					}
+					userLoginRepository.save(inviteUser);
+					
+					String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
+					int updateGold=Integer.valueOf(invite_gold)+Integer.valueOf(String.valueOf(userLogin.getGold()));
+					
+					userLogin.setGold(Long.valueOf(updateGold));
+					userLoginRepository.save(userLogin);
+					
+					GoldLog goldLogInvite=new GoldLog();
+					goldLogInvite.setUserId(userLogin.getId());
+					goldLogInvite.setType(Consts.GoldLog.Type.SET_INVITE);
+					goldLogInvite.setNum(Integer.valueOf(updateGold));
+					goldLogInvite.setOldNum(userLogin.getGold());
+					goldLogInvite.setNewNum(Integer.valueOf(invite_gold));
+					goldLogInvite.setCreateUser(userLogin.getId());
+					goldLogInvite.setCreateTime(new Date());
+					goldLogRepository.save(goldLogInvite);
+					return 0;
+				}else {
+					return -1;
+				}
+			}else {
+				return -2;
+			}
+		}catch(Exception e) {
+				return -2;
 		}
 	}
 	

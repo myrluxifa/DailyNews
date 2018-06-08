@@ -83,28 +83,47 @@ public class UserLoginServiceImpl implements UserLoginService{
 		goldLog.setCreateTime(new Date());
 		goldLogRepository.save(goldLog);
 		
+		
 		if(!Util.isBlank(userLogin.getInviteCode())) {
 			
 			//给邀请人添加邀请数量
 			UserLogin inviteUser=userLoginRepository.findByMyInviteCode(userLogin.getInviteCode());
-			if(inviteUser.getFirstInvite().equals("0")) {
-				String money=goldRewardsRepository.findByType(Consts.BalanceLog.Type.FIRST_INVITE).getMoney();
-				
-				inviteUser.setBalance(String.valueOf(Double.valueOf(userLogin.getBalance())+Double.valueOf(money)));
-				//首次召徒获得现金奖励
-				inviteUser.setFirstInvite("1");
-				balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,"0.00",money,Consts.BalanceLog.Type.FIRST_INVITE));
-			}
-			inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
-			if(!Util.isBlank(inviteUser.getInviteCode())) {
-				UserLogin masterMasetUser=userLoginRepository.findByMyInviteCode(inviteUser.getInviteCode());
-				if(masterMasetUser.getGrandCnt()<2) {
-					masterMasetUser.setGrandCnt(masterMasetUser.getGrandCnt()+1);
-					user.setMasterMaster(masterMasetUser.getId());
-					userLoginRepository.save(user);
+			if(inviteUser!=null) {
+				if(inviteUser.getFirstInvite().equals("0")) {
+					String money=goldRewardsRepository.findByType(Consts.BalanceLog.Type.FIRST_INVITE).getMoney();
+					
+					inviteUser.setBalance(String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)));
+					//首次召徒获得现金奖励
+					inviteUser.setFirstInvite("1");
+					balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
 				}
+				inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
+				if(!Util.isBlank(inviteUser.getInviteCode())) {
+					UserLogin masterMasetUser=userLoginRepository.findByMyInviteCode(inviteUser.getInviteCode());
+					if(masterMasetUser.getGrandCnt()<2) {
+						masterMasetUser.setGrandCnt(masterMasetUser.getGrandCnt()+1);
+						user.setMasterMaster(masterMasetUser.getId());
+						userLoginRepository.save(user);
+					}
+				}
+				userLoginRepository.save(inviteUser);
+				
+				String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
+				int updateGold=Integer.valueOf(invite_gold)+Integer.valueOf(gold);
+				
+				user.setGold(Long.valueOf(updateGold));
+				userLoginRepository.save(user);
+				
+				GoldLog goldLogInvite=new GoldLog();
+				goldLogInvite.setUserId(user.getId());
+				goldLogInvite.setType(Consts.GoldLog.Type.SET_INVITE);
+				goldLogInvite.setNum(Integer.valueOf(updateGold));
+				goldLogInvite.setOldNum(Integer.valueOf(gold));
+				goldLogInvite.setNewNum(Integer.valueOf(invite_gold));
+				goldLogInvite.setCreateUser(user.getId());
+				goldLogInvite.setCreateTime(new Date());
+				goldLogRepository.save(goldLogInvite);
 			}
-			userLoginRepository.save(inviteUser);
 			
 		}
 		

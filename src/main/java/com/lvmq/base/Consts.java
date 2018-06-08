@@ -35,6 +35,9 @@ public class Consts {
 			
 			//被召回奖励
 			public static final String RECALL_BACK="113";
+			
+			//填写邀请码
+			public static final String SET_INVITE="114";
 		}
 		
 		/**分享奖励个数**/
@@ -62,6 +65,9 @@ public class Consts {
 				return "召回奖励";
 			case Type.RECALL_BACK:
 				return "被召回奖励";
+			case Type.SET_INVITE:
+				return "填写邀请码奖励";
+			
 				default:
 					return "神秘奖励";
 			}

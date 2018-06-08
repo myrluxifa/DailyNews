@@ -15,4 +15,6 @@ public interface InviteService {
 	 RecallRes  recallList(String userId);
 	 
 	 boolean recall(String userId,String recallUser);
+	 
+	 int setInviteCode(String userId,String inviteCode);
 }

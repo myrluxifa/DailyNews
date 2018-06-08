@@ -53,4 +53,19 @@ public class InviteAPI {
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", inviteService.recall(userId,recallUser));
 	}
 	
+	
+	@ApiOperation(value="填写邀请码")
+	@RequestMapping(value="/setInviteCode",method=RequestMethod.POST)
+	public ResponseBean setInviteCode(String userId,String inviteCode) {
+		int flag=inviteService.setInviteCode(userId, inviteCode);
+		
+		if(flag==-1) {
+			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"邀请码不存在");
+		}else if(flag==0) {
+			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
+		}else {
+			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"失败");
+		}
+		
+	}
 }
