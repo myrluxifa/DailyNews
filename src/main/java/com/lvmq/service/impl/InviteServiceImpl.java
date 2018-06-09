@@ -17,6 +17,8 @@ import com.lvmq.api.res.ImgBanner;
 import com.lvmq.api.res.InviteInfoRes;
 import com.lvmq.api.res.RecallListRes;
 import com.lvmq.api.res.RecallRes;
+import com.lvmq.api.res.TudiArrayRes;
+import com.lvmq.api.res.TudiRes;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
@@ -151,6 +153,39 @@ public class InviteServiceImpl implements InviteService {
 			// TODO: handle exception
 			return false;
 		}
+	}
+	
+	public TudiArrayRes tudiList(String userId) {
+		Optional<UserLogin> opt=userLoginRepository.findById(userId);
+		if(opt.isPresent()) {
+			UserLogin userLogin=opt.get();
+			String myInviteCode=userLogin.getMyInviteCode();
+			List<UserLogin> userLoginArray=userLoginRepository.findByInviteCode(myInviteCode);
+			
+			List<TudiRes> tudiArray=new ArrayList<TudiRes>(); 
+			for(UserLogin u:userLoginArray) {
+				int g=goldLogRepository.sumByTypeAndTriggerUserIdAndUserId(Consts.GoldLog.Type.MASTER_READ_REWARDS,u.getId(),userId);
+				List<String> bl=Arrays.asList(Consts.BalanceLog.Type.EIGHT_DAY_REWARDS,Consts.BalanceLog.Type.FIRST_INVITE);
+				String bs=balanceLogRepository.sumByTypeAndTriggerUserIdAndUserId(bl, u.getId(),userId);
+				String  ic=String.valueOf(Double.parseDouble(bs)+(double)g/Consts.GOLD_RATIO);
+				tudiArray.add(new TudiRes(u.getHeadPortrait(), u.getUserName(), u.getName(),ic));
+			}
+			
+			//金币奖励
+			List<String> goldTypeList=Arrays.asList(Consts.GoldLog.Type.MASTER_READ_REWARDS);
+			int goldSum=goldLogRepository.sumNumByTypeInAndUserId(goldTypeList,userId);
+			
+			//现金奖励
+			List<String> balanceTypeList=Arrays.asList(Consts.BalanceLog.Type.EIGHT_DAY_REWARDS,Consts.BalanceLog.Type.FIRST_INVITE);
+			String balanceSum=balanceLogRepository.sumNumByTypeInAndUserId(balanceTypeList, userId);
+			
+			String  income=String.valueOf(Double.parseDouble(balanceSum)+(double)goldSum/Consts.GOLD_RATIO);
+			
+			return new TudiArrayRes(String.valueOf(userLoginArray.size()),income,tudiArray);
+		}else {
+			return new TudiArrayRes();
+		}
+		
 	}
 	
 	public int setInviteCode(String userId,String inviteCode) {

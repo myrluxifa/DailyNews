@@ -68,4 +68,10 @@ public class InviteAPI {
 		}
 		
 	}
+	
+	@ApiOperation(value="徒弟列表")
+	@RequestMapping(value="/tudiList",method=RequestMethod.POST)
+	public ResponseBean tudiList(String userId) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",inviteService.tudiList(userId));
+	}
 }

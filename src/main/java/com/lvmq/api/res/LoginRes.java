@@ -17,6 +17,8 @@ public class LoginRes {
 	
 	private String earnings;
 	
+	private String invite_code;
+	
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
 	}
@@ -30,6 +32,7 @@ public class LoginRes {
 		this.gold=String.valueOf(userLogin.getGold());
 		this.balance=String.valueOf(userLogin.getBalance());
 		this.earnings=String.valueOf(userLogin.getEarnings());
+		this.invite_code=userLogin.getInviteCode()==null?"":userLogin.getInviteCode();
 	}
 
 	public String getUser_id() {
@@ -86,6 +89,14 @@ public class LoginRes {
 
 	public void setEarnings(String earnings) {
 		this.earnings = earnings;
+	}
+
+	public String getInvite_code() {
+		return invite_code;
+	}
+
+	public void setInviteCode(String invite_code) {
+		this.invite_code = invite_code;
 	}
 	
 	

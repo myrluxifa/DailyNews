@@ -5,10 +5,14 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.lvmq.api.res.LoginRes;
 import com.lvmq.model.UserLogin;
 
 @Service
 public interface UserLoginService {
+	
+	LoginRes findByUserId(String userId);
+	
 	Optional<UserLogin> login(UserLogin userLogin);
 	
 	UserLogin save(UserLogin userLogin);

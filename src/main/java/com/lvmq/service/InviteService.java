@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.lvmq.api.res.BannerRes;
 import com.lvmq.api.res.InviteInfoRes;
 import com.lvmq.api.res.RecallRes;
+import com.lvmq.api.res.TudiArrayRes;
 
 @Service
 public interface InviteService {
@@ -17,4 +18,6 @@ public interface InviteService {
 	 boolean recall(String userId,String recallUser);
 	 
 	 int setInviteCode(String userId,String inviteCode);
+	 
+	 TudiArrayRes tudiList(String userId);
 }

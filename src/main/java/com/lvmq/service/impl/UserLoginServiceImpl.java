@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.lvmq.api.res.LoginRes;
 import com.lvmq.base.Argument;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
@@ -37,6 +38,11 @@ public class UserLoginServiceImpl implements UserLoginService{
 	
 	public int countByUserName(String userName) {
 		return userLoginRepository.countByUserName(userName);
+	}
+	
+	public LoginRes findByUserId(String id) {
+		return new LoginRes( userLoginRepository.findById(id).get());
+		
 	}
 
 	@Override

@@ -8,4 +8,5 @@ import com.lvmq.model.GoldRewards;
 @Repository
 public interface GoldRewardsRepository extends CrudRepository<GoldRewards, String> {
 	GoldRewards findByType(String type);
+	
 }

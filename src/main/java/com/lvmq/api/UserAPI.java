@@ -71,6 +71,8 @@ public class UserAPI {
 	}
 	
 	
+	
+	
 	@ApiOperation(value = "发送验证码", notes = "临时验证码123456")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String")
@@ -173,6 +175,12 @@ public class UserAPI {
 		}
 	}
 	
+	
+	@ApiOperation(value="获取个人信息",notes="")
+	@RequestMapping(value="/getUserInfo",method=RequestMethod.POST)
+	public ResponseBean getUserInfo(String userId) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", userLoginService.findByUserId(userId));
+	}
 	
 	
 }
