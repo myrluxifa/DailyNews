@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@CrossOrigin(maxAge = 3600)
+@CrossOrigin(origins="*", maxAge = 3600)
 @Api(tags = {"新闻"})
 @RestController
 @RequestMapping("/api/news")

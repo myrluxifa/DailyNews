@@ -220,6 +220,7 @@ public class InviteServiceImpl implements InviteService {
 					int updateGold=Integer.valueOf(invite_gold)+Integer.valueOf(String.valueOf(userLogin.getGold()));
 					
 					userLogin.setGold(Long.valueOf(updateGold));
+					userLogin.setInviteCode(inviteCode);
 					userLoginRepository.save(userLogin);
 					
 					GoldLog goldLogInvite=new GoldLog();
