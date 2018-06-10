@@ -29,7 +29,11 @@ public class TimeUtil {
 			return (now-time)>259200000l; 
 	}
 	
-	
+	public static String today() {
+		Date date=new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		return dateFormat.format(date);
+	}
 	
 	
 	
@@ -79,7 +83,6 @@ public class TimeUtil {
 	public static String format(Calendar instance) {
 		return format(instance.getTime(), null);
 	}
-	
 	
 	
 }
