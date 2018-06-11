@@ -4,38 +4,61 @@ import com.lvmq.model.UserLogin;
 
 public class LoginRes {
 	private String user_id;
-	
+
 	private String phone;
-	
+
 	private String head_portrait;
-	
+
 	private String gold;
-	
+
 	private String my_invite_code;
-	
+
 	private String balance;
-	
+
 	private String earnings;
-	
+
 	private String invite_code;
-	
+
 	private String newer_mission;
-	
+
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public LoginRes(UserLogin userLogin) {
 		// TODO Auto-generated constructor stub
-		this.user_id=userLogin.getId();
-		this.phone=userLogin.getUserName();
-		this.head_portrait=userLogin.getHeadPortrait()==null?"":userLogin.getHeadPortrait();
-		this.my_invite_code=userLogin.getMyInviteCode();
-		this.gold=String.valueOf(userLogin.getGold());
-		this.balance=String.valueOf(userLogin.getBalance());
-		this.earnings=String.valueOf(userLogin.getEarnings());
-		this.invite_code=userLogin.getInviteCode()==null?"":userLogin.getInviteCode();
-		this.newer_mission = userLogin.getNewerMission()==null?"": userLogin.getNewerMission();
+		this.user_id = userLogin.getId();
+		this.phone = userLogin.getUserName();
+		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
+		this.my_invite_code = userLogin.getMyInviteCode();
+		this.gold = String.valueOf(userLogin.getGold());
+		this.balance = String.valueOf(userLogin.getBalance());
+		this.earnings = String.valueOf(userLogin.getEarnings());
+		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
+		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
+	}
+
+	/**
+	 * @return the newer_mission
+	 */
+	public String getNewer_mission() {
+		return newer_mission;
+	}
+
+	/**
+	 * @param invite_code
+	 *            the invite_code to set
+	 */
+	public void setInvite_code(String invite_code) {
+		this.invite_code = invite_code;
+	}
+
+	/**
+	 * @param newer_mission
+	 *            the newer_mission to set
+	 */
+	public void setNewer_mission(String newer_mission) {
+		this.newer_mission = newer_mission;
 	}
 
 	public String getUser_id() {
@@ -101,6 +124,5 @@ public class LoginRes {
 	public void setInviteCode(String invite_code) {
 		this.invite_code = invite_code;
 	}
-	
-	
+
 }
