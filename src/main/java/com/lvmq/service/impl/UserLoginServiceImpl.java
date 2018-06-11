@@ -64,6 +64,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		userLogin.setCreateTime(new Date());
 		
+		// 任务主页 新手任务状态
+		userLogin.setNewerMission("0|0|0|0");
+		
 		String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getGold();
 		
 		userLogin.setGold(Long.valueOf(gold));

@@ -2,6 +2,7 @@ package com.lvmq.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -45,6 +46,8 @@ public class UserLogin {
 
 	private String masterMaster;
 
+	private String newerMission;
+
 	private int grandCnt;
 
 	private Date createTime;
@@ -64,6 +67,21 @@ public class UserLogin {
 		// TODO Auto-generated constructor stub
 		this.userName = userName;
 		this.passwd = passwd;
+	}
+
+	/**
+	 * @return the newerMission
+	 */
+	public String getNewerMission() {
+		return newerMission;
+	}
+
+	/**
+	 * @param newerMission
+	 *            the newerMission to set
+	 */
+	public void setNewerMission(String newerMission) {
+		this.newerMission = newerMission;
 	}
 
 	/**

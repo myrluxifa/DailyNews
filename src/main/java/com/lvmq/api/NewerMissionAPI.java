@@ -60,6 +60,24 @@ public class NewerMissionAPI extends BaseAPI {
 		}
 	}
 	
+	@ApiOperation(value = "用户搜索后调用，触发新手搜索任务", notes = "")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, dataType = "String")
+	})
+	@PostMapping("search")
+	public ResponseBean<Object> search(String userId) {
+		try {
+			
+			// 新手任务
+			entry(Consts.NewerMission.Type.SEARCH, userId);
+			
+			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return new ResponseBean<Object>(Code.FAIL, Code.FAIL, e.getMessage());
+		}
+	}
+	
 	public NewerMission entry(String type, String userId) {
 		//参数最大值
 		int maxRead = 10; int maxSign = 1; int maxShare = 1; int maxSearch = 2;

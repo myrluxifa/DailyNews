@@ -44,6 +44,10 @@ public class WeixinAPI {
 			if(org.springframework.util.StringUtils.isEmpty(user.get().getOpenid())) {
 				UserLogin uu = user.get();
 				uu.setOpenid(map.get("openid").toString());
+				
+				String[] states = uu.getNewerMission().split("\\|");
+				uu.setNewerMission((Integer.valueOf(states[0]) + 1) + "|" + states[1] + "|" + states[2] + "|" + states[3]);
+				
 				userRepository.save(uu);
 				//FIXME 完成增加金币功能
 				

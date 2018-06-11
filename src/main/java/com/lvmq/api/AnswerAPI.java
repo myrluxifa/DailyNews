@@ -1,6 +1,7 @@
 package com.lvmq.api;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
+import com.lvmq.base.Consts;
 import com.lvmq.model.Answer;
+import com.lvmq.model.UserLogin;
 import com.lvmq.repository.AnswerRepository;
+import com.lvmq.repository.UserLoginRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -27,6 +31,9 @@ public class AnswerAPI extends BaseAPI {
 	@Autowired
 	private AnswerRepository answerRepository;
 	
+	@Autowired
+	private UserLoginRepository userLoginRepository;
+	
 	@ApiOperation(value = "答案提交", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, dataType = "String"),
@@ -41,6 +48,22 @@ public class AnswerAPI extends BaseAPI {
 			ans.setAnswers(answers);
 			ans.setCreateTime(new Date());
 			ans.setQuestions(QUESTIONS[type]);
+			
+			// 更新新手任务状态
+			Optional<UserLogin> user = userLoginRepository.findById(userId);
+			
+			UserLogin uu = user.get();
+			
+			String[] states = uu.getNewerMission().split("\\|");
+			if(type == 0) {
+				uu.setNewerMission(states[0] + "|" + states[1] + "|" + (Integer.valueOf(states[2]) + 1) + "|" + states[3]);				
+			}else if(type == 1) {
+				uu.setNewerMission(states[0] + "|" + states[1] + "|" + states[2] + "|" + (Integer.valueOf(states[3]) + 1));			
+			}
+			
+			userLoginRepository.save(uu);
+			// end 更新新手任务状态
+			
 			ans.setType(type.toString());
 			ans.setUserId(userId);
 			

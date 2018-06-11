@@ -19,6 +19,8 @@ public class LoginRes {
 	
 	private String invite_code;
 	
+	private String newer_mission;
+	
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
 	}
@@ -33,6 +35,7 @@ public class LoginRes {
 		this.balance=String.valueOf(userLogin.getBalance());
 		this.earnings=String.valueOf(userLogin.getEarnings());
 		this.invite_code=userLogin.getInviteCode()==null?"":userLogin.getInviteCode();
+		this.newer_mission = userLogin.getNewerMission()==null?"": userLogin.getNewerMission();
 	}
 
 	public String getUser_id() {
