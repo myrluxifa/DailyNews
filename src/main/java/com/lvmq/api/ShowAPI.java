@@ -37,9 +37,13 @@ public class ShowAPI extends BaseAPI {
 	public ResponseBean<Object> income(String userId) {
 		try {
 			Calendar cal = Calendar.getInstance();
-			cal.set(cal.get(Calendar.YEAR), Calendar.MONTH, Calendar.DAY_OF_MONTH, 0, 0, 0);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
 			Date from = cal.getTime();
-			cal.set(cal.get(Calendar.YEAR), Calendar.MONTH, Calendar.DAY_OF_MONTH, 23, 59, 59);
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
 			Date to = cal.getTime();
 			
 			List<BalanceLog> logs = balanceRepository.findByUserIdAndCreateTimeBetween(userId, from, to);
@@ -59,4 +63,5 @@ public class ShowAPI extends BaseAPI {
 			return new ResponseBean<Object>(Code.FAIL, Code.FAIL, e.getMessage());
 		}
 	}
+	
 }
