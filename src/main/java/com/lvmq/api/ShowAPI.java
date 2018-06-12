@@ -3,7 +3,6 @@ package com.lvmq.api;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +29,7 @@ public class ShowAPI extends BaseAPI {
 	@Autowired
 	private BalanceLogRepository balanceRepository;
 	
-	@ApiOperation(value = "账户明细，金币分页", notes = "", httpMethod = "POST")
+	@ApiOperation(value = "晒收入", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
 			})
