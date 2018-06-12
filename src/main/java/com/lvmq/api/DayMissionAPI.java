@@ -50,7 +50,7 @@ public class DayMissionAPI extends BaseAPI {
 				dm = dayMissionRepository.save(new DayMission(userId, today));
 			}
 			
-			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, dm.getParam());
+			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", dm.getParam());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseBean<Object>(Code.FAIL, Code.FAIL, e.getMessage());
@@ -68,7 +68,7 @@ public class DayMissionAPI extends BaseAPI {
 			// 日常任务 分享奖励
 			DayMission dm = dayMissionService.updateDayMission(userId, Consts.DayMission.Type.SHOW);
 			
-			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, dm.getParam());
+			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", dm.getParam());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseBean<Object>(Code.FAIL, Code.FAIL, e.getMessage());
