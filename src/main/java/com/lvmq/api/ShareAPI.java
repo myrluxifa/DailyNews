@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
+import com.lvmq.model.DayMission;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,6 +43,9 @@ public class ShareAPI extends BaseAPI{
 	
 	@Autowired
 	private GoldLogRepository goldLogRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	@Autowired
 	private NewerMissionAPI newerMission;
@@ -133,6 +138,9 @@ public class ShareAPI extends BaseAPI{
 			
 			//新手任务
 			newerMission.entry(Consts.NewerMission.Type.SHARE, userId);
+			
+			// 日常任务 分享奖励
+			dayMissionService.updateDayMission(userId, Consts.DayMission.Type.SHARE);
 			
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, null);
 		} catch (Exception e) {

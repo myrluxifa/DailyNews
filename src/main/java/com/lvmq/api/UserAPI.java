@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,10 +17,16 @@ import com.google.gson.Gson;
 import com.lvmq.api.res.LoginRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
+import com.lvmq.base.Consts;
 import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoResponseDto;
+import com.lvmq.model.DayMission;
+import com.lvmq.model.GoldLog;
 import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
+import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 import com.lvmq.service.NewsService;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.service.VideosService;
@@ -40,6 +47,14 @@ public class UserAPI {
 	@Autowired
 	private UserLoginService userLoginService;
 	
+	@Autowired
+	private UserLoginRepository userLoginRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
+	
+	@Autowired
+	private GoldLogRepository goldLogRepository;
 	
 	private static final Logger log = LoggerFactory.getLogger(UserAPI.class);
 	
@@ -168,6 +183,13 @@ public class UserAPI {
 			messageCodeMap.remove(userName);
 			
 			userLoginService.save(new UserLogin(userName,MD5.getMD5(passwd),inviteCode));
+			
+			// 日常任务 邀请好友
+			if(!StringUtils.isEmpty(inviteCode)) {
+				UserLogin user = userLoginRepository.findByMyInviteCode(inviteCode);
+				DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);
+			}
+			
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
 		}catch (Exception e) {
 			// TODO: handle exception

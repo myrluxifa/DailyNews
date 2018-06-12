@@ -1,6 +1,7 @@
 package com.lvmq.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +17,11 @@ import com.lvmq.api.res.RewardsRes;
 import com.lvmq.api.res.VideosArrayRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
+import com.lvmq.base.Consts;
+import com.lvmq.model.DayMission;
 import com.lvmq.model.NewsComment;
+import com.lvmq.model.UserLogin;
+import com.lvmq.service.DayMissionService;
 import com.lvmq.service.NewsService;
 
 import io.swagger.annotations.Api;
@@ -33,6 +38,8 @@ public class NewsAPI {
 	@Autowired
 	private NewsService newsService;
 	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	
 	@ApiOperation(value = "新闻分类", notes = "")
@@ -103,6 +110,9 @@ public class NewsAPI {
 	//第一层评论parentId=0
 	@RequestMapping(value="/setComment",method=RequestMethod.POST)
 	public ResponseBean<NewsCommentRes> setComment(String newsId,String userId,String parentId,String level,String comment) {
+		
+		// 日常任务 评论奖励
+		DayMission dm = dayMissionService.updateDayMission(userId, Consts.DayMission.Type.COMMENT);
 			 return new ResponseBean<NewsCommentRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",newsService.setComment(newsId,userId,parentId,comment,level)); 
 	}
 	
@@ -145,6 +155,10 @@ public class NewsAPI {
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "登陆人编号", required = true, dataType = "String")
 		})
 	public ResponseBean readNews(String userId,String newsId) {
+		
+		// 日常任务 阅读奖励
+		DayMission dm = dayMissionService.updateDayMission(userId, Consts.DayMission.Type.READ);
+		
 		if(newsService.readNews(userId, newsId)) {
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
 		}else {

@@ -38,6 +38,13 @@ public class Consts {
 			
 			//填写邀请码
 			public static final String SET_INVITE="114";
+			
+			/** 日常任务邀请好友奖励 **/
+			public static final String INVITE = "115";
+			/** 晒收入奖励 **/
+			public static final String SHOW = "116";
+			/** 评论奖励 **/
+			public static final String COMMENT = "117";
 		}
 		
 		/**分享奖励个数**/
@@ -73,7 +80,12 @@ public class Consts {
 				return "被召回奖励";
 			case Type.SET_INVITE:
 				return "填写邀请码奖励";
-			
+			case Type.INVITE: 
+				return "日常任务邀请好友奖励";
+			case Type.SHOW:
+				return "晒收入奖励";
+			case Type.COMMENT:
+				return "评论奖励";
 				default:
 					return "神秘奖励";
 			}
@@ -149,5 +161,23 @@ public class Consts {
 		public static final String URI="/opt/apache-tomcat-9.0.5/webapps/img-uri/";
 		
 		public static final String IP="http://47.104.73.127:8080";
+	}
+	
+	public static final class DayMission {
+		//日常任务奖励数量
+		public static final Long[] REWARD = {4000l,1000l,100l,100l,100l}; 
+		
+		public static final class Type {
+			/** 邀请好友 **/
+			public static final int INVITE = 0;
+			/** 阅读 **/
+			public static final int READ = 1;
+			/** 分享 **/
+			public static final int SHARE = 2;
+			/** 晒单 **/
+			public static final int SHOW = 3;
+			/** 评价 **/
+			public static final int COMMENT = 4;
+		}
 	}
 }
