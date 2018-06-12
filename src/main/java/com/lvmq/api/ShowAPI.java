@@ -36,17 +36,8 @@ public class ShowAPI extends BaseAPI {
 	@PostMapping("income")
 	public ResponseBean<Object> income(String userId) {
 		try {
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			Date from = cal.getTime();
-			cal.set(Calendar.HOUR_OF_DAY, 23);
-			cal.set(Calendar.MINUTE, 59);
-			cal.set(Calendar.SECOND, 59);
-			Date to = cal.getTime();
 			
-			List<BalanceLog> logs = balanceRepository.findByUserIdAndCreateTimeBetween(userId, from, to);
+			List<BalanceLog> logs = balanceRepository.findByUserIdAndCreateTimeBetween(userId);
 			double income = 0;
 			for (BalanceLog log : logs) {
 				income += Double.valueOf(log.getNum());

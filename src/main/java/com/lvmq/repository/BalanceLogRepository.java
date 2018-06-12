@@ -31,4 +31,6 @@ public interface BalanceLogRepository extends CrudRepository<com.lvmq.model.Bala
 
 	List<BalanceLog> findByUserIdAndCreateTimeBetween(String userId, Date from, Date to);
 
+	List<BalanceLog> findByUserIdAndCreateTimeBetween(String userId);
+
 }
