@@ -15,7 +15,7 @@ public class MakeMoneyDetailRes {
 	
 	public MakeMoneyDetailRes(MakeMoney m,int status,String endTime) {
 		// TODO Auto-generated constructor stub
-		this.makeMoney=makeMoney;
+		this.makeMoney=m;
 		this.status=String.valueOf(status);
 		this.endTime=endTime;
 	}
