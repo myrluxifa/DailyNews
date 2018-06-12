@@ -120,6 +120,34 @@ public class UserAPI {
 		}
 	}
 	
+	@ApiOperation(value = "修改密码2", notes = "")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户Id", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "oldPasswd", value = "原密码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "newPasswd", value = "新密码", required = true, dataType = "String")
+	})
+	@RequestMapping(value="/updatePasswd2", method=RequestMethod.POST)
+	public ResponseBean updatePasswd2(String userId,String newPasswd,String oldPasswd) {
+		
+		try {
+			Optional<UserLogin> ouser = userLoginRepository.findById(userId);
+			
+			UserLogin user = ouser.get();
+			
+			if(!MD5.getMD5(oldPasswd).equals(user.getPasswd())) {
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "原密码不正确");
+			}
+			
+			user.setPasswd(MD5.getMD5(newPasswd));
+			
+			userLoginRepository.save(user);
+			
+			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
+		}catch(Exception e) {
+			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"未知错误");
+		}
+		
+	}
 	
 	@ApiOperation(value = "修改密码", notes = "")
 	@ApiImplicitParams({
