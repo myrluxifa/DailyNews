@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
-import com.lvmq.model.DayMission;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.GoldLogRepository;
@@ -71,8 +70,8 @@ public class ShareAPI extends BaseAPI{
 			//获取当天分享次数
 			List<GoldLog> logs = goldLogRepository.findByTypeAndUserIdAndCreateTimeBetweenOrderByCreateTimeDesc(Consts.GoldLog.Type.SHARE, userId, startTime, endTime);
 			
-			int count = null == logs ? 0 : logs.size();
-			long lastTime = null == logs ? 0 : logs.get(0).getCreateTime().getTime();
+			int count = null == logs || logs.size() == 0 ? 0 : logs.size();
+			long lastTime = null == logs || logs.size() == 0 ? 0 : logs.get(0).getCreateTime().getTime();
 			
 			Map<String, Object> result = new HashMap<>();
 			result.put("count", Code.SHARE.MAX_TIMES - count);

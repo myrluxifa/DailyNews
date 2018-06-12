@@ -8,6 +8,8 @@ package com.lvmq.base;
  */
 public class Consts {
 
+	public static final String QRCODE = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528800765208&di=371c98b4d958ed7dc48015a1095ae724&imgtype=0&src=http%3A%2F%2Fs1.sinaimg.cn%2Flarge%2F005CbCKDzy753KDRoF99f";
+	
 	public static class GoldLog {
 		public static final class Type{
 			/**分享**/
