@@ -1,5 +1,6 @@
 package com.lvmq.api;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
 import com.lvmq.repository.BalanceLogRepository;
+import com.lvmq.repository.GoldLogRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,6 +30,9 @@ public class ShowAPI extends BaseAPI {
 
 	@Autowired
 	private BalanceLogRepository balanceRepository;
+	
+	@Autowired
+	private GoldLogRepository goldLogRepository;
 	
 	@ApiOperation(value = "晒收入", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
@@ -43,9 +48,15 @@ public class ShowAPI extends BaseAPI {
 				income += Double.valueOf(log.getNum());
 			}
 			
+			//金币奖励
+			List<String> goldTypeList=Arrays.asList(Consts.GoldLog.Type.MASTER_READ_REWARDS);
+			int goldSum=goldLogRepository.sumNumByTypeInAndUserId(goldTypeList,userId);
+			
+			double  fee= income + (double)goldSum/Consts.GOLD_RATIO;
+			
 			ShowRes res = new ShowRes();
 			
-			res.setIncome(income);
+			res.setIncome(fee);
 			res.setUrl(Consts.QRCODE);
 			
 			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", res);
