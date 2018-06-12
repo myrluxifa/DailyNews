@@ -26,7 +26,7 @@ public class FileUtil {
                 if(CreateFile.createImageDir(filePath)) {
                 	// 转存文件
                     file.transferTo(new File(filePath));  
-                    return "/img-uri/"+url;  
+                    return Consts.file.IP+Consts.file.URI+url;  
                 }else {
                 	//转存失败
                 	return "-1";
