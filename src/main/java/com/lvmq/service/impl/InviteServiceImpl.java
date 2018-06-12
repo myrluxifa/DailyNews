@@ -79,6 +79,7 @@ public class InviteServiceImpl implements InviteService {
 				strArray.add(Util.getContent(content));
 			}
 		}
+		
 		return new BannerRes(imgBannerArray,strArray);
 	}
 
@@ -105,7 +106,8 @@ public class InviteServiceImpl implements InviteService {
 		String inviteCode="";
 		Optional<UserLogin> u=userLoginRepository.findById(userId);
 		if(u.isPresent()) {
-			inviteCount=String.valueOf(u.get().getInviteCount());
+			List<UserLogin> userLoginArray=userLoginRepository.findByInviteCode(u.get().getMyInviteCode());
+			inviteCount=String.valueOf(userLoginArray.size());
 			inviteCode=u.get().getMyInviteCode();
 		}
 		
