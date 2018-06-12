@@ -29,8 +29,6 @@ public interface BalanceLogRepository extends CrudRepository<com.lvmq.model.Bala
 	@Query(value="select ifnull(sum(num),0) from t_balance_log where type in ?1 and trigger_user_id=?2 and user_id=?3",nativeQuery=true)
 	String sumByTypeAndTriggerUserIdAndUserId(List<String> type,String triggerUserId,String userId);
 
-	List<BalanceLog> findByUserIdAndCreateTimeBetween(String userId, Date from, Date to);
-
-	List<BalanceLog> findByUserIdAndCreateTimeBetween(String userId);
+	List<BalanceLog> findByUserId(String userId);
 
 }

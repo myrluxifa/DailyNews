@@ -37,7 +37,7 @@ public class ShowAPI extends BaseAPI {
 	public ResponseBean<Object> income(String userId) {
 		try {
 			
-			List<BalanceLog> logs = balanceRepository.findByUserIdAndCreateTimeBetween(userId);
+			List<BalanceLog> logs = balanceRepository.findByUserId(userId);
 			double income = 0;
 			for (BalanceLog log : logs) {
 				income += Double.valueOf(log.getNum());
