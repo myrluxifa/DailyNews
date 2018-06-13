@@ -95,7 +95,7 @@ public class AccountAPI extends BaseAPI {
 				result.add(res);
 			}
 
-			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, page.getTotalPages() + "", result);
+			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, /*page.getTotalPages() + */"成功", result);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseBean<>(Code.FAIL, Code.FAIL, e.getMessage());
