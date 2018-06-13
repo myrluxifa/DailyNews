@@ -19,7 +19,7 @@ public class MakeMoney {
 	
 	private String url;
 	
-	private String explain;
+	private String exposition;
 	
 	private String logo;
 	
@@ -80,12 +80,16 @@ public class MakeMoney {
 		this.url = url;
 	}
 
-	public String getExplain() {
-		return explain;
+	
+
+	
+
+	public String getExposition() {
+		return exposition;
 	}
 
-	public void setExplain(String explain) {
-		this.explain = explain;
+	public void setExposition(String exposition) {
+		this.exposition = exposition;
 	}
 
 	public String getLogo() {
