@@ -13,4 +13,5 @@ public interface MakeMoneyRepository extends CrudRepository<MakeMoney, String> {
 	
 	
 	List<MakeMoney> findByFlag(Pageable pageable,int flag);
+	
 }

@@ -3,17 +3,31 @@ package com.lvmq.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
+import com.lvmq.api.res.EasyMoneyListRes;
+import com.lvmq.api.res.EasyMoneyShareRes;
+import com.lvmq.api.res.EasyMoneyTaskRes;
 import com.lvmq.api.res.MakeMoneyDetailRes;
 import com.lvmq.api.res.MakeMoneyRes;
+import com.lvmq.api.res.MakeMoneyTaskRes;
+import com.lvmq.model.EasyMoney;
+import com.lvmq.model.EasyMoneyLog;
 import com.lvmq.model.MakeMoney;
 import com.lvmq.model.MakeMoneyLog;
+import com.lvmq.repository.EasyMoneyLogRepository;
+import com.lvmq.repository.EasyMoneyRepository;
 import com.lvmq.repository.MakeMoneyLogRepository;
 import com.lvmq.repository.MakeMoneyRepository;
 import com.lvmq.service.MakeMoneyService;
@@ -26,6 +40,16 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	
 	@Autowired
 	private MakeMoneyLogRepository makeMoneyLogRepository;
+	
+	@Autowired
+	private EasyMoneyRepository easyMoneyRepository;
+	
+	@Autowired
+	private EasyMoneyLogRepository easyMoneyLogRepository;
+	
+	@Autowired
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	public List<MakeMoneyRes> makeMoneyList(String userId,String page,String pageSize) {
 		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC),0);
@@ -90,4 +114,65 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 		}
 	}
 
+	
+	public List<EasyMoneyListRes> easyMoneyList(String userId,String page,String pageSize) {
+		
+		List<EasyMoney> easyMoneyList=easyMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC), 0);
+		
+		List<EasyMoneyListRes> el=new ArrayList<EasyMoneyListRes>();
+		for(EasyMoney e:easyMoneyList) {
+			el.add(new EasyMoneyListRes(e.getId(), e.getTitle(), e.getImg()));
+		}
+		return el;
+	}
+	
+	public List<MakeMoneyTaskRes> makeMoneyTask(String userId,String page,String pageSize){
+		List<MakeMoneyLog> makeMoneyLogList =makeMoneyLogRepository.findByUserId(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC),userId);
+		
+		List<MakeMoneyTaskRes> mlr=new ArrayList<MakeMoneyTaskRes>();
+		for(MakeMoneyLog m:makeMoneyLogList) {
+			Optional<MakeMoney> ml=makeMoneyRepository.findById(m.getMakeMoneyId());
+			String rewards="0";
+			String status=String.valueOf(m.getStatus());
+			
+			if(m.getStatus()==3) {
+				rewards=ml.get().getCash();
+			}else {
+				Date d=new Date();
+				if(!d.before(m.getEndTime())) {
+					status="6";
+				}
+			}
+			
+			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),String.valueOf(m.getEndTime().getTime()),status,rewards));
+		}
+		return mlr;
+	}
+	
+	
+	public  EasyMoneyShareRes easyMoneyShare(String userId,String id) {
+		EasyMoneyLog el=easyMoneyLogRepository.save(new EasyMoneyLog(userId,id));
+		EasyMoneyShareRes es=new EasyMoneyShareRes();
+		es.setToken(el.getId());
+		return es;
+	}
+	
+	
+	public List<EasyMoneyTaskRes> easyMoneyTask(String userId,Pageable pageable){
+		StringBuffer sql=new StringBuffer();
+		sql.append("select * from v_easy_money_task where user_id='").append(userId).append("' limit ").append(pageable.getPageNumber()).append(pageable.getPageSize());
+		
+		Query query=entityManager.createNativeQuery(sql.toString());
+		List<Object> objs=query.getResultList();
+		
+		List<EasyMoneyTaskRes> elr=new ArrayList<EasyMoneyTaskRes>();
+		for (Object o : objs) {
+			Object[] obj=(Object[]) o;
+			new EasyMoneyTaskRes(obj);
+		}
+		entityManager.close();
+		
+		
+		return elr;
+	}
 }
