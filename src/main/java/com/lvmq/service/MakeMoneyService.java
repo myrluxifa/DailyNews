@@ -10,7 +10,7 @@ import com.lvmq.api.res.MakeMoneyRes;
 @Service
 public interface MakeMoneyService {
 
-	List<MakeMoneyRes> makeMoneyList(String userId);
+	List<MakeMoneyRes> makeMoneyList(String userId,String page,String pageSize);
 	
 	void takePartIn(String userId,String id);
 	

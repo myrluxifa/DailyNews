@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.lvmq.api.res.MakeMoneyDetailRes;
@@ -26,8 +27,8 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	@Autowired
 	private MakeMoneyLogRepository makeMoneyLogRepository;
 	
-	public List<MakeMoneyRes> makeMoneyList(String userId) {
-		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(0);
+	public List<MakeMoneyRes> makeMoneyList(String userId,String page,String pageSize) {
+		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC),0);
 		List<MakeMoneyRes> makeMoneyResList=new ArrayList<MakeMoneyRes>();
 		for(MakeMoney m:makeMoneyList) {
 			

@@ -29,8 +29,8 @@ public class MakeMoneyAPI {
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户编号", required = true, dataType = "String")
 	})
 	@RequestMapping(value="/getList",method=RequestMethod.POST)
-	public ResponseBean getList(String userId) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.makeMoneyList(userId));
+	public ResponseBean getList(String userId,String page,String pageSize) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.makeMoneyList(userId,page,pageSize));
 	}
 	
 	@ApiOperation(value = "参与", notes = "")
