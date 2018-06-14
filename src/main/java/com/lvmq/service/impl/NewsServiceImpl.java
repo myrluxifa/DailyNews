@@ -317,6 +317,10 @@ public class NewsServiceImpl implements NewsService {
 			int count=newsInfoReadRepository.countByuserIdAndNewsId(userId, newsId);
 			if(count==0) {
 				newsInfoReadRepository.save(new NewsInfoRead(userId,newsId,0));
+				Optional<NewsInfo> newsinfo = newsInfoRepository.findById(newsId);
+				NewsInfo ni = newsinfo.get();
+				ni.setViewCount(ni.getViewCount() + 1);
+				newsInfoRepository.save(ni);
 			}
 			return true;
 		}catch (Exception e) {
