@@ -1,6 +1,7 @@
 package com.lvmq.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,8 +30,8 @@ public class MakeMoneyAPI {
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户编号", required = true, dataType = "String")
 	})
 	@RequestMapping(value="/getList",method=RequestMethod.POST)
-	public ResponseBean getList(String userId) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.makeMoneyList(userId));
+	public ResponseBean getList(String userId,String page,String pageSize) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.makeMoneyList(userId,page,pageSize));
 	}
 	
 	@ApiOperation(value = "参与", notes = "")
@@ -75,4 +76,31 @@ public class MakeMoneyAPI {
 	public ResponseBean detail(String userId,String id) {
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.detail(userId, id));
 	}
+	
+	@ApiOperation(value="轻松赚钱列表",notes="")
+	@RequestMapping(value="/easyMoneyList",method=RequestMethod.POST)
+	public ResponseBean easyMoneyList(String userId,String page,String pageSize) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.easyMoneyList(userId, page, pageSize));
+	}
+	
+	@ApiOperation(value="分享之前调用",notes="")
+	@RequestMapping(value="/easyMoneyShare",method=RequestMethod.POST)
+	public ResponseBean easyMoneyShare(String userId,String id) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.easyMoneyShare(userId, id));
+	}
+	
+	
+	@ApiOperation(value="高额返利任务列表",notes="")
+	@RequestMapping(value="/makeMoneyTask",method=RequestMethod.POST)
+	public ResponseBean makeMoneyTask(String userId,String page,String pageSize) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.makeMoneyTask(userId, page, pageSize)); 
+	}
+	
+	
+	@ApiOperation(value="轻松赚钱任务",notes="")
+	@RequestMapping(value="/easyMoneyTask",method=RequestMethod.POST)
+	public ResponseBean easyMoneyTask(String userId,String page,String pageSize) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.easyMoneyTask(userId, com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)))); 
+	}
+	
 }

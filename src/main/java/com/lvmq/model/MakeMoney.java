@@ -41,11 +41,7 @@ public class MakeMoney {
 	
 	private String introduce;
 	
-	private String wantToUploadImg;
 	
-	private String paySpecialAttentionTo;
-	
-	private String pour;
 	
 	private String imgs;
 	
@@ -142,29 +138,7 @@ public class MakeMoney {
 		this.introduce = introduce;
 	}
 
-	public String getWantToUploadImg() {
-		return wantToUploadImg;
-	}
-
-	public void setWantToUploadImg(String wantToUploadImg) {
-		this.wantToUploadImg = wantToUploadImg;
-	}
-
-	public String getPaySpecialAttentionTo() {
-		return paySpecialAttentionTo;
-	}
-
-	public void setPaySpecialAttentionTo(String paySpecialAttentionTo) {
-		this.paySpecialAttentionTo = paySpecialAttentionTo;
-	}
-
-	public String getPour() {
-		return pour;
-	}
-
-	public void setPour(String pour) {
-		this.pour = pour;
-	}
+	
 
 	public String getImgs() {
 		return imgs;
