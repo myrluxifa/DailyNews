@@ -55,6 +55,12 @@ public class UserLogin {
 	public UserLogin() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public UserLogin(String openid) {
+		super();
+		this.openid = openid;
+	}
+
 
 	public UserLogin(String userName, String passwd, String inviteCode) {
 		// TODO Auto-generated constructor stub

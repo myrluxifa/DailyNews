@@ -47,6 +47,8 @@ public class Consts {
 			public static final String SHOW = "116";
 			/** 评论奖励 **/
 			public static final String COMMENT = "117";
+			/** 绑定微信奖励 **/
+			public static final String BIND_WEIXIN = "118";
 		}
 		
 		/**分享奖励个数**/
@@ -88,6 +90,8 @@ public class Consts {
 				return "晒收入奖励";
 			case Type.COMMENT:
 				return "评论奖励";
+			case Type.BIND_WEIXIN:
+				return "绑定微信奖励";
 				default:
 					return "神秘奖励";
 			}
