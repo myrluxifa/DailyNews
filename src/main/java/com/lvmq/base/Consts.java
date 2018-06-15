@@ -165,6 +165,14 @@ public class Consts {
 		public static final String IP="http://47.104.73.127:8080";
 	}
 	
+	public static final class SmsConfig{
+		public static final String TEMPLATECODE="SMS_137421153";
+		
+		public static final String ACCESS_KEY_ID="LTAI8cUSfbegm9Qs";
+		
+		public static final String ACCESS_KEY_SECRET="oXibwPt3OJGzStoYVeJD6s9z95VqRV";
+	}
+	
 	public static final class DayMission {
 		//日常任务奖励数量
 		public static final Long[] REWARD = {4000l,1000l,100l,100l,100l}; 
