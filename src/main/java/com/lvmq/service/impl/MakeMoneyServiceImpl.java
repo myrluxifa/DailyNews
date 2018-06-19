@@ -52,7 +52,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	private EntityManager entityManager;
 	
 	public List<MakeMoneyRes> makeMoneyList(String userId,String page,String pageSize) {
-		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC),0);
+		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)),0);
 		List<MakeMoneyRes> makeMoneyResList=new ArrayList<MakeMoneyRes>();
 		for(MakeMoney m:makeMoneyList) {
 			
@@ -127,7 +127,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	}
 	
 	public List<MakeMoneyTaskRes> makeMoneyTask(String userId,String page,String pageSize){
-		List<MakeMoneyLog> makeMoneyLogList =makeMoneyLogRepository.findByUserId(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC),userId);
+		List<MakeMoneyLog> makeMoneyLogList =makeMoneyLogRepository.findByUserId(com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)),userId);
 		
 		List<MakeMoneyTaskRes> mlr=new ArrayList<MakeMoneyTaskRes>();
 		for(MakeMoneyLog m:makeMoneyLogList) {
