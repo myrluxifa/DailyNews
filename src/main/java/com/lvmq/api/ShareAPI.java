@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,7 +76,7 @@ public class ShareAPI extends BaseAPI{
 			
 			Map<String, Object> result = new HashMap<>();
 			result.put("count", Code.SHARE.MAX_TIMES - count);
-			result.put("lastTime", lastTime);
+			result.put("lastTime", DateUtils.formatDate(new Date(lastTime), "HH:mm:ss"));
 			
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, result);
 		} catch (Exception e) {
