@@ -58,7 +58,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			
 			Optional<MakeMoneyLog> makeMoneyLog=makeMoneyLogRepository.findByMakeMoneyIdAndUserId(m.getId(), userId);
 			if(makeMoneyLog.isPresent()) {
-				makeMoneyResList.add(new MakeMoneyRes(m,makeMoneyLog.get().getStatus()));
+				makeMoneyResList.add(new MakeMoneyRes(m,makeMoneyLog.get().getStatus(),String.valueOf(makeMoneyLog.get().getEndTime().getTime())));
 			}else {
 				makeMoneyResList.add(new MakeMoneyRes(m));
 			}
@@ -72,7 +72,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			Optional<MakeMoneyLog> makeMoneyLog=makeMoneyLogRepository.findByMakeMoneyIdAndUserId(id, userId);
 			if(!makeMoneyLog.isPresent()) {
 				Calendar cal = Calendar.getInstance();   
-		        cal.setTime(makeMoneyLog.get().getCreateTime());
+		        cal.setTime(new Date());
 		        cal.add(Calendar.MINUTE, makeMoney.get().getTimeLimit());
 				makeMoneyLogRepository.save(new MakeMoneyLog(userId,id,1,cal.getTime()));
 			}
