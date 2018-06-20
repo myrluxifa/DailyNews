@@ -118,7 +118,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	
 	public List<EasyMoneyListRes> easyMoneyList(String userId,String page,String pageSize) {
 		
-		List<EasyMoney> easyMoneyList=easyMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(Integer.valueOf(page),Integer.valueOf(pageSize),Direction.DESC), 0);
+		List<EasyMoney> easyMoneyList=easyMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)), 0);
 		
 		List<EasyMoneyListRes> el=new ArrayList<EasyMoneyListRes>();
 		for(EasyMoney e:easyMoneyList) {
