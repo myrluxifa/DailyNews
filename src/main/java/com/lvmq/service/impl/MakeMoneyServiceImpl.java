@@ -58,7 +58,8 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			
 			Optional<MakeMoneyLog> makeMoneyLog=makeMoneyLogRepository.findByMakeMoneyIdAndUserId(m.getId(), userId);
 			if(makeMoneyLog.isPresent()) {
-				makeMoneyResList.add(new MakeMoneyRes(m,makeMoneyLog.get().getStatus(),String.valueOf(makeMoneyLog.get().getEndTime().getTime())));
+				Date date=new Date();
+				makeMoneyResList.add(new MakeMoneyRes(m,makeMoneyLog.get().getStatus(),String.valueOf(makeMoneyLog.get().getEndTime().getTime()-date.getTime())));
 			}else {
 				makeMoneyResList.add(new MakeMoneyRes(m));
 			}

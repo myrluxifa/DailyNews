@@ -17,7 +17,7 @@ public class MakeMoneyRes {
 	//状态：0未参与,1待上传，2待审批，3审批通过，4审批不通过
 	private String status;
 	
-	private String endTime;
+	private String time;
 	
 	
 	public MakeMoneyRes() {
@@ -32,11 +32,11 @@ public class MakeMoneyRes {
 		this.cash=m.getCash();
 		this.type=m.getType();
 		this.status="0";
-		this.endTime="";
+		this.time="";
 		
 	}
 	
-	public MakeMoneyRes(MakeMoney m,int status,String endTime) {
+	public MakeMoneyRes(MakeMoney m,int status,String time) {
 		// TODO Auto-generated constructor stub
 		this.id=m.getId();
 		this.title=m.getTitle();
@@ -44,7 +44,7 @@ public class MakeMoneyRes {
 		this.cash=m.getCash();
 		this.type=m.getType();
 		this.status=String.valueOf(status);
-		this.endTime=endTime;
+		this.time=time;
 	}
 	
 	
@@ -101,13 +101,15 @@ public class MakeMoneyRes {
 		this.status = status;
 	}
 
-	public String getEndTime() {
-		return endTime;
+	public String getTime() {
+		return time;
 	}
 
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
+	public void setTime(String time) {
+		this.time = time;
 	}
+
+	
 	
 	
 }
