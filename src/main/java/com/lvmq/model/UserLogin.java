@@ -56,9 +56,11 @@ public class UserLogin {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public UserLogin(String openid) {
+	public UserLogin(String openid, String headPortrait, String sex, String nickname) {
 		super();
 		this.openid = openid;
+		this.headPortrait = headPortrait;
+		this.name = nickname;
 	}
 
 
