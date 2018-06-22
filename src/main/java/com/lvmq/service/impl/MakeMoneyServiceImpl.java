@@ -22,14 +22,18 @@ import com.lvmq.api.res.EasyMoneyTaskRes;
 import com.lvmq.api.res.MakeMoneyDetailRes;
 import com.lvmq.api.res.MakeMoneyRes;
 import com.lvmq.api.res.MakeMoneyTaskRes;
+import com.lvmq.base.Consts;
 import com.lvmq.model.EasyMoney;
 import com.lvmq.model.EasyMoneyLog;
+import com.lvmq.model.GoldRewards;
 import com.lvmq.model.MakeMoney;
 import com.lvmq.model.MakeMoneyLog;
 import com.lvmq.repository.EasyMoneyLogRepository;
 import com.lvmq.repository.EasyMoneyRepository;
+import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.MakeMoneyLogRepository;
 import com.lvmq.repository.MakeMoneyRepository;
+import com.lvmq.repository.ReadRewardsRepository;
 import com.lvmq.service.MakeMoneyService;
 
 @Component
@@ -46,6 +50,9 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	
 	@Autowired
 	private EasyMoneyLogRepository easyMoneyLogRepository;
+	
+	@Autowired
+	private GoldRewardsRepository goldRewardsRepository;
 	
 	@Autowired
 	@PersistenceContext
@@ -122,7 +129,8 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 		
 		List<EasyMoneyListRes> el=new ArrayList<EasyMoneyListRes>();
 		for(EasyMoney e:easyMoneyList) {
-			el.add(new EasyMoneyListRes(e.getId(), e.getTitle(), e.getImg()));
+			GoldRewards goldRewards=goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE);
+			el.add(new EasyMoneyListRes(e.getId(), e.getTitle(), e.getImg(),goldRewards.getGold()));
 		}
 		return el;
 	}

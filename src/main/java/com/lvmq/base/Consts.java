@@ -49,6 +49,8 @@ public class Consts {
 			public static final String COMMENT = "117";
 			/** 绑定微信奖励 **/
 			public static final String BIND_WEIXIN = "118";
+			/**轻松赚钱**/
+			public static final String EASY_MONEY_SHARE="119";
 		}
 		
 		/**分享奖励个数**/
@@ -92,6 +94,8 @@ public class Consts {
 				return "评论奖励";
 			case Type.BIND_WEIXIN:
 				return "绑定微信奖励";
+			case Type.EASY_MONEY_SHARE:
+				return "轻松赚钱分享奖励";
 				default:
 					return "神秘奖励";
 			}

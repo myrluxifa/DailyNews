@@ -32,7 +32,7 @@ public class MakeMoneyRes {
 		this.cash=m.getCash();
 		this.type=m.getType();
 		this.status="0";
-		this.time="";
+		this.time=String.valueOf((int) (m.getTimeLimit()*60));
 		
 	}
 	
