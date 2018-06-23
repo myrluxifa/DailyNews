@@ -1,5 +1,7 @@
 package com.lvmq.api.res;
 
+import java.util.Optional;
+
 import org.springframework.util.StringUtils;
 
 import com.lvmq.model.UserLogin;
@@ -7,7 +9,7 @@ import com.lvmq.model.UserLogin;
 public class LoginRes {
 	private String user_id;
 
-	private String phone = "";
+	private String phone;
 
 	private String head_portrait;
 
@@ -32,7 +34,7 @@ public class LoginRes {
 	public LoginRes(UserLogin userLogin) {
 		// TODO Auto-generated constructor stub
 		this.user_id = userLogin.getId();
-		this.phone = userLogin.getUserName();
+		this.phone = Optional.ofNullable(userLogin.getUserName()).map(user -> user).orElse("");
 		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
 		this.my_invite_code = userLogin.getMyInviteCode();
 		this.gold = String.valueOf(userLogin.getGold());
