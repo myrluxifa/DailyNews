@@ -1,5 +1,7 @@
 package com.lvmq.api.res;
 
+import org.springframework.util.StringUtils;
+
 import com.lvmq.model.UserLogin;
 
 public class LoginRes {
@@ -21,6 +23,8 @@ public class LoginRes {
 
 	private String newer_mission;
 
+	private boolean bindwx;
+
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
 	}
@@ -36,6 +40,22 @@ public class LoginRes {
 		this.earnings = String.valueOf(userLogin.getEarnings());
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
+		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
+	}
+
+	/**
+	 * @return the bindwx
+	 */
+	public boolean isBindwx() {
+		return bindwx;
+	}
+
+	/**
+	 * @param bindwx
+	 *            the bindwx to set
+	 */
+	public void setBindwx(boolean bindwx) {
+		this.bindwx = bindwx;
 	}
 
 	/**

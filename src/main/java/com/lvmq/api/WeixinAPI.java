@@ -164,7 +164,7 @@ public class WeixinAPI {
 		if(user.isPresent()) {
 			userLogin = user.get();
 		}else {
-			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, sex, nickname));		
+			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname));		
 			
 			//增加金币
 			GoldLog gl = new GoldLog(userLogin.getId(), userLogin.getGold() + 100, 100, userLogin.getGold(), Consts.GoldLog.Type.BIND_WEIXIN);

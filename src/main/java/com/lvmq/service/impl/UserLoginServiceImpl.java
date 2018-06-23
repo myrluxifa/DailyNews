@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.lvmq.api.res.LoginRes;
 import com.lvmq.base.Argument;
@@ -64,8 +65,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		userLogin.setCreateTime(new Date());
 		
-		// 任务主页 新手任务状态
-		userLogin.setNewerMission("0|0|0|0");
+		if(StringUtils.isEmpty(userLogin.getNewerMission()))
+			// 任务主页 新手任务状态
+			userLogin.setNewerMission("0|0|0|0");
 		
 		String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getGold();
 		
