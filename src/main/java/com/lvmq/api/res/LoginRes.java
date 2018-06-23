@@ -7,7 +7,7 @@ import com.lvmq.model.UserLogin;
 public class LoginRes {
 	private String user_id;
 
-	private String phone;
+	private String phone = "";
 
 	private String head_portrait;
 
