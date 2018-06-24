@@ -1,9 +1,11 @@
 package com.lvmq.api.res;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.lvmq.model.NewsInfo;
 import com.lvmq.util.ArrayUtil;
+import com.lvmq.util.RelativeDateFormat;
 
 public class NewsInfoRes {
 	private String id;
@@ -28,15 +30,19 @@ public class NewsInfoRes {
 	
 	private String newsType;
 	
+	private String redpackage;
+	
+	private String redMoney;
+	
 	
 	public NewsInfoRes() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public NewsInfoRes(NewsInfo newsInfo,int ifRead) {
+	public NewsInfoRes(NewsInfo newsInfo,String redPackage,String redMoney,int ifRead) {
 		// TODO Auto-generated constructor stub
 		this.id=newsInfo.getId();
-		this.publishDate=String.valueOf(newsInfo.getPublishDate().getTime());
+		this.publishDate=RelativeDateFormat.format(newsInfo.getPublishDate());
 		this.posterScreenName=newsInfo.getPosterScreenName();
 		this.url=newsInfo.getUrl();
 		this.title=newsInfo.getTitle();
@@ -46,6 +52,8 @@ public class NewsInfoRes {
 		this.imgsUrl=ArrayUtil.stringToList(newsInfo.getImgsUrl());
 		this.ifRead=String.valueOf(ifRead);
 		this.newsType=ArrayUtil.getNewsTypeOrAdType(newsInfo.getImgsUrl());
+		this.redpackage=redPackage;
+		this.redMoney=redMoney;
 	}
 
 	public String getId() {
@@ -134,6 +142,22 @@ public class NewsInfoRes {
 
 	public void setNewsType(String newsType) {
 		this.newsType = newsType;
+	}
+
+	public String getRedpackage() {
+		return redpackage;
+	}
+
+	public void setRedpackage(String redpackage) {
+		this.redpackage = redpackage;
+	}
+
+	public String getRedMoney() {
+		return redMoney;
+	}
+
+	public void setRedMoney(String redMoney) {
+		this.redMoney = redMoney;
 	}
 	
 	

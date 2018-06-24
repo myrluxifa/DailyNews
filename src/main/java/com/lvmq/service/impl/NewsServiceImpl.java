@@ -148,7 +148,14 @@ public class NewsServiceImpl implements NewsService {
 	
 	
 	public NewsRes home(String userId,int page,int pageSize,String catId,int adPage,int adPageSize){
+		
 		try {
+			int redPackagecnt=0;
+			
+			//取出每小时随机红包次数
+			Optional<ReadReward> opt=readRewardsRepository.findById("1");
+			ReadReward r=opt.get();
+			
 			try {
 			if(!Util.isBlank(userId)) {
 				if(goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.LOGIN, userId,TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
@@ -212,6 +219,13 @@ public class NewsServiceImpl implements NewsService {
 					recallLogRepository.updateByRecallUser(userId);
 				}
 				
+				int cnt=r.getHorCnt();
+				
+				int count=balanceLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ, userId, TimeUtil.zeroForHour(), TimeUtil.twelveForHour());
+				if(cnt>count) {
+					redPackagecnt=cnt-count;
+				}
+				
 			}
 			}catch (Exception e) {
 				// TODO: handle exception
@@ -228,7 +242,19 @@ public class NewsServiceImpl implements NewsService {
 				
 				List<NewsInfo> newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
 				
-				newsInfoArray.forEach(x->newsInfoResArray.add(new NewsInfoRes(x,Util.isBlank(userId)==true?0:newsInfoReadRepository.countByuserIdAndNewsId(userId,x.getId()))));
+				
+				for(NewsInfo newsInfo: newsInfoArray) {
+					String redPackage="0";
+					String redMoney="0";
+					if(redPackagecnt>0) {
+						redPackage="1";
+						redPackagecnt=redPackagecnt-1;
+						redMoney=r.getHorMoney();
+					}
+					newsInfoResArray.add(new NewsInfoRes(newsInfo,redPackage,redMoney,Util.isBlank(userId)==true?0:newsInfoReadRepository.countByuserIdAndNewsId(userId,newsInfo.getId())));
+				}
+				
+				
 				
 				newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
 //			}
@@ -349,12 +375,24 @@ public class NewsServiceImpl implements NewsService {
 			ReadReward r=opt.get();
 			int flag=0;
 			
-			//计算当前时间
-			Calendar calendar=Calendar.getInstance();
-			int hour=calendar.get(Calendar.HOUR_OF_DAY);
 			
 			
-			if((r.getDailyCnt()+(hour/r.getHour()*r.getHorCnt())-readGoldCnt)>0) {
+			int redCount=balanceLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ, userId, TimeUtil.zeroForHour(), TimeUtil.twelveForHour());
+			
+			if((r.getHorCnt()-redCount)>0) {
+				UserLogin u=userLoginRepository.findById(userId).get();
+				BalanceLog b=new BalanceLog();
+				b.setType(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ);
+				b.setOldNum(u.getBalance());
+				b.setNum(r.getHorMoney());
+				b.setNewNum(String.valueOf(Double.parseDouble(u.getBalance())+Double.parseDouble(r.getHorMoney())));
+				b.setUserId(userId);
+				b.setCreateUser(userId);
+				b.setCreateTime(new Date());
+				balanceLogRepository.save(b);
+			}else {
+			
+			if((r.getDailyCnt()-readGoldCnt)>0) {
 				UserLogin u=userLoginRepository.findById(userId).get();
 				GoldLog g=new GoldLog();
 				g.setType(Consts.GoldLog.Type.READ);
@@ -501,6 +539,7 @@ public class NewsServiceImpl implements NewsService {
 				}
 				flag=1;
 			}
+			}
 				NewsInfoRead nr=o.get();
 				nr.setFlag(1);
 				newsInfoReadRepository.save(nr);
@@ -541,10 +580,10 @@ public class NewsServiceImpl implements NewsService {
 		ReadReward r=opt.get();
 		int flag=0;
 		
-		//计算当前时间
-		Calendar calendar=Calendar.getInstance();
-		int hour=calendar.get(Calendar.HOUR_OF_DAY);
-		int cnt=r.getDailyCnt()+(hour/r.getHour()*r.getHorCnt());
+//		//计算当前时间
+//		Calendar calendar=Calendar.getInstance();
+//		int hour=calendar.get(Calendar.HOUR_OF_DAY);
+		int cnt=r.getDailyCnt();
 		
 		Optional<ReadReward> op=readRewardsRepository.findById("1");
 		
@@ -566,7 +605,7 @@ public class NewsServiceImpl implements NewsService {
 		for(int i=0;i<Integer.valueOf(newsPageSize);i++) {
 			int p=r.nextInt(Integer.valueOf(String.valueOf(c)));
 			List<NewsInfo> newsInfoArray=newsInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(p, 1,Direction.DESC, "publishDate"), 0);
-			newsInfoResArray.add(new NewsInfoRes(newsInfoArray.get(0),0));
+			newsInfoResArray.add(new NewsInfoRes(newsInfoArray.get(0),"0","0",0));
 		}
 		newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
 		

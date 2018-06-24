@@ -23,7 +23,10 @@ public class ReadReward {
 	
 	private int horCnt;
 	
+	
 	private String explain;
+	
+	private String horMoney;
 
 	public String getId() {
 		return id;
@@ -71,6 +74,14 @@ public class ReadReward {
 
 	public void setExplain(String explain) {
 		this.explain = explain;
+	}
+
+	public String getHorMoney() {
+		return horMoney;
+	}
+
+	public void setHorMoney(String horMoney) {
+		this.horMoney = horMoney;
 	}
 	
 	

@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.format.datetime.DateFormatter;
 
 public class TimeUtil {
@@ -49,6 +50,21 @@ public class TimeUtil {
 		return new Timestamp(twelve);
 	}
 	
+	public static Date zeroForHour() {
+		Calendar c = Calendar.getInstance();
+		int hour=c.get(Calendar.HOUR_OF_DAY);
+		long current=System.currentTimeMillis();
+		long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+hour*60*60*1000;
+		return new Timestamp(zero);
+	}
+	
+	public static Date twelveForHour() {
+		long current=System.currentTimeMillis();
+		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+24*60*60*1000;
+		return new Timestamp(twelve);
+	}
+	
+	
 	
 	public static Date getHistoryDay(Date date,int day) {  
         Calendar calendar = Calendar.getInstance();  
@@ -84,5 +100,17 @@ public class TimeUtil {
 		return format(instance.getTime(), null);
 	}
 	
+	
+	public static void main(String[] args) throws Exception {
+		Calendar c = Calendar.getInstance();
+		int hour=c.get(Calendar.HOUR_OF_DAY);
+		long current=System.currentTimeMillis();
+		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+hour*60*60*1000;
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date=new Timestamp(twelve);
+		String d=format.format(date);
+		System.out.println(d);
+	}
+
 	
 }

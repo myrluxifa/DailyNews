@@ -51,6 +51,7 @@ public class Consts {
 			public static final String BIND_WEIXIN = "118";
 			/**轻松赚钱**/
 			public static final String EASY_MONEY_SHARE="119";
+			
 		}
 		
 		/**分享奖励个数**/
@@ -109,6 +110,9 @@ public class Consts {
 			
 			//徒弟前8天师傅奖励
 			public static final String EIGHT_DAY_REWARDS="107";
+			
+			/**每小时奖励红包**/
+			public static final String RED_PACKAGE_BY_READ="120";
 		}
 		
 	}

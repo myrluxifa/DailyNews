@@ -115,7 +115,7 @@ public class NewsAPI extends BaseAPI {
 
 	@ApiOperation(value = "首页新闻列表", notes = "")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户编号", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户编号", required = false, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "catId", value = "分类编号", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "page", value = "分页", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页数量", required = true, dataType = "String"),
