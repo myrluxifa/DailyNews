@@ -1,5 +1,9 @@
 package com.lvmq.api.res;
 
+import java.util.Optional;
+
+import org.springframework.util.StringUtils;
+
 import com.lvmq.model.UserLogin;
 
 public class LoginRes {
@@ -21,6 +25,8 @@ public class LoginRes {
 
 	private String newer_mission;
 
+	private boolean bindwx;
+
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
 	}
@@ -28,7 +34,7 @@ public class LoginRes {
 	public LoginRes(UserLogin userLogin) {
 		// TODO Auto-generated constructor stub
 		this.user_id = userLogin.getId();
-		this.phone = userLogin.getUserName();
+		this.phone = Optional.ofNullable(userLogin.getUserName()).map(user -> user).orElse("");
 		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
 		this.my_invite_code = userLogin.getMyInviteCode();
 		this.gold = String.valueOf(userLogin.getGold());
@@ -36,6 +42,22 @@ public class LoginRes {
 		this.earnings = String.valueOf(userLogin.getEarnings());
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
+		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
+	}
+
+	/**
+	 * @return the bindwx
+	 */
+	public boolean isBindwx() {
+		return bindwx;
+	}
+
+	/**
+	 * @param bindwx
+	 *            the bindwx to set
+	 */
+	public void setBindwx(boolean bindwx) {
+		this.bindwx = bindwx;
 	}
 
 	/**
