@@ -31,6 +31,8 @@ public class GoldRewards {
 	
 	private Date updateTime;
 	
+	
+	
 
 	public String getId() {
 		return id;

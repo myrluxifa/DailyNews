@@ -2,6 +2,7 @@ package com.lvmq.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,6 +88,13 @@ public class MakeMoneyAPI {
 	@RequestMapping(value="/easyMoneyShare",method=RequestMethod.POST)
 	public ResponseBean easyMoneyShare(String userId,String id) {
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.easyMoneyShare(userId, id));
+	}
+	
+	@CrossOrigin(origins="*", maxAge = 3600)
+	@ApiOperation(value="阅读轻松赚钱分享内容",notes="")
+	@RequestMapping(value="/readEasyMoneyShare",method=RequestMethod.POST)
+	public ResponseBean readEasyMoneyShare(String token) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.readEasyMoneyShare(token));
 	}
 	
 	

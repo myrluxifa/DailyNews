@@ -32,4 +32,6 @@ public interface MakeMoneyService {
 	 EasyMoneyShareRes easyMoneyShare(String userId,String id);
 	 
 	 List<EasyMoneyTaskRes> easyMoneyTask(String userId,Pageable pageable);
+	 
+	 String readEasyMoneyShare(String token);
 }

@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@CrossOrigin(origins="*", maxAge = 3600)
+
 @Api(tags = {"新闻"})
 @RestController
 @RequestMapping("/api/news")
@@ -130,11 +130,11 @@ public class NewsAPI extends BaseAPI {
 	
 	
 	
-//	@RequestMapping(value="/getNewsFromIDataAPI",method=RequestMethod.POST)
-//	public void getNewsFromIDataAPI(){
-//		newsService.getNewsFromIDataAPI();
-//	}
-//	
+	@RequestMapping(value="/getNewsFromIDataAPI",method=RequestMethod.POST)
+	public void getNewsFromIDataAPI(){
+		newsService.getNewsFromIDataAPI();
+	}
+	
 	
 	@ApiOperation(value = "获得评论列表", notes = "")
 	@ApiImplicitParams({

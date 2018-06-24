@@ -25,15 +25,19 @@ import com.lvmq.api.res.MakeMoneyTaskRes;
 import com.lvmq.base.Consts;
 import com.lvmq.model.EasyMoney;
 import com.lvmq.model.EasyMoneyLog;
+import com.lvmq.model.GoldLog;
 import com.lvmq.model.GoldRewards;
 import com.lvmq.model.MakeMoney;
 import com.lvmq.model.MakeMoneyLog;
+import com.lvmq.model.UserLogin;
 import com.lvmq.repository.EasyMoneyLogRepository;
 import com.lvmq.repository.EasyMoneyRepository;
+import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.MakeMoneyLogRepository;
 import com.lvmq.repository.MakeMoneyRepository;
 import com.lvmq.repository.ReadRewardsRepository;
+import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.MakeMoneyService;
 
 @Component
@@ -53,6 +57,12 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	
 	@Autowired
 	private GoldRewardsRepository goldRewardsRepository;
+	
+	@Autowired
+	private GoldLogRepository goldLogRepository;
+	
+	@Autowired
+	private UserLoginRepository userLoginRepository;
 	
 	@Autowired
 	@PersistenceContext
@@ -164,6 +174,45 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 		EasyMoneyShareRes es=new EasyMoneyShareRes();
 		es.setToken(el.getId());
 		return es;
+	}
+	
+	
+	public  String readEasyMoneyShare(String token) {
+		Optional<EasyMoneyLog> op=easyMoneyLogRepository.findById(token);
+		
+		if(op.isPresent()) {
+			EasyMoneyLog em=op.get();
+			if(em.getFlag()==0) {
+				int count=easyMoneyLogRepository.countByUserIdAndEmIdAndFlag(em.getUserId(), em.getEmId(), 2);
+				if(count==0) {
+					
+					Optional<UserLogin> uop=userLoginRepository.findById(em.getUserId());
+					if(uop.isPresent()) {
+						UserLogin ul=uop.get();
+						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE).getGold());
+						//更新为已获得奖励状态
+						em.setFlag(2);
+						easyMoneyLogRepository.save(em);
+						//添加奖励
+						ul.setGold(ul.getGold()+gold);
+						userLoginRepository.save(ul);
+						//添加奖励日志
+						goldLogRepository.save(new GoldLog(em.getUserId(),ul.getGold()+gold , gold, ul.getGold(), Consts.GoldLog.Type.EASY_MONEY_SHARE));
+					}else {
+						em.setFlag(1);
+						easyMoneyLogRepository.save(em);
+					}
+				}
+			}
+			Optional<EasyMoney> emoney=easyMoneyRepository.findById(em.getEmId());
+			if(emoney.isPresent()) {
+				return emoney.get().getTextare();
+			}else {
+				return "";
+			}
+		}
+		
+		return "";
 	}
 	
 	

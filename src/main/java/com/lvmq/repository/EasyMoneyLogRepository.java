@@ -9,4 +9,7 @@ import com.lvmq.model.EasyMoneyLog;
 public interface EasyMoneyLogRepository extends CrudRepository<EasyMoneyLog, String> {
 	
   	List<EasyMoneyLog> findByUserId(String userId);
+  	
+
+	int countByUserIdAndEmIdAndFlag(String userId, String emId, int i);
 }
