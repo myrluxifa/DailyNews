@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,6 +94,21 @@ public class WeixinAPI {
 		Optional<UserLogin> user = userRepository.findById(userId);
 		
 		if(user.isPresent()) {
+			UserLogin ul = user.get();
+			if(!StringUtils.isEmpty(ul.getOpenid())) {
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "您已绑定过微信，无需重复绑定~");
+			}
+		}
+		
+		int cnt = userRepository.countByOpenid(openid);
+		
+		if(cnt > 0) {
+			return new ResponseBean<>(Code.FAIL, Code.FAIL, "该微信已被绑定过，请更换其他微信~");
+		}
+		
+		
+		
+		if(user.isPresent()) {
 			if(org.springframework.util.StringUtils.isEmpty(user.get().getOpenid())) {
 				UserLogin uu = user.get();
 				uu.setOpenid(openid);
@@ -102,10 +118,13 @@ public class WeixinAPI {
 				
 				uu.setHeadPortrait(headimgurl);
 				
+				// 增加金币
+				uu.setGold(uu.getGold() + 100);
+				
 				userRepository.save(uu);
 				
 				//增加金币
-				GoldLog gl = new GoldLog(userId, uu.getGold() + 100, 100, uu.getGold(), Consts.GoldLog.Type.BIND_WEIXIN);
+				GoldLog gl = new GoldLog(userId, uu.getGold(), 100, uu.getGold() - 100, Consts.GoldLog.Type.BIND_WEIXIN);
 				goldLogRepository.save(gl);
 				
 				return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "微信绑定成功~");
@@ -164,10 +183,10 @@ public class WeixinAPI {
 		if(user.isPresent()) {
 			userLogin = user.get();
 		}else {
-			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname));		
+			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100));		
 			
 			//增加金币
-			GoldLog gl = new GoldLog(userLogin.getId(), userLogin.getGold() + 100, 100, userLogin.getGold(), Consts.GoldLog.Type.BIND_WEIXIN);
+			GoldLog gl = new GoldLog(userLogin.getId(), userLogin.getGold(), 100, userLogin.getGold() - 100, Consts.GoldLog.Type.BIND_WEIXIN);
 			goldLogRepository.save(gl);
 		}
 		

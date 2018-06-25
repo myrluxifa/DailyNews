@@ -27,4 +27,6 @@ public interface UserLoginRepository extends BaseRepository<UserLogin> {
 	List<UserLogin> findByInviteCode(String inviteCode);
 
 	Optional<UserLogin> findByOpenid(String openid);
+
+	int countByOpenid(String openid);
 }
