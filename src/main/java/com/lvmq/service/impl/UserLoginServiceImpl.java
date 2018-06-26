@@ -71,7 +71,11 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getGold();
 		
-		userLogin.setGold(Long.valueOf(gold));
+		if(null != userLogin.getGold() && userLogin.getGold() > 0) {
+			userLogin.setGold(Long.valueOf(gold) + userLogin.getGold());		
+		}else {
+			userLogin.setGold(Long.valueOf(gold));			
+		}
 		
 		
 		
