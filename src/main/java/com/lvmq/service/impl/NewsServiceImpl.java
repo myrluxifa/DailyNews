@@ -139,6 +139,31 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	
+	@Override
+	public void getNewsFromIDataAPIByCatId(String catId) {
+		// TODO Auto-generated method stub
+		try {
+			
+					String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid="+catId;
+					String json = IDataAPI.getRequestFromUrl(url);
+					log.info(json);
+					Gson gson=new Gson();
+					ToutiaoResponseDto toutiaoResponseDto=gson.fromJson(json, ToutiaoResponseDto.class);
+					
+					List<NewsInfo> newsInfoArray=new ArrayList<NewsInfo>();
+					for(ToutiaoDataResponseDto toutiao :toutiaoResponseDto.getData()) {
+						newsInfoArray.add(new NewsInfo(toutiao,catId));
+					}
+					List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
+				
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			log.info(e.getMessage());
+		}
+	}
+	
+	
 	public NewsTypeArray types() {
 		List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
 		List<NewsTypeRes> typeArray=new ArrayList<NewsTypeRes>();

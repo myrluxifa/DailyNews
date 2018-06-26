@@ -48,8 +48,8 @@ public class MakeMoneyAPI {
 	
 	@ApiOperation(value="上传图片返回图片路径",notes="")
 	@RequestMapping(value="/uploadImage",method=RequestMethod.POST)
-	public ResponseBean uploadImage(MultipartFile file) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",com.lvmq.util.FileUtil.uploadOneFile(file));
+	public ResponseBean uploadImage(String base64) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",com.lvmq.util.FileUtil.decryptByBase64(base64));
 	}
 	
 	

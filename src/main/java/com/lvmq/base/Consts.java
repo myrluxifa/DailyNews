@@ -174,7 +174,7 @@ public class Consts {
 	public static final class file{
 		public static final String URI="/opt/apache-tomcat-9.0.5/webapps/img-uri/";
 		
-		public static final String IP="http://47.104.73.127:8080";
+		public static final String IP="http://47.104.73.127:8080/img-uri/";
 	}
 	
 	public static final class SmsConfig{

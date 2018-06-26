@@ -66,7 +66,7 @@ public class NewsInfo {
 		this.posterId=dto.getPosterId();
 		this.viewCount=0;
 		this.content=dto.getContent();
-		this.imgsUrl=ArrayUtil.arrayToString(dto.getImageUrls());
+		this.imgsUrl=dto.getImageUrls()==null?"":ArrayUtil.arrayToString(dto.getImageUrls());
 		this.catId=catId;
 		this.flag=0;
 	}
