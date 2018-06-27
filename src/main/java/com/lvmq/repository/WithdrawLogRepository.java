@@ -10,4 +10,6 @@ public interface WithdrawLogRepository extends JpaRepository<WithdrawLog, String
 
 	Page<WithdrawLog> findByUserId(Pageable pagePluginSort, String userId);
 
+	int countByUserIdAndFeeAndState(String userId, String string, String pass);
+
 }

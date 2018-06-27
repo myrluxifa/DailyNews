@@ -90,7 +90,13 @@ public class WithdrawAPI extends BaseAPI {
 			// 1元提现直接提
 			if(wfee == 1) {
 				
-				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), fee, Consts.Withdraw.State.DEFAULT, userId);
+				int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
+				
+				if(cnt > 0) {
+					return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "一元提现只能做一次~"); 
+				}
+				
+				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), "1", Consts.Withdraw.State.DEFAULT, userId);
 				
 			} 
 			// 非1元提现
