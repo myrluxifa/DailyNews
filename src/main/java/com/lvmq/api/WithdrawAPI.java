@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@Api(tags = {"账户"})
+@Api(tags = {"提现"})
 @RestController
 @RequestMapping("api/withdraw")
 public class WithdrawAPI extends BaseAPI {
