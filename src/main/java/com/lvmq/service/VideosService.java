@@ -12,5 +12,7 @@ public interface VideosService {
 	VideosArrayRes getVideosArray(int page,int pageSize);
 
 	VideosArrayRes getWonderfulVideosArray(int pageSize);
+
+	int addAmountOfPlay(String id);
 	
 }

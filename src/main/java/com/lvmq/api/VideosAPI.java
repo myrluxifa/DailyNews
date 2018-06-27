@@ -38,4 +38,10 @@ public class VideosAPI {
 	public ResponseBean<VideosArrayRes> getWonderfulVideo(String pageSize) {
 		return new ResponseBean<VideosArrayRes>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", videosService.getWonderfulVideosArray(Integer.valueOf(pageSize)));
 	}
+	
+	@ApiOperation(value="增加播放次数")
+	@RequestMapping(value="/addAmountOfPlay",method=RequestMethod.POST)
+	public ResponseBean addAmountOfPlay(String id) {
+		return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功",videosService.addAmountOfPlay(id));
+	}
 }

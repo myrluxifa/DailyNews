@@ -2,6 +2,7 @@ package com.lvmq.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,4 +99,22 @@ public class VideosServiceImpl implements VideosService {
 		}
 	}
 	
+	
+	@Override
+	public int addAmountOfPlay(String id) {
+		try {
+			
+			Optional<VideosInfo> ov=videosInfoRepository.findById(id);
+			if(ov.isPresent()) {
+				VideosInfo v=ov.get();
+				v.setViewCount(v.getViewCount()+1);
+				videosInfoRepository.save(v);
+				return v.getViewCount();
+			}else {
+				return 0;
+			}
+		}catch(Exception e) {
+			return 0;
+		}
+	}
 }
