@@ -8,6 +8,22 @@ package com.lvmq.base;
  */
 public class Consts {
 
+	public static class Withdraw {
+		public static class State {
+			public static final String DEFAULT = "0";
+			public static final String PASS = "1";
+			public static final String REJECT= "2";
+			public static String getName(String state) {
+				switch(state) {
+				case "0": return "待审核";
+				case "1": return "成功";
+				case "2": return "审核不通过";
+				default: return "神秘记录";
+				}
+			}
+		}
+	}
+	
 	public static final String QRCODE = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528800765208&di=371c98b4d958ed7dc48015a1095ae724&imgtype=0&src=http%3A%2F%2Fs1.sinaimg.cn%2Flarge%2F005CbCKDzy753KDRoF99f";
 	
 	public static class GoldLog {
