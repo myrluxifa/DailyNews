@@ -13,6 +13,8 @@ public interface UserLoginService {
 	
 	LoginRes findByUserId(String userId);
 	
+	LoginRes findByUserId(String userId, int cnt);
+	
 	Optional<UserLogin> login(UserLogin userLogin);
 	
 	UserLogin save(UserLogin userLogin);

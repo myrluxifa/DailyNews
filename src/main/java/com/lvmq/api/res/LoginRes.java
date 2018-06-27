@@ -27,8 +27,25 @@ public class LoginRes {
 
 	private boolean bindwx;
 
+	private boolean oneyuan;
+
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @return the oneyuan
+	 */
+	public boolean isOneyuan() {
+		return oneyuan;
+	}
+
+	/**
+	 * @param oneyuan
+	 *            the oneyuan to set
+	 */
+	public void setOneyuan(boolean oneyuan) {
+		this.oneyuan = oneyuan;
 	}
 
 	public LoginRes(UserLogin userLogin) {
@@ -43,6 +60,20 @@ public class LoginRes {
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
+	}
+
+	public LoginRes(UserLogin userLogin, int cnt) {
+		this.user_id = userLogin.getId();
+		this.phone = Optional.ofNullable(userLogin.getUserName()).map(user -> user).orElse("");
+		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
+		this.my_invite_code = userLogin.getMyInviteCode();
+		this.gold = String.valueOf(userLogin.getGold());
+		this.balance = String.valueOf(userLogin.getBalance());
+		this.earnings = String.valueOf(userLogin.getEarnings());
+		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
+		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
+		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
+		this.oneyuan = cnt > 0 ? true : false; 
 	}
 
 	/**

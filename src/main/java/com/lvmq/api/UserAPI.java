@@ -26,6 +26,7 @@ import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.repository.WithdrawLogRepository;
 import com.lvmq.service.DayMissionService;
 import com.lvmq.service.NewsService;
 import com.lvmq.service.UserLoginService;
@@ -58,6 +59,9 @@ public class UserAPI {
 	@Autowired
 	private GoldLogRepository goldLogRepository;
 	
+	@Autowired
+	private WithdrawLogRepository withdrawLogRepository;
+	
 	private static final Logger log = LoggerFactory.getLogger(UserAPI.class);
 	
 	
@@ -81,7 +85,10 @@ public class UserAPI {
 		if(userLoginOpt.isPresent()) {
 			UserLogin userLogin=userLoginOpt.get();
 		
-			return new ResponseBean<LoginRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin));
+			//1元提现
+			int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userLogin.getId(), "1", Consts.Withdraw.State.PASS);
+			
+			return new ResponseBean<LoginRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin, cnt));
 		}else {
 			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"账号或密码错误"); 
 		}
@@ -235,7 +242,11 @@ public class UserAPI {
 	@ApiOperation(value="获取个人信息",notes="")
 	@RequestMapping(value="/getUserInfo",method=RequestMethod.POST)
 	public ResponseBean getUserInfo(String userId) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", userLoginService.findByUserId(userId));
+		
+		//1元提现
+		int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
+		
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", userLoginService.findByUserId(userId, cnt));
 	}
 	
 	

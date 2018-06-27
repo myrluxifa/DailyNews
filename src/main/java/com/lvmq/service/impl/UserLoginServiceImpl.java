@@ -45,6 +45,12 @@ public class UserLoginServiceImpl implements UserLoginService{
 		return new LoginRes( userLoginRepository.findById(id).get());
 		
 	}
+	
+	@Override
+	public LoginRes findByUserId(String id, int cnt) {
+		return new LoginRes( userLoginRepository.findById(id).get(), cnt);
+		
+	}
 
 	@Override
 	public Optional<UserLogin> login(UserLogin userLogin) {
