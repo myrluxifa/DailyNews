@@ -15,9 +15,9 @@ public class Consts {
 			public static final String REJECT= "2";
 			public static String getName(String state) {
 				switch(state) {
-				case "0": return "待审核";
+				case "0": return "审核中";
 				case "1": return "成功";
-				case "2": return "审核不通过";
+				case "2": return "失败";
 				default: return "神秘记录";
 				}
 			}

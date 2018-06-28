@@ -150,7 +150,19 @@ public class WithdrawAPI extends BaseAPI {
 
 			List<WithdrawPageRes> result = new ArrayList<>();
 			for (WithdrawLog wl : page) {
-				WithdrawPageRes res = new WithdrawPageRes(wl.getFee(), DateUtils.formatDate(wl.getCreateTime(), "yyyy-MM-dd HH:mm:ss"), Consts.Withdraw.State.getName(wl.getState()));
+				String title = "";
+				switch(wl.getState()) {
+				case Consts.Withdraw.State.DEFAULT:
+					title = "提现申请审核中";
+					break;
+				case Consts.Withdraw.State.PASS:
+					title = "提现金额\""+wl.getFee()+"元\"";
+					break;
+				case Consts.Withdraw.State.REJECT:
+					title = "提现审核失败";
+					break;
+				}
+				WithdrawPageRes res = new WithdrawPageRes(title, DateUtils.formatDate(wl.getCreateTime(), "yyyy-MM-dd HH:mm:ss"), Consts.Withdraw.State.getName(wl.getState()));
 				result.add(res);
 			}
 

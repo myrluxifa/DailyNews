@@ -2,7 +2,7 @@ package com.lvmq.api.res;
 
 public class WithdrawPageRes {
 
-	private String fee;
+	private String title;
 	private String time;
 	private String state;
 
@@ -10,18 +10,18 @@ public class WithdrawPageRes {
 		super();
 	}
 
-	public WithdrawPageRes(String fee, String time, String state) {
+	public WithdrawPageRes(String title, String time, String state) {
 		super();
-		this.fee = fee;
+		this.title = title;
 		this.time = time;
 		this.state = state;
 	}
 
 	/**
-	 * @return the fee
+	 * @return the title
 	 */
-	public String getFee() {
-		return fee;
+	public String getTitle() {
+		return title;
 	}
 
 	/**
@@ -39,24 +39,21 @@ public class WithdrawPageRes {
 	}
 
 	/**
-	 * @param fee
-	 *            the fee to set
+	 * @param title the title to set
 	 */
-	public void setFee(String fee) {
-		this.fee = fee;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	/**
-	 * @param time
-	 *            the time to set
+	 * @param time the time to set
 	 */
 	public void setTime(String time) {
 		this.time = time;
 	}
 
 	/**
-	 * @param state
-	 *            the state to set
+	 * @param state the state to set
 	 */
 	public void setState(String state) {
 		this.state = state;
