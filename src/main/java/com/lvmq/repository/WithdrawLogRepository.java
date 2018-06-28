@@ -12,4 +12,6 @@ public interface WithdrawLogRepository extends JpaRepository<WithdrawLog, String
 
 	int countByUserIdAndFeeAndState(String userId, String string, String pass);
 
+	int countByUserIdAndState(String userId, String default1);
+
 }

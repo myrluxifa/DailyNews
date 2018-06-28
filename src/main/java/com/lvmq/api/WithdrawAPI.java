@@ -81,6 +81,12 @@ public class WithdrawAPI extends BaseAPI {
 			
 			double  balance= Double.valueOf(ul.getBalance()) + (double)ul.getGold()/Consts.GOLD_RATIO;
 			
+			int tag = withdrawLogRepository.countByUserIdAndState(userId, Consts.Withdraw.State.DEFAULT);
+			
+			if(tag > 0) {
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "您有待审核的提现记录，请等待审核结束再进行下次提现~"); 
+			} 
+			
 			//提现金额不足
 			if(wfee > balance) {
 				return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "余额不足~"); 
