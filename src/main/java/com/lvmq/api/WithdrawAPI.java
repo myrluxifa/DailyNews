@@ -162,7 +162,7 @@ public class WithdrawAPI extends BaseAPI {
 					title = "提现审核失败";
 					break;
 				}
-				WithdrawPageRes res = new WithdrawPageRes(title, DateUtils.formatDate(wl.getCreateTime(), "yyyy-MM-dd HH:mm:ss"), Consts.Withdraw.State.getName(wl.getState()));
+				WithdrawPageRes res = new WithdrawPageRes(title, DateUtils.formatDate(wl.getCreateTime(), "yyyy-MM-dd HH:mm:ss"), Consts.Withdraw.State.getName(wl.getState()), wl.getFee());
 				result.add(res);
 			}
 

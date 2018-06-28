@@ -5,16 +5,32 @@ public class WithdrawPageRes {
 	private String title;
 	private String time;
 	private String state;
+	private String fee;
 
 	public WithdrawPageRes() {
 		super();
 	}
 
-	public WithdrawPageRes(String title, String time, String state) {
+	public WithdrawPageRes(String title, String time, String state, String fee) {
 		super();
 		this.title = title;
 		this.time = time;
 		this.state = state;
+		this.fee = fee;
+	}
+
+	/**
+	 * @return the fee
+	 */
+	public String getFee() {
+		return fee;
+	}
+
+	/**
+	 * @param fee the fee to set
+	 */
+	public void setFee(String fee) {
+		this.fee = fee;
 	}
 
 	/**
