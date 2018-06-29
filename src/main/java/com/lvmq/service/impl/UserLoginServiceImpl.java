@@ -165,4 +165,11 @@ public class UserLoginServiceImpl implements UserLoginService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	public String getUserEarnings(String userId) {
+		String bsum=balanceLogRepository.sumNumByUserId(userId);
+		int gsum=(int) (goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO);
+		return String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum));
+	}
 }

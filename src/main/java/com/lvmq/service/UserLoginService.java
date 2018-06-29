@@ -24,4 +24,6 @@ public interface UserLoginService {
 	UserLogin updatePasswd(String userName,String passwd);
 	
 	List<UserLogin> findByInviteCode(String inviteCode);
+	
+	String getUserEarnings(String userId);
 }

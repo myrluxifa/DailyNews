@@ -30,5 +30,8 @@ public interface BalanceLogRepository extends CrudRepository<com.lvmq.model.Bala
 	String sumByTypeAndTriggerUserIdAndUserId(List<String> type,String triggerUserId,String userId);
 
 	List<BalanceLog> findByUserId(String userId);
+	
+	@Query(value="select ifnull(sum(num),0) from t_balance_log where user_id=?1",nativeQuery=true)
+	String sumNumByUserId(String userId );
 
 }
