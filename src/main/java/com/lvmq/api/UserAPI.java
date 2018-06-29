@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -258,4 +259,11 @@ public class UserAPI {
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",userLoginService.getUserEarnings(userId));
 	}
 	
+	
+	@CrossOrigin(origins="*", maxAge = 3600)
+	@ApiOperation(value="每日分享",notes="")
+	@RequestMapping(value="/shareEveryDay",method=RequestMethod.POST)
+	public ResponseBean shareEveryDay(String userId) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",userLoginService.shareEveryDay(userId));
+	}
 }

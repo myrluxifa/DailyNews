@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.lvmq.api.res.EveryDayShareRes;
 import com.lvmq.api.res.LoginRes;
 import com.lvmq.model.UserLogin;
 
@@ -26,4 +27,6 @@ public interface UserLoginService {
 	List<UserLogin> findByInviteCode(String inviteCode);
 	
 	String getUserEarnings(String userId);
+	
+	EveryDayShareRes shareEveryDay(String userId);
 }

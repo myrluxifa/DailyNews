@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.lvmq.api.res.EveryDayShareRes;
 import com.lvmq.api.res.LoginRes;
 import com.lvmq.base.Argument;
 import com.lvmq.base.Consts;
@@ -171,5 +172,18 @@ public class UserLoginServiceImpl implements UserLoginService{
 		String bsum=balanceLogRepository.sumNumByUserId(userId);
 		int gsum=(int) (goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO);
 		return String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum));
+	}
+	
+	
+	public EveryDayShareRes shareEveryDay(String userId) {
+		String bsum=balanceLogRepository.sumNumByUserId(userId);
+		int gsum=(int) (goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO);
+		
+		Optional<UserLogin> u=userLoginRepository.findById(userId);
+		if(u.isPresent()) {
+			UserLogin userLogin=u.get();
+			return new EveryDayShareRes(userLogin.getInviteCode(),userLogin.getHeadPortrait(),String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum)),userLogin.getUserName());
+		}
+		return new EveryDayShareRes();
 	}
 }
