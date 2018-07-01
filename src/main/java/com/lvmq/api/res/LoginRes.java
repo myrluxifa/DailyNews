@@ -28,6 +28,22 @@ public class LoginRes {
 	private boolean bindwx;
 
 	private boolean oneyuan;
+	
+	private String name;
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public LoginRes() {
 		// TODO Auto-generated constructor stub
@@ -73,6 +89,7 @@ public class LoginRes {
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
+		this.name = Optional.ofNullable(userLogin.getName()).map(name -> name).orElse("");
 		this.oneyuan = cnt > 0 ? true : false; 
 	}
 
