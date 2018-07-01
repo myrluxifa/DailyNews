@@ -29,4 +29,6 @@ public interface UserLoginService {
 	String getUserEarnings(String userId);
 	
 	EveryDayShareRes shareEveryDay(String userId);
+	
+	String getOfficial(String type);
 }

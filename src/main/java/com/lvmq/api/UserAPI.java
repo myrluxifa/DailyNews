@@ -266,4 +266,10 @@ public class UserAPI {
 	public ResponseBean shareEveryDay(String userId) {
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",userLoginService.shareEveryDay(userId));
 	}
+	
+	@ApiOperation(value="获得文案",notes="分类(DEPOSIT:提现说明;INVITE:邀请规则;SIGN_IN:签到规则;MAKEMONEY:赚钱攻略;HELP:帮助与反馈)")
+	@RequestMapping(value="/getOfficial",method=RequestMethod.POST)
+	public ResponseBean  getOfficial(String type) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",userLoginService.getOfficial(type));
+	}
 }

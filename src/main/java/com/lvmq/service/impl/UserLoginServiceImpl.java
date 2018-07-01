@@ -14,10 +14,12 @@ import com.lvmq.base.Argument;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
+import com.lvmq.model.Official;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.GoldRewardsRepository;
+import com.lvmq.repository.OfficialRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.util.MD5;
@@ -37,6 +39,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 	
 	@Autowired
 	private BalanceLogRepository balanceLogRepository;
+	
+	@Autowired
+	private OfficialRepository officialRepository;
 	
 	public int countByUserName(String userName) {
 		return userLoginRepository.countByUserName(userName);
@@ -182,8 +187,13 @@ public class UserLoginServiceImpl implements UserLoginService{
 		Optional<UserLogin> u=userLoginRepository.findById(userId);
 		if(u.isPresent()) {
 			UserLogin userLogin=u.get();
-			return new EveryDayShareRes(userLogin.getInviteCode(),userLogin.getHeadPortrait(),String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum)),userLogin.getUserName());
+			return new EveryDayShareRes(userLogin.getMyInviteCode(),userLogin.getHeadPortrait(),String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum)),userLogin.getUserName());
 		}
 		return new EveryDayShareRes();
+	}
+	
+	public String getOfficial(String type) {
+		Official of=officialRepository.findByType(type);
+		return of.getDetails();
 	}
 }
