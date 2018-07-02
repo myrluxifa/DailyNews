@@ -97,7 +97,7 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		GoldLog goldLog=new GoldLog();
 		goldLog.setUserId(user.getId());
-		goldLog.setType(Consts.GoldLog.Type.SIGN);
+		goldLog.setType(Consts.GoldLog.Type.REGISTER);
 		goldLog.setNum(Integer.valueOf(gold));
 		goldLog.setOldNum(0);
 		goldLog.setNewNum(Integer.valueOf(gold));
