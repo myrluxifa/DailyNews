@@ -28,10 +28,10 @@ public class VideosAPI {
 	}
 	
 	
-//	@RequestMapping(value="/getVideosFromIDataAPI",method=RequestMethod.POST)
-//	public void getVideosFromIDataAPI() {
-//		videosService.getVideosFromIDataAPI();
-//	}
+	@RequestMapping(value="/getVideosFromIDataAPI",method=RequestMethod.POST)
+	public void getVideosFromIDataAPI() {
+		videosService.getVideosFromIDataAPI();
+	}
 	
 	@ApiOperation(value = "精彩视频", notes = "")
 	@RequestMapping(value="/getWonderfulVideo",method=RequestMethod.POST)

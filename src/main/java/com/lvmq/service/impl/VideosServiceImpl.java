@@ -7,7 +7,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -24,6 +26,7 @@ import com.lvmq.model.VideosInfo;
 import com.lvmq.repository.VideosInfoRepository;
 import com.lvmq.service.VideosService;
 
+@Configuration
 @Component
 public class VideosServiceImpl implements VideosService {
 	
@@ -33,13 +36,15 @@ public class VideosServiceImpl implements VideosService {
 	@Autowired
 	private VideosInfoRepository videosInfoRepository;
 	
+	@Scheduled(cron="0 0 0/1 * * ?")
+	@SuppressWarnings("unchecked")
 	@Override
 	public void getVideosFromIDataAPI() {
 		// TODO Auto-generated method stub
 		try {
 			
 			
-				String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&id=3757989448";
+				String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&uid=95420323139_1595728444432398";
 				String json = IDataAPI.getRequestFromUrl(url);
 				log.info(json);
 				Gson gson=new Gson();
@@ -57,7 +62,11 @@ public class VideosServiceImpl implements VideosService {
 						log.info(e.getMessage());
 					}
 				}
-				
+
+				if("true".equals(videosResponseDto.getHasNext())) {
+					getVideosFromIDataAPIByPageToken(videosResponseDto.getPageToken());
+					
+				}
 				//不能批量添加还需要判断视频重复问题
 				//videosInfoRepository.saveAll(videosInfoArray);
 				
@@ -67,6 +76,80 @@ public class VideosServiceImpl implements VideosService {
 			log.info(e.getMessage());
 		}
 	}
+	
+	public void getVideosFromIDataAPIByPageToken(String pageToken) {
+		// TODO Auto-generated method stub
+				try {
+					
+					
+						String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&uid=95420323139_1595728444432398"+"&pageToken="+pageToken;
+						String json = IDataAPI.getRequestFromUrl(url);
+						log.info(json);
+						Gson gson=new Gson();
+						
+						VideosResponseDto videosResponseDto=gson.fromJson(json, VideosResponseDto.class);
+						List<VideosDataResponseDto> videosDataResponseDto=videosResponseDto.getData();
+						
+						List<VideosInfo> videosInfoArray=new ArrayList<VideosInfo>();
+						
+						for(VideosDataResponseDto dto: videosDataResponseDto) {
+							try{
+								videosInfoRepository.save(new VideosInfo(dto));
+							}catch (Exception e) {
+								// TODO: handle exception
+								log.info(e.getMessage());
+							}
+						}
+
+						if("true".equals(videosResponseDto.getHasNext())) {
+							getVideosFromIDataAPIByPageToken2(videosResponseDto.getPageToken());
+						}
+						//不能批量添加还需要判断视频重复问题
+						//videosInfoRepository.saveAll(videosInfoArray);
+						
+						
+				}catch(Exception e) {
+					log.info(e.getMessage());
+				}
+	}
+	
+	public void getVideosFromIDataAPIByPageToken2(String pageToken) {
+		// TODO Auto-generated method stub
+				try {
+					
+					
+						String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&uid=95420323139_1595728444432398"+"&pageToken="+pageToken;
+						String json = IDataAPI.getRequestFromUrl(url);
+						log.info(json);
+						Gson gson=new Gson();
+						
+						VideosResponseDto videosResponseDto=gson.fromJson(json, VideosResponseDto.class);
+						List<VideosDataResponseDto> videosDataResponseDto=videosResponseDto.getData();
+						
+						List<VideosInfo> videosInfoArray=new ArrayList<VideosInfo>();
+						
+						for(VideosDataResponseDto dto: videosDataResponseDto) {
+							try{
+								videosInfoRepository.save(new VideosInfo(dto));
+							}catch (Exception e) {
+								// TODO: handle exception
+								log.info(e.getMessage());
+							}
+						}
+
+						if("true".equals(videosResponseDto.getHasNext())) {
+							getVideosFromIDataAPIByPageToken(videosResponseDto.getPageToken());
+						}
+						//不能批量添加还需要判断视频重复问题
+						//videosInfoRepository.saveAll(videosInfoArray);
+						
+						
+				}catch(Exception e) {
+					log.info(e.getMessage());
+				}
+	}
+	
+	
 	
 	
 	@Override
