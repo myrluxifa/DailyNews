@@ -415,6 +415,8 @@ public class NewsServiceImpl implements NewsService {
 				b.setCreateUser(userId);
 				b.setCreateTime(new Date());
 				balanceLogRepository.save(b);
+				u.setBalance(String.valueOf(Double.parseDouble(u.getBalance())+Double.parseDouble(r.getHorMoney())));
+				userLoginRepository.save(u);
 			}else {
 			
 			if((r.getDailyCnt()-readGoldCnt)>0) {

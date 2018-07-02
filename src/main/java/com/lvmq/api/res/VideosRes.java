@@ -21,8 +21,10 @@ public class VideosRes {
 	
 	private String publishDate;
 	
-	private List<String> videoUrls;
+	//private List<String> videoUrls;
 
+	private String url;
+	
 	
 	public VideosRes() {
 		// TODO Auto-generated constructor stub
@@ -37,7 +39,7 @@ public class VideosRes {
 		this.viewCount=String.valueOf(videosInfo.getViewCount());
 		this.description=videosInfo.getDescription();
 		this.publishDate=String.valueOf(videosInfo.getPublishDate().getTime());
-		this.videoUrls=ArrayUtil.stringToList(videosInfo.getVideoUrls());
+		this.url=videosInfo.getUrl();
 	}
 
 	public String getTitle() {
@@ -96,13 +98,21 @@ public class VideosRes {
 		this.id = id;
 	}
 
-	public List<String> getVideoUrls() {
-		return videoUrls;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setVideoUrls(List<String> videoUrls) {
-		this.videoUrls = videoUrls;
+	public void setUrl(String url) {
+		this.url = url;
 	}
+
+//	public List<String> getVideoUrls() {
+//		return videoUrls;
+//	}
+//
+//	public void setVideoUrls(List<String> videoUrls) {
+//		this.videoUrls = videoUrls;
+//	}
 
 	
 	

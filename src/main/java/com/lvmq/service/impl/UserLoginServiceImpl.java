@@ -144,9 +144,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 				GoldLog goldLogInvite=new GoldLog();
 				goldLogInvite.setUserId(user.getId());
 				goldLogInvite.setType(Consts.GoldLog.Type.SET_INVITE);
-				goldLogInvite.setNum(Integer.valueOf(updateGold));
+				goldLogInvite.setNum(Integer.valueOf(invite_gold));
 				goldLogInvite.setOldNum(Integer.valueOf(gold));
-				goldLogInvite.setNewNum(Integer.valueOf(invite_gold));
+				goldLogInvite.setNewNum(Integer.valueOf(updateGold));
 				goldLogInvite.setCreateUser(user.getId());
 				goldLogInvite.setCreateTime(new Date());
 				goldLogRepository.save(goldLogInvite);

@@ -68,7 +68,7 @@ public class VideosInfo {
 		this.publishDate=new Date(Long.valueOf(videosDataResponseDto.getPublishDate())*1000);
 		this.url=videosDataResponseDto.getUrl();
 		this.flag=0;
-		this.videoUrls=ArrayUtil.arrayToString(videosDataResponseDto.getVideoUrls());
+		this.videoUrls=videosDataResponseDto.getVideoUrls()==null?"":ArrayUtil.arrayToString(videosDataResponseDto.getVideoUrls());
 	}
 
 	public String getId() {
