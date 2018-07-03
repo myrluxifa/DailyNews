@@ -39,14 +39,14 @@ public class TimeUtil {
 	
 	
 	public static Date zeroForToday() {
-		long current=System.currentTimeMillis();
-		long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset();
+		long current=new Date().getTime();
+		long zero=current/(1000*3600*24)*(1000*3600*24)+24*60*60*1000-TimeZone.getDefault().getRawOffset();
 		return new Timestamp(zero);
 	}
 	
 	public static Date twelveForToday() {
 		long current=System.currentTimeMillis();
-		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+24*60*60*1000-1;
+		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+24*2*60*60*1000-1;
 		return new Timestamp(twelve);
 	}
 	
@@ -54,13 +54,15 @@ public class TimeUtil {
 		Calendar c = Calendar.getInstance();
 		int hour=c.get(Calendar.HOUR_OF_DAY);
 		long current=System.currentTimeMillis();
-		long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+hour*60*60*1000;
+		long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+(24+hour)*60*60*1000;
 		return new Timestamp(zero);
 	}
 	
 	public static Date twelveForHour() {
+		Calendar c = Calendar.getInstance();
+		int hour=c.get(Calendar.HOUR_OF_DAY);
 		long current=System.currentTimeMillis();
-		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+24*60*60*1000;
+		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+(24+hour+1)*60*60*1000-1;
 		return new Timestamp(twelve);
 	}
 	
@@ -104,14 +106,14 @@ public class TimeUtil {
 	
 	
 	public static void main(String[] args) throws Exception {
-		Calendar c = Calendar.getInstance();
-		int hour=c.get(Calendar.HOUR_OF_DAY);
-		long current=System.currentTimeMillis();
-		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+hour*60*60*1000;
+		
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date=new Timestamp(twelve);
-		String d=format.format(date);
-		System.out.println(d);
+		System.out.println(format.format(twelveForHour()));
+		System.out.println(format.format(zeroForHour()));
+		
+		long current=new Date().getTime();
+		long zero=current/(1000*3600*24)*(1000*3600*24)+24*3600*1000-TimeZone.getDefault().getRawOffset();
+		System.out.println(format.format(twelveForToday()));
 	}
 
 	

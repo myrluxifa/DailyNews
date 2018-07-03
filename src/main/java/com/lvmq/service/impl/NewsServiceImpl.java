@@ -265,6 +265,9 @@ public class NewsServiceImpl implements NewsService {
 				
 				int cnt=r.getHorCnt();
 				
+				SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				System.out.println(simpleDateFormat.format(TimeUtil.zeroForHour()));
+				System.out.println(simpleDateFormat.format(TimeUtil.twelveForHour()));
 				int count=balanceLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ, userId, TimeUtil.zeroForHour(), TimeUtil.twelveForHour());
 				if(cnt>count) {
 					redPackagecnt=cnt-count;
@@ -350,6 +353,16 @@ public class NewsServiceImpl implements NewsService {
 										needMoreRedPackageNum=needMoreRedPackageNum-1;
 										redPackageNews.get(userId).setTime(new Date().getTime());
 										
+									}
+								}
+							}
+						}else {
+							if(Util.isBlank(userId)==false) {
+								if(redPackageNews.containsKey(userId)&&newsInfoReadRepository.countByuserIdAndNewsId(userId,newsInfo.getId())==0) {
+									ReadPackageNews rpns=redPackageNews.get(userId);
+									if(rpns.getIds().contains(newsInfo.getId())) {
+										redPackage="1";
+										redMoney=r.getHorMoney();
 									}
 								}
 							}
