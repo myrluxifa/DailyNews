@@ -19,10 +19,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.tomcat.util.codec.binary.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
@@ -33,12 +34,16 @@ import com.lvmq.util.Util;
 @Controller
 public class CaptchaController {
 
+	Logger log = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private WxpubCaptchaRepository repository;
 	
-	
-	@GetMapping("gzh/captcha")
+	@RequestMapping("gzh/captcha")
 	public String login(String[] code, String[] state, Model model) throws UnsupportedEncodingException {
+		
+		log.info(new Gson().toJson(code));
+		log.info(new Gson().toJson(state));
 		
 		Map<String, Object> map = getAccessToken(code[0]);
 		
@@ -54,6 +59,7 @@ public class CaptchaController {
 		wxpub.setCountry(StringUtils.newStringUtf8(wxuser.get("country").toString().getBytes("ISO-8859-1")));
 		wxpub.setCreateTime(Calendar.getInstance().getTime());
 		wxpub.setCaptcha(Util.getRandom(6));
+		wxpub.setUnionid(map.get("unionid").toString());
 		repository.save(wxpub);
 		
 		model.addAttribute("captcha", wxpub.getCaptcha());
