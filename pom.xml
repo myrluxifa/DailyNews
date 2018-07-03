@@ -50,6 +50,11 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
 		<!-- 看看HikariCP连接池好用不 -->
 		<dependency>  
 	        <groupId>com.zaxxer</groupId>  

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>点击复制</title>
+    <link rel="stylesheet" href="/css/index.css"/>
+</head>
+
+<body>
+    <div id='copy'>
+        <div class='copy-mask'>
+            <div class='cope-submitPopup cope-popup'>
+                <div class="cope-popup-title">验证码</div>
+                <div class="cope-popup-text cope-popup-num" id="cope-popup-num" th:text="${captcha}"></div>
+                <div class="cope-popup-text">有效时间：十分钟</div>
+                <div class="cope-popup-submitCopy" id="d_clip_button">点击复制</div>
+            </div>
+            <div class='cope-closePopup cope-popup'>
+                <div class="cope-popup-title">温馨提示</div>
+                <div class="cope-popup-text" style="padding: 0 35px;">验证码复制成功，请返回粘贴</div>
+                <div class="cope-popup-submitOK">知道了</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="/js/jquery-3.1.1.js"></script>
+<script>
+    $(window).on("load resize", function() {
+        var h = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
+        $(".copy-mask").css("height", h);
+    });
+    $(".cope-popup-submitCopy").click(function() {
+        var Url2 = document.getElementById("cope-popup-num").innerText;
+        var oInput = document.createElement('input');
+        oInput.value = Url2;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.className = 'oInput';
+        oInput.style.display = 'none';
+        $(".cope-submitPopup").css({
+            'display': 'none'
+        })
+        $(".cope-closePopup").css({
+            'display': 'block'
+        })
+    });
+    $(".cope-popup-submitOK").click(function() {
+        $(".copy-mask").css({
+            'display': 'none'
+        })
+    })
+</script>

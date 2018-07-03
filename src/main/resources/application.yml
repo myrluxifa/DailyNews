@@ -14,3 +14,23 @@ spring:
   jpa:
     database: mysql
     show-sql: true
+  
+  http:
+    encoding.charset: UTF-8
+    encoding.enable: true
+    encoding.force: true
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+      enabled: true
+  thymeleaf:
+    mode: HTML5
+    encodeing: UTF-8
+    content-type: text/html
+    cache: true # Allow Thymeleaf templates to be reloaded at dev time
+    prefix: /WEB-INF/templates/
+    suffix: .html
+  message:
+    basename: /i18n/messages
+    cache-seconds: 3600
+    encoding: utf-8
