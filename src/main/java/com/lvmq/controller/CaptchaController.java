@@ -60,7 +60,6 @@ public class CaptchaController {
 		wxpub.setCountry(StringUtils.newStringUtf8(wxuser.get("country").toString().getBytes("ISO-8859-1")));
 		wxpub.setCreateTime(Calendar.getInstance().getTime());
 		wxpub.setCaptcha(Util.getRandom(6));
-		wxpub.setUnionid(map.get("unionid").toString());
 		repository.save(wxpub);
 		
 		model.addAttribute("captcha", wxpub.getCaptcha());
