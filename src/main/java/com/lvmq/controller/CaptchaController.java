@@ -51,6 +51,7 @@ public class CaptchaController {
 		wxpub = Optional.ofNullable(wxpub).map(wx -> wx).orElse(new WxpubCaptcha());
 		wxpub.setOpenid(map.get("openid").toString());
 		Map<String, Object> wxuser = getUserInfo(map.get("access_token").toString(), wxpub.getOpenid());
+		log.info(new Gson().toJson(wxuser));
 		wxpub.setNickname(StringUtils.newStringUtf8(wxuser.get("nickname").toString().getBytes("ISO-8859-1")));
 		wxpub.setHeadimgurl(wxuser.get("headimgurl").toString());
 		wxpub.setSex(wxuser.get("sex") + "");
