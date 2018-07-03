@@ -89,12 +89,12 @@ public class WithdrawAPI extends BaseAPI {
 			int tag = withdrawLogRepository.countByUserIdAndState(userId, Consts.Withdraw.State.DEFAULT);
 			
 			if(tag > 0) {
-				return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "您有待审核的提现记录，请等待审核结束再进行下次提现~"); 
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "您有待审核的提现记录，请等待审核结束再进行下次提现~"); 
 			} 
 			
 			//提现金额不足
 			if(wfee > balance) {
-				return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "余额不足~"); 
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "余额不足~"); 
 			}
 			
 			WithdrawLog log;
@@ -104,7 +104,7 @@ public class WithdrawAPI extends BaseAPI {
 				int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
 				
 				if(cnt > 0) {
-					return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "一元提现只能做一次~"); 
+					return new ResponseBean<>(Code.FAIL, Code.FAIL, "一元提现只能做一次~"); 
 				}
 				
 				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), "1", Consts.Withdraw.State.DEFAULT, userId);
@@ -114,7 +114,7 @@ public class WithdrawAPI extends BaseAPI {
 			else {
 				
 				if(!ul.getNewerMission().equals("1|1|10|2")) {
-					return new ResponseBean<>(Code.FAIL, Code.FAIL, "失败", "请先完成1元提现任务~"); 
+					return new ResponseBean<>(Code.FAIL, Code.FAIL, "请先完成1元提现任务~"); 
 				}
 				
 				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), fee, Consts.Withdraw.State.DEFAULT, userId);
