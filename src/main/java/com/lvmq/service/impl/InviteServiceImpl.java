@@ -221,6 +221,8 @@ public class InviteServiceImpl implements InviteService {
 					String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
 					int updateGold=Integer.valueOf(invite_gold)+Integer.valueOf(String.valueOf(userLogin.getGold()));
 					
+					long userGold=userLogin.getGold();
+					
 					userLogin.setGold(Long.valueOf(updateGold));
 					userLogin.setInviteCode(inviteCode);
 					userLoginRepository.save(userLogin);
@@ -229,7 +231,7 @@ public class InviteServiceImpl implements InviteService {
 					goldLogInvite.setUserId(userLogin.getId());
 					goldLogInvite.setType(Consts.GoldLog.Type.SET_INVITE);
 					goldLogInvite.setNum(Integer.valueOf(invite_gold));
-					goldLogInvite.setOldNum(userLogin.getGold());
+					goldLogInvite.setOldNum(userGold);
 					goldLogInvite.setNewNum(Integer.valueOf(updateGold));
 					goldLogInvite.setCreateUser(userLogin.getId());
 					goldLogInvite.setCreateTime(new Date());

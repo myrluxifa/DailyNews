@@ -1,5 +1,6 @@
 package com.lvmq.api;
 
+import com.lvmq.base.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lvmq.api.res.base.ResponseBean;
-import com.lvmq.base.Code;
-import com.lvmq.service.MakeMoneyService;
 
-import ch.qos.logback.core.util.FileUtil;
+import com.lvmq.service.MakeMoneyService;
+import com.lvmq.util.FileUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,7 +50,8 @@ public class MakeMoneyAPI {
 	@ApiOperation(value="上传图片返回图片路径",notes="")
 	@RequestMapping(value="/uploadImage",method=RequestMethod.POST)
 	public ResponseBean uploadImage(String base64) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",com.lvmq.util.FileUtil.decryptByBase64(base64));
+		String url=FileUtil.decryptByBase64(base64);
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",url);
 	}
 	
 	
@@ -105,7 +107,14 @@ public class MakeMoneyAPI {
 	}
 	
 	
-	@ApiOperation(value="轻松赚钱任务",notes="")
+	@ApiOperation(value="高额返利截图示例",notes="")
+	@RequestMapping(value="/getMakeMoneyExample",method=RequestMethod.POST)
+	public ResponseBean getMakeMoneyExample(String id) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.getMakeMoneyExample(id)); 
+	}
+	
+	
+	@ApiOperation(value="轻松赚钱",notes="")
 	@RequestMapping(value="/easyMoneyTask",method=RequestMethod.POST)
 	public ResponseBean easyMoneyTask(String userId,String page,String pageSize) {
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.easyMoneyTask(userId, com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)))); 

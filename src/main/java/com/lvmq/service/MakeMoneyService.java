@@ -9,6 +9,7 @@ import com.lvmq.api.res.EasyMoneyListRes;
 import com.lvmq.api.res.EasyMoneyShareRes;
 import com.lvmq.api.res.EasyMoneyTaskRes;
 import com.lvmq.api.res.MakeMoneyDetailRes;
+import com.lvmq.api.res.MakeMoneyImgsRes;
 import com.lvmq.api.res.MakeMoneyRes;
 import com.lvmq.api.res.MakeMoneyTaskRes;
 
@@ -34,4 +35,6 @@ public interface MakeMoneyService {
 	 List<EasyMoneyTaskRes> easyMoneyTask(String userId,Pageable pageable);
 	 
 	 String readEasyMoneyShare(String token);
+	 
+	 List<MakeMoneyImgsRes> getMakeMoneyExample(String id);
 }

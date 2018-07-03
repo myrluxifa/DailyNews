@@ -1,5 +1,6 @@
 package com.lvmq.api.res;
 
+
 public class MakeMoneyTaskRes {
 	private String id;
 	

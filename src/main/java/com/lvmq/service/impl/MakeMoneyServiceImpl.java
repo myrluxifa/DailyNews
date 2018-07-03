@@ -13,13 +13,13 @@ import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.lvmq.api.res.EasyMoneyListRes;
 import com.lvmq.api.res.EasyMoneyShareRes;
 import com.lvmq.api.res.EasyMoneyTaskRes;
 import com.lvmq.api.res.MakeMoneyDetailRes;
+import com.lvmq.api.res.MakeMoneyImgsRes;
 import com.lvmq.api.res.MakeMoneyRes;
 import com.lvmq.api.res.MakeMoneyTaskRes;
 import com.lvmq.base.Consts;
@@ -39,6 +39,8 @@ import com.lvmq.repository.MakeMoneyRepository;
 import com.lvmq.repository.ReadRewardsRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.MakeMoneyService;
+import com.lvmq.util.ArrayUtil;
+import com.lvmq.util.PagePlugin;
 
 @Component
 public class MakeMoneyServiceImpl implements MakeMoneyService {
@@ -69,14 +71,20 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	private EntityManager entityManager;
 	
 	public List<MakeMoneyRes> makeMoneyList(String userId,String page,String pageSize) {
-		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)),0);
+		List<MakeMoney> makeMoneyList=makeMoneyRepository.findByFlag(PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)),0);
 		List<MakeMoneyRes> makeMoneyResList=new ArrayList<MakeMoneyRes>();
 		for(MakeMoney m:makeMoneyList) {
 			
 			Optional<MakeMoneyLog> makeMoneyLog=makeMoneyLogRepository.findByMakeMoneyIdAndUserId(m.getId(), userId);
 			if(makeMoneyLog.isPresent()) {
 				Date date=new Date();
-				makeMoneyResList.add(new MakeMoneyRes(m,makeMoneyLog.get().getStatus(),String.valueOf(makeMoneyLog.get().getEndTime().getTime()-date.getTime())));
+				int status=makeMoneyLog.get().getStatus();
+				if(makeMoneyLog.get().getEndTime().getTime()-date.getTime()<0) {
+					if(status==1||status==2) {
+						status=6;
+					}
+				}
+				makeMoneyResList.add(new MakeMoneyRes(m,status,String.valueOf(makeMoneyLog.get().getEndTime().getTime()-date.getTime())));
 			}else {
 				makeMoneyResList.add(new MakeMoneyRes(m));
 			}
@@ -156,14 +164,15 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			
 			if(m.getStatus()==3) {
 				rewards=ml.get().getCash();
-			}else {
+			}else if(m.getStatus()==1||m.getStatus()==2) {
 				Date d=new Date();
 				if(!d.before(m.getEndTime())) {
 					status="6";
 				}
 			}
 			
-			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),String.valueOf(m.getEndTime().getTime()),status,rewards));
+			SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards));
 		}
 		return mlr;
 	}
@@ -232,5 +241,18 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 		
 		
 		return elr;
+	}
+	
+	public List<MakeMoneyImgsRes> getMakeMoneyExample(String id){
+		Optional<MakeMoney> makeMoney=makeMoneyRepository.findById(id);
+		List<MakeMoneyImgsRes> mr=new ArrayList<MakeMoneyImgsRes>();
+		if(makeMoney.isPresent()) {
+			MakeMoney m=makeMoney.get();
+			List<String> s=ArrayUtil.stringToList(m.getImgs());
+			for(String ss:s) {
+				mr.add(new MakeMoneyImgsRes(ss));
+			}
+		}
+		return mr;
 	}
 }
