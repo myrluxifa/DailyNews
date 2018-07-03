@@ -95,4 +95,15 @@ public class Util {
 			return str;
 		} 
 
+	 
+	 public static boolean trueOrFalse() {
+		    Random rand=new Random();
+		    int a=rand.nextInt(2);
+		    
+		    if(a==0) {
+		    	return true;
+		    }else {
+		    	return false;
+		    }
+	 }
 }
