@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -28,6 +30,7 @@ import com.lvmq.api.res.NewsInfoRes;
 import com.lvmq.api.res.NewsRes;
 import com.lvmq.api.res.NewsTypeArray;
 import com.lvmq.api.res.NewsTypeRes;
+import com.lvmq.api.res.ReadPackageNews;
 import com.lvmq.api.res.RewardsRes;
 import com.lvmq.api.res.VideosRes;
 import com.lvmq.base.Consts;
@@ -39,6 +42,7 @@ import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.GoldRewards;
 import com.lvmq.model.LikeLog;
+import com.lvmq.model.MessageCode;
 import com.lvmq.model.NewsComment;
 import com.lvmq.model.NewsInfo;
 import com.lvmq.model.NewsInfoRead;
@@ -172,6 +176,8 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	
+	public static Map<String,ReadPackageNews> redPackageNews=new HashMap<String,ReadPackageNews>();
+	
 	public NewsRes home(String userId,int page,int pageSize,String catId,int adPage,int adPageSize){
 		
 		try {
@@ -181,8 +187,20 @@ public class NewsServiceImpl implements NewsService {
 			Optional<ReadReward> opt=readRewardsRepository.findById("1");
 			ReadReward r=opt.get();
 			
+			//加载过程中是否需要分配新的红包
+			Boolean needNewRedPackage=false;
+			
+			Boolean needMoreRedPackage=false;
+			
+			int needMoreRedPackageNum=0;
+			
 			try {
 			if(!Util.isBlank(userId)) {
+				
+				
+				
+				
+				//登录奖励
 				if(goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.LOGIN, userId,TimeUtil.zeroForToday(), TimeUtil.twelveForToday())==0) {
 					Optional<UserLogin> ou=userLoginRepository.findById(userId);
 					if(ou.isPresent()) {
@@ -202,6 +220,7 @@ public class NewsServiceImpl implements NewsService {
 					}
 				}
 				
+				//是否被召回
 				if(recallLogRepository.countByRecallUserAndFlagAndCreateTimeBetween(userId, 0,TimeUtil.getHistoryDay(new Date(), 3), new Date())>0) {
 					List<RecallLog> recallLogArray=recallLogRepository.findByRecallUserAndFlagAndCreateTimeBetween(com.lvmq.util.PagePlugin.pagePluginSort(0, 1,Direction.DESC, "createTime"), userId,0, TimeUtil.getHistoryDay(new Date(), 3), new Date());
 					String masterId=recallLogArray.get(0).getUserId();
@@ -251,17 +270,39 @@ public class NewsServiceImpl implements NewsService {
 					redPackagecnt=cnt-count;
 				}
 				
+				int alreadyRedPackageNum=0;
+				
+				if(redPackageNews.containsKey(userId)) {
+					//取出用户当前时间段的红包新闻
+					ReadPackageNews rp=redPackageNews.get(userId);
+					Date d=new Date(rp.getTime());
+					
+					if(d.getHours()!=new Date().getHours()) {
+						//如果所在小时不同则清除红包集合
+						redPackageNews.remove(userId);
+						needNewRedPackage=true;
+					}
+					//取出当前红包新闻数量
+					alreadyRedPackageNum=rp.getIds().size();
+					if(redPackagecnt>alreadyRedPackageNum) {
+						needMoreRedPackage=true;
+						needMoreRedPackageNum=redPackagecnt-alreadyRedPackageNum;
+					}
+					
+				}else {
+					needNewRedPackage=true;
+					needMoreRedPackage=true;
+					needMoreRedPackageNum=redPackagecnt;
+				}
+				
+				
 			}
 			}catch (Exception e) {
 				// TODO: handle exception
 				log.info(e.getMessage());
 			}
 			
-//			List<NewsType> newsTypeArray=newsTypeRepository.findAllByFlag(0);
-//			
-			List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
-//			
-//			for(NewsType n:newsTypeArray) {
+				List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
 				
 				List<NewsInfoRes> newsInfoResArray=new ArrayList<NewsInfoRes>();
 				
@@ -269,20 +310,59 @@ public class NewsServiceImpl implements NewsService {
 				
 				
 				for(NewsInfo newsInfo: newsInfoArray) {
+					
+					//需要从新分配红包奖励
 					String redPackage="0";
 					String redMoney="0";
-					if(redPackagecnt>0) {
-						redPackage="1";
-						redPackagecnt=redPackagecnt-1;
-						redMoney=r.getHorMoney();
+					if(needNewRedPackage==true) {
+						if(Util.isBlank(userId)==false) {
+							if(newsInfoReadRepository.countByuserIdAndNewsId(userId,newsInfo.getId())==0&&needMoreRedPackageNum>0) {
+								if(Util.trueOrFalse()) {
+									redPackage="1";
+									redMoney=r.getHorMoney();
+									
+									if(!redPackageNews.containsKey(userId)) {
+										List<String> ids=new ArrayList<String> ();
+										ids.add(newsInfo.getId());
+										ReadPackageNews rpn=new ReadPackageNews(ids, new Date().getTime());
+										redPackageNews.put(userId, rpn);
+									}else {
+										ReadPackageNews rpn=redPackageNews.get(userId);
+										rpn.getIds().add(newsInfo.getId());
+										rpn.setTime(new Date().getTime());
+										redPackageNews.put(userId, rpn);
+									}
+									
+									needMoreRedPackageNum=needMoreRedPackageNum-1;
+									
+								}
+							}
+						}
+						
+					}else {
+						if(needNewRedPackage==true) {
+							if(Util.isBlank(userId)==false) {
+								if(newsInfoReadRepository.countByuserIdAndNewsId(userId,newsInfo.getId())==0&&needMoreRedPackageNum>0) {
+									if(Util.trueOrFalse()) {
+										redPackage="1";
+										redMoney=r.getHorMoney();
+										redPackageNews.get(userId).getIds().add(newsInfo.getId());
+										needMoreRedPackageNum=needMoreRedPackageNum-1;
+										redPackageNews.get(userId).setTime(new Date().getTime());
+										
+									}
+								}
+							}
+						}
 					}
+					
+					
 					newsInfoResArray.add(new NewsInfoRes(newsInfo,redPackage,redMoney,Util.isBlank(userId)==true?0:newsInfoReadRepository.countByuserIdAndNewsId(userId,newsInfo.getId())));
 				}
 				
 				
 				
-				newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
-//			}
+			newsByTypeArray.add(new NewsByTypeRes(newsInfoResArray));
 			
 			List<AdvertInfo> advertInfo=advertInfoRepository.findByFlag(com.lvmq.util.PagePlugin.pagePluginSort(adPage, adPageSize,Direction.DESC, "createTime"),0);
 			

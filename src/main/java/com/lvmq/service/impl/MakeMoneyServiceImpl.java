@@ -236,6 +236,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 		for (Object o : objs) {
 			Object[] obj=(Object[]) o;
 			new EasyMoneyTaskRes(obj);
+			elr.add(new EasyMoneyTaskRes(obj));
 		}
 		entityManager.close();
 		

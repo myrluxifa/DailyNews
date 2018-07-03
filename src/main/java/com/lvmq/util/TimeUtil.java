@@ -101,6 +101,8 @@ public class TimeUtil {
 	}
 	
 	
+	
+	
 	public static void main(String[] args) throws Exception {
 		Calendar c = Calendar.getInstance();
 		int hour=c.get(Calendar.HOUR_OF_DAY);
