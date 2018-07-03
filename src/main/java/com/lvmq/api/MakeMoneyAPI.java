@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.service.MakeMoneyService;
+import com.lvmq.util.FileUtil;
 
-import ch.qos.logback.core.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,7 +49,8 @@ public class MakeMoneyAPI {
 	@ApiOperation(value="上传图片返回图片路径",notes="")
 	@RequestMapping(value="/uploadImage",method=RequestMethod.POST)
 	public ResponseBean uploadImage(String base64) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",com.lvmq.util.FileUtil.decryptByBase64(base64));
+		String url=FileUtil.decryptByBase64(base64);
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",url);
 	}
 	
 	

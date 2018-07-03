@@ -382,7 +382,7 @@ public class NewsServiceImpl implements NewsService {
 	
 	
 	@Transactional
-	public boolean getReward(String newsId,String userId) {
+	public boolean getReward(String newsId,String userId,String ifReadPackage) {
 		try {
 			Optional<NewsInfoRead> o=newsInfoReadRepository.findByNewsIdAndUserId(newsId, userId);
 			if(o.isPresent()) {
@@ -404,7 +404,7 @@ public class NewsServiceImpl implements NewsService {
 			
 			int redCount=balanceLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ, userId, TimeUtil.zeroForHour(), TimeUtil.twelveForHour());
 			
-			if((r.getHorCnt()-redCount)>0) {
+			if((r.getHorCnt()-redCount)>0&&ifReadPackage.equals("1")) {
 				UserLogin u=userLoginRepository.findById(userId).get();
 				BalanceLog b=new BalanceLog();
 				b.setType(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ);

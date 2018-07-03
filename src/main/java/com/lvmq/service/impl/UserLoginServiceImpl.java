@@ -136,7 +136,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 				userLoginRepository.save(inviteUser);
 				
 				String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
-				int updateGold=Integer.valueOf(invite_gold)+Integer.valueOf(gold);
+				int updateGold=(int) (Integer.valueOf(invite_gold)+user.getGold());
+				
+				long userGold=user.getGold();
 				
 				user.setGold(Long.valueOf(updateGold));
 				userLoginRepository.save(user);
@@ -145,7 +147,7 @@ public class UserLoginServiceImpl implements UserLoginService{
 				goldLogInvite.setUserId(user.getId());
 				goldLogInvite.setType(Consts.GoldLog.Type.SET_INVITE);
 				goldLogInvite.setNum(Integer.valueOf(invite_gold));
-				goldLogInvite.setOldNum(Integer.valueOf(gold));
+				goldLogInvite.setOldNum(userGold);
 				goldLogInvite.setNewNum(Integer.valueOf(updateGold));
 				goldLogInvite.setCreateUser(user.getId());
 				goldLogInvite.setCreateTime(new Date());

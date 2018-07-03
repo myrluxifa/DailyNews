@@ -163,7 +163,8 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 				}
 			}
 			
-			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),String.valueOf(m.getEndTime().getTime()),status,rewards));
+			SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards));
 		}
 		return mlr;
 	}

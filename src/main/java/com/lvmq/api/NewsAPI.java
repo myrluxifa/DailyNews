@@ -239,10 +239,11 @@ public class NewsAPI extends BaseAPI {
 	@RequestMapping(value="/getReward",method=RequestMethod.POST)
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "newsId", value = "新闻编号", required = true, dataType = "String"),
-		@ApiImplicitParam(paramType = "query", name = "userId", value = "登陆人编号", required = true, dataType = "String")
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "登陆人编号", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "ifReadPackage", value = "是否是红包新闻", required = true, dataType = "String")
 		})
-	public ResponseBean getReward(String userId,String newsId) {
-		if(newsService.getReward(newsId, userId)) {
+	public ResponseBean getReward(String userId,String newsId,String ifReadPackage) {
+		if(newsService.getReward(newsId, userId,ifReadPackage)) {
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
 		}else {
 			return new ResponseBean(Code.FAIL,Code.READ_CODE_FAIL,"失败");

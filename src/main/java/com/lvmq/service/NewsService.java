@@ -29,7 +29,7 @@ public interface NewsService {
 	boolean readNews(String userId,String newsId);
 
 	
-	boolean getReward(String newsId,String userId);
+	boolean getReward(String newsId,String userId,String ifReadPackage);
 	
 	 boolean likeComment(String newsId,String userId) ;
 	 
