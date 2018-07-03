@@ -7,13 +7,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 
-
 /**
  * The persistent class for the t_withdraw_log database table.
  * 
  */
 @Entity
-@Table(name="t_withdraw_log")
+@Table(name = "t_withdraw_log")
 public class WithdrawLog implements Serializable {
 
 	/**
@@ -22,21 +21,21 @@ public class WithdrawLog implements Serializable {
 	private static final long serialVersionUID = -5438808887059204695L;
 
 	@Id
-	@GenericGenerator(name="system-uuid",strategy="uuid")
-	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@GeneratedValue(generator = "system-uuid")
 	private String id;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="auditing_time")
+	@Column(name = "auditing_time")
 	private Date auditingTime;
 
-	@Column(name="auditing_user")
+	@Column(name = "auditing_user")
 	private String auditingUser;
 
 	private String captcha;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="create_time")
+	@Column(name = "create_time")
 	private Date createTime;
 
 	private String fee;
@@ -45,8 +44,24 @@ public class WithdrawLog implements Serializable {
 
 	private String state;
 
-	@Column(name="user_id")
+	@Column(name = "user_id")
 	private String userId;
+
+	private String openid;
+
+	/**
+	 * @return the openid
+	 */
+	public String getOpenid() {
+		return openid;
+	}
+
+	/**
+	 * @param openid the openid to set
+	 */
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
 
 	public WithdrawLog(String captcha, Date createTime, String fee, String state, String userId) {
 		super();

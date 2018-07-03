@@ -20,8 +20,10 @@ import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
 import com.lvmq.model.UserLogin;
 import com.lvmq.model.WithdrawLog;
+import com.lvmq.model.WxpubCaptcha;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.repository.WithdrawLogRepository;
+import com.lvmq.repository.WxpubCaptchaRepository;
 import com.lvmq.util.NumberUtils;
 import com.lvmq.util.PagePlugin;
 
@@ -40,6 +42,9 @@ public class WithdrawAPI extends BaseAPI {
 	
 	@Autowired
 	private WithdrawLogRepository withdrawLogRepository;
+	
+	@Autowired
+	private WxpubCaptchaRepository wxpubRepository;
 
 	@ApiOperation(value = "可提现金额查询", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
@@ -126,6 +131,15 @@ public class WithdrawAPI extends BaseAPI {
 				ul.setBalance("0");
 				ul.setGold(ul.getGold() - (long)(wfee * Consts.GOLD_RATIO));
 			}
+			
+			WxpubCaptcha wxpc = wxpubRepository.findTop1ByCaptchaOrderByCreateTimeDesc(captcha);
+			if(null == wxpc) {
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "验证码不存在");
+			}else {
+				log.setOpenid(wxpc.getOpenid());				
+				wxpubRepository.deleteById(wxpc.getId());
+			}
+			
 			
 			withdrawLogRepository.save(log);
 			userRepository.save(ul);

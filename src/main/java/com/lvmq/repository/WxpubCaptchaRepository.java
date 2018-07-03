@@ -8,4 +8,6 @@ public interface WxpubCaptchaRepository extends JpaRepository<WxpubCaptcha, Stri
 
 	WxpubCaptcha findTop1ByOpenidOrderByCreateTimeDesc(String string);
 
+	WxpubCaptcha findTop1ByCaptchaOrderByCreateTimeDesc(String captcha);
+
 }
