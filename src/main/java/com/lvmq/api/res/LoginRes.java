@@ -90,7 +90,7 @@ public class LoginRes {
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
 		this.name = Optional.ofNullable(userLogin.getName()).map(name -> name).orElse("");
-		this.oneyuan = cnt > 0 ? true : false; 
+		this.oneyuan = cnt > 0 ? true : false;
 	}
 
 	/**
