@@ -123,6 +123,8 @@ public class WithdrawAPI extends BaseAPI {
 				
 				String[] newer = ul.getNewerMission().split("\\|");
 				ul.setNewerMission(newer[0] + "|" + (newer[1] + 1)  + "|" + newer[2] + "|" + newer[3]);
+				
+				userRepository.save(ul);
 			} 
 			// 非1元提现
 			else {
