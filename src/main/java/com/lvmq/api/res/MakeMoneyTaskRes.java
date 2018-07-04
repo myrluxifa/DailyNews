@@ -14,13 +14,14 @@ public class MakeMoneyTaskRes {
 	
 	private String rewards;
 
+	private String gold;
 	
 	public MakeMoneyTaskRes() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	
-	public MakeMoneyTaskRes(String id,String logo,String title,String endTime,String status,String rewards) {
+	public MakeMoneyTaskRes(String id,String logo,String title,String endTime,String status,String rewards,String gold) {
 		// TODO Auto-generated constructor stub
 		this.id=id;
 		this.logo=logo;
@@ -28,6 +29,7 @@ public class MakeMoneyTaskRes {
 		this.endTime=endTime;
 		this.status=status;
 		this.rewards=rewards;
+		this.gold=gold;
 	}
 	
 	
@@ -77,6 +79,16 @@ public class MakeMoneyTaskRes {
 
 	public void setRewards(String rewards) {
 		this.rewards = rewards;
+	}
+
+
+	public String getGold() {
+		return gold;
+	}
+
+
+	public void setGold(String gold) {
+		this.gold = gold;
 	}
 	
 	

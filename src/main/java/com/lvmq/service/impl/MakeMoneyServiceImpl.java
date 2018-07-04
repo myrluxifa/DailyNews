@@ -156,6 +156,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	public List<MakeMoneyTaskRes> makeMoneyTask(String userId,String page,String pageSize){
 		List<MakeMoneyLog> makeMoneyLogList =makeMoneyLogRepository.findByUserId(com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)),userId);
 		
+		GoldRewards goldRewards=goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE);
 		List<MakeMoneyTaskRes> mlr=new ArrayList<MakeMoneyTaskRes>();
 		for(MakeMoneyLog m:makeMoneyLogList) {
 			Optional<MakeMoney> ml=makeMoneyRepository.findById(m.getMakeMoneyId());
@@ -172,7 +173,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			}
 			
 			SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards));
+			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards,goldRewards.getGold()));
 		}
 		return mlr;
 	}
