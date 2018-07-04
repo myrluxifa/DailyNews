@@ -156,7 +156,6 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	public List<MakeMoneyTaskRes> makeMoneyTask(String userId,String page,String pageSize){
 		List<MakeMoneyLog> makeMoneyLogList =makeMoneyLogRepository.findByUserId(com.lvmq.util.PagePlugin.pagePlugin(Integer.valueOf(page),Integer.valueOf(pageSize)),userId);
 		
-		GoldRewards goldRewards=goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE);
 		List<MakeMoneyTaskRes> mlr=new ArrayList<MakeMoneyTaskRes>();
 		for(MakeMoneyLog m:makeMoneyLogList) {
 			Optional<MakeMoney> ml=makeMoneyRepository.findById(m.getMakeMoneyId());
@@ -173,7 +172,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			}
 			
 			SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards,goldRewards.getGold()));
+			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards));
 		}
 		return mlr;
 	}
@@ -228,7 +227,10 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	
 	public List<EasyMoneyTaskRes> easyMoneyTask(String userId,Pageable pageable){
 		StringBuffer sql=new StringBuffer();
-		sql.append("select * from v_easy_money_task where user_id='").append(userId).append("' limit ").append(pageable.getPageNumber()).append(pageable.getPageSize());
+		sql.append("select * from v_easy_money_task where user_id='").append(userId).append("' limit ").append(pageable.getPageNumber()).append(",").append(pageable.getPageSize());
+		
+		
+		GoldRewards goldRewards=goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE);
 		
 		Query query=entityManager.createNativeQuery(sql.toString());
 		List<Object> objs=query.getResultList();
@@ -236,8 +238,7 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 		List<EasyMoneyTaskRes> elr=new ArrayList<EasyMoneyTaskRes>();
 		for (Object o : objs) {
 			Object[] obj=(Object[]) o;
-			new EasyMoneyTaskRes(obj);
-			elr.add(new EasyMoneyTaskRes(obj));
+			elr.add(new EasyMoneyTaskRes(obj,goldRewards.getGold()));
 		}
 		entityManager.close();
 		

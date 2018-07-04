@@ -13,12 +13,13 @@ public class EasyMoneyTaskRes {
 	
 	private String flag;
 	
+	private String gold;
 	
 	public EasyMoneyTaskRes() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public EasyMoneyTaskRes(Object[] obj) {
+	public EasyMoneyTaskRes(Object[] obj,String gold) {
 		// TODO Auto-generated constructor stub
 		
 		this.id=String.valueOf(obj[2]);
@@ -27,6 +28,7 @@ public class EasyMoneyTaskRes {
 		this.cnt=String.valueOf(obj[4]);
 		this.rewards=String.valueOf(obj[5]);
 		this.flag=String.valueOf(obj[6]);
+		this.gold=gold;
 	}
 
 	public String getId() {
@@ -75,6 +77,14 @@ public class EasyMoneyTaskRes {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public String getGold() {
+		return gold;
+	}
+
+	public void setGold(String gold) {
+		this.gold = gold;
 	}
 	
 	
