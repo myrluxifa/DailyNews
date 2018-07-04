@@ -166,10 +166,11 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 				rewards=ml.get().getCash();
 			}else if(m.getStatus()==1||m.getStatus()==2) {
 				Date d=new Date();
-				if(!d.before(m.getEndTime())) {
+				if(m.getEndTime().getTime()-d.getTime()<0) {
 					status="6";
 				}
 			}
+			
 			
 			SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 			mlr.add(new MakeMoneyTaskRes(m.getId(),ml.get().getLogo(),ml.get().getTitle(),simpleDateFormat.format(m.getEndTime()),status,rewards));
