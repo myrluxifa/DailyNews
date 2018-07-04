@@ -101,6 +101,10 @@ public class WithdrawAPI extends BaseAPI {
 			// 1元提现直接提
 			if(wfee == 1) {
 				
+				if(!ul.getNewerMission().equals("1|1|10|2")){
+					return new ResponseBean<>(Code.FAIL, Code.FAIL, "请先完成一元提现任务~"); 
+				}
+				
 				int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
 				
 				if(cnt > 0) {
