@@ -691,6 +691,8 @@ public class NewsServiceImpl implements NewsService {
 	
 	
 	public RewardsRes getRewardsCnt(String userId) {
+		System.out.println(TimeUtil.zeroForToday());
+		System.out.println(TimeUtil.twelveForToday());
 		//当天阅读奖励
 		int readGoldCnt=goldLogRepository.countByTypeAndUserIdAndCreateTimeBetween(Consts.GoldLog.Type.READ, userId, TimeUtil.zeroForToday(), TimeUtil.twelveForToday());
 		//配置的阅读奖励 条数 和 奖励金币数量
