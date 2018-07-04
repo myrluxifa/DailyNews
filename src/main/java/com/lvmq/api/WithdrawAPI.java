@@ -18,9 +18,11 @@ import com.lvmq.api.res.WithdrawPageRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
+import com.lvmq.model.NewerMission;
 import com.lvmq.model.UserLogin;
 import com.lvmq.model.WithdrawLog;
 import com.lvmq.model.WxpubCaptcha;
+import com.lvmq.repository.NewerMissonRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.repository.WithdrawLogRepository;
 import com.lvmq.repository.WxpubCaptchaRepository;
@@ -45,6 +47,9 @@ public class WithdrawAPI extends BaseAPI {
 	
 	@Autowired
 	private WxpubCaptchaRepository wxpubRepository;
+	
+	@Autowired
+	private NewerMissonRepository oneyuanRepository;
 
 	@ApiOperation(value = "可提现金额查询", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
@@ -97,15 +102,18 @@ public class WithdrawAPI extends BaseAPI {
 				return new ResponseBean<>(Code.FAIL, Code.FAIL, "余额不足~"); 
 			}
 			
+			NewerMission nm = oneyuanRepository.findByUserId(userId);
+			
+			if(nm.getRead() + nm.getShare() + nm.getSign() + nm.getSearch() < 1 + 1 + 10 + 2){
+				return new ResponseBean<>(Code.FAIL, Code.FAIL, "请先完成一元提现任务~"); 
+			}
+			
+			int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
+			
 			WithdrawLog log;
 			// 1元提现直接提
 			if(wfee == 1) {
 				
-				if(!ul.getNewerMission().equals("1|1|10|2")){
-					return new ResponseBean<>(Code.FAIL, Code.FAIL, "请先完成一元提现任务~"); 
-				}
-				
-				int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
 				
 				if(cnt > 0) {
 					return new ResponseBean<>(Code.FAIL, Code.FAIL, "一元提现只能做一次~"); 
@@ -117,8 +125,8 @@ public class WithdrawAPI extends BaseAPI {
 			// 非1元提现
 			else {
 				
-				if(!ul.getNewerMission().equals("1|1|10|2")) {
-					return new ResponseBean<>(Code.FAIL, Code.FAIL, "请先完成1元提现任务~"); 
+				if(cnt <= 0) {
+					return new ResponseBean<>(Code.FAIL, Code.FAIL, "请先完成1元提现~"); 
 				}
 				
 				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), fee, Consts.Withdraw.State.DEFAULT, userId);
