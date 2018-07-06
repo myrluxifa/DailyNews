@@ -131,7 +131,14 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 			Optional<MakeMoneyLog> makeMoneyLog=makeMoneyLogRepository.findByMakeMoneyIdAndUserId(id, userId);
 			SimpleDateFormat dateFormate=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			if(makeMoneyLog.isPresent()) {
-				return new MakeMoneyDetailRes(makeMoney.get(), makeMoneyLog.get().getStatus(),dateFormate.format(makeMoneyLog.get().getEndTime()));
+				int status=makeMoneyLog.get().getStatus();
+				Date date=new Date();
+				if(makeMoneyLog.get().getEndTime().getTime()-date.getTime()<0) {
+					if(status==1||status==2) {
+						status=6;
+					}
+				}
+				return new MakeMoneyDetailRes(makeMoney.get(), status,dateFormate.format(makeMoneyLog.get().getEndTime()));
 			}else {
 				return new MakeMoneyDetailRes(makeMoney.get(), 0,"");
 			}

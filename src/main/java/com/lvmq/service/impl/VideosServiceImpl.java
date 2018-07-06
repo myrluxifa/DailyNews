@@ -36,7 +36,7 @@ public class VideosServiceImpl implements VideosService {
 	@Autowired
 	private VideosInfoRepository videosInfoRepository;
 	
-	@Scheduled(cron="0 0 0/1 * * ?")
+	@Scheduled(cron="0 0 0/6 * * ? ")
 	@SuppressWarnings("unchecked")
 	@Override
 	public void getVideosFromIDataAPI() {
@@ -60,6 +60,7 @@ public class VideosServiceImpl implements VideosService {
 					}catch (Exception e) {
 						// TODO: handle exception
 						log.info(e.getMessage());
+						break;
 					}
 				}
 
