@@ -109,8 +109,8 @@ public class DayMissionServiceImpl implements DayMissionService {
 			UserLogin user = ouser.get();
 			
 			GoldLog gl = new GoldLog(user.getId(), user.getGold() + Consts.DayMission.REWARD[type], Consts.DayMission.REWARD[type], user.getGold(), ttglt(type));
-			goldLogRepository.save(gl);
-			user.setGold(user.getGold() + Consts.DayMission.REWARD[Consts.DayMission.Type.INVITE]);
+			gl = goldLogRepository.save(gl);
+			user.setGold(gl.getNewNum());
 			userLoginRepository.save(user);
 		}else if("0".equals(paramValue(dm.getParam(), type))) {
 			Optional<UserLogin> ouser = userLoginRepository.findById(userId);
@@ -118,8 +118,8 @@ public class DayMissionServiceImpl implements DayMissionService {
 			UserLogin user = ouser.get();
 			
 			GoldLog gl = new GoldLog(user.getId(), user.getGold() + Consts.DayMission.REWARD[type], Consts.DayMission.REWARD[type], user.getGold(), ttglt(type));
-			goldLogRepository.save(gl);
-			user.setGold(user.getGold() + Consts.DayMission.REWARD[Consts.DayMission.Type.INVITE]);
+			gl = goldLogRepository.save(gl);
+			user.setGold(gl.getNewNum());
 			userLoginRepository.save(user);
 		}
 		

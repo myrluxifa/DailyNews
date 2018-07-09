@@ -118,6 +118,7 @@ public class WeixinAPI {
 				
 				uu.setHeadPortrait(headimgurl);
 				
+				uu.setName(nickname);
 				// 增加金币
 				uu.setGold(uu.getGold() + 100);
 				

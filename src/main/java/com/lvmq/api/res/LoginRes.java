@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.util.StringUtils;
 
+import com.lvmq.base.Consts;
 import com.lvmq.model.UserLogin;
 
 public class LoginRes {
@@ -85,7 +86,8 @@ public class LoginRes {
 		this.my_invite_code = userLogin.getMyInviteCode();
 		this.gold = String.valueOf(userLogin.getGold());
 		this.balance = String.valueOf(userLogin.getBalance());
-		this.earnings = String.valueOf(userLogin.getEarnings());
+//		this.earnings = String.valueOf(userLogin.getEarnings());
+		this.earnings = String.valueOf(Integer.valueOf(this.gold)/Consts.GOLD_RATIO + Integer.valueOf(this.balance));
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
