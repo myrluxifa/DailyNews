@@ -72,7 +72,7 @@ public class DayMissionServiceImpl implements DayMissionService {
 	public String ttglt(Integer type){
 		switch(type) {
 		case 0: return Consts.GoldLog.Type.INVITE;
-		case 1: return Consts.GoldLog.Type.READ;
+		case 1: return Consts.GoldLog.Type.DAY_MISSION_READ;
 		case 2: return Consts.GoldLog.Type.SHARE;
 		case 3: return Consts.GoldLog.Type.SHOW;
 		case 4: return Consts.GoldLog.Type.COMMENT;

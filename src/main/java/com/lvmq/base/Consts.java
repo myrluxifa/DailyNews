@@ -67,6 +67,8 @@ public class Consts {
 			public static final String BIND_WEIXIN = "118";
 			/**轻松赚钱**/
 			public static final String EASY_MONEY_SHARE="119";
+			/** 日常任务 阅读奖励 **/
+			public static final String DAY_MISSION_READ = "120";
 			
 		}
 		
@@ -113,6 +115,8 @@ public class Consts {
 				return "绑定微信奖励";
 			case Type.EASY_MONEY_SHARE:
 				return "轻松赚钱分享奖励";
+			case Type.DAY_MISSION_READ:
+				return "日常任务阅读奖励";
 				default:
 					return "神秘奖励";
 			}
@@ -203,7 +207,7 @@ public class Consts {
 	
 	public static final class DayMission {
 		//日常任务奖励数量
-		public static final Long[] REWARD = {4000l,1000l,100l,100l,100l}; 
+		public static final Long[] REWARD = {4000l,100l,100l,100l,100l}; 
 		
 		public static final class Type {
 			/** 邀请好友 **/
