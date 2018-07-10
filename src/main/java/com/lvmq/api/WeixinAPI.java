@@ -182,33 +182,41 @@ public class WeixinAPI {
 	@PostMapping("login")
 	public ResponseBean<Object> login(String phone, String captcha, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
 		
-		if(!UserAPI.messageCodeMap.containsKey(phone)) {
-			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
+		if(!StringUtils.isEmpty(phone) && !StringUtils.isEmpty(captcha)) {
+			if(!UserAPI.messageCodeMap.containsKey(phone)) {
+				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
+			}
+			
+			MessageCode  m=UserAPI.messageCodeMap.get(phone);
+			//如果验证码过期
+			if(TimeUtil.ifPastDue(m.getTime())) {
+				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_PAST_DUE,"验证码过期");
+			}
+			
+			if(!m.getCode().equals(captcha)) {
+				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_MISTAKE,"验证码错误");
+			}
+			
+			//验证成功 移除当前验证码
+			UserAPI.messageCodeMap.remove(phone);
+			
+			UserLogin up = userRepository.findByUserName(phone);
+			if(null != up) {
+				bind(up.getId(), openid, nickname, sex, language, city, province, country, headimgurl, unionid);
+				up = userRepository.findByUserName(phone);
+				return new ResponseBean<>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(up));
+			}
 		}
-		
-		MessageCode  m=UserAPI.messageCodeMap.get(phone);
-		//如果验证码过期
-		if(TimeUtil.ifPastDue(m.getTime())) {
-			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_PAST_DUE,"验证码过期");
-		}
-		
-		if(!m.getCode().equals(captcha)) {
-			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_MISTAKE,"验证码错误");
-		}
-		
-		UserLogin up = userRepository.findByUserName(phone);
-		if(null != up) {
-			return bind(up.getId(), openid, nickname, sex, language, city, province, country, headimgurl, unionid);
-		}
-		
-		//验证成功 移除当前验证码
-		UserAPI.messageCodeMap.remove(phone);
 		
 		Optional<UserLogin> user = userRepository.findByOpenid(openid);
 		
 		UserLogin userLogin;
 		if(user.isPresent()) {
 			userLogin = user.get();
+			if(!StringUtils.isEmpty(phone) && !StringUtils.isEmpty(captcha)) {
+				userLogin.setUserName(phone);
+				userRepository.save(userLogin);				
+			}
 		}else {
 			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100, phone));		
 			
