@@ -15,10 +15,12 @@ import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
 import com.lvmq.model.GoldLog;
+import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.UserLoginService;
+import com.lvmq.util.TimeUtil;
 import com.lvmq.weixin.Weixin;
 
 import io.swagger.annotations.Api;
@@ -165,6 +167,8 @@ public class WeixinAPI {
 	
 	@ApiOperation(value = "微信登录", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "openid", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "nickname", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "sex", value = "微信返回值透传", required = true, dataType = "String"),
@@ -176,7 +180,29 @@ public class WeixinAPI {
 			@ApiImplicitParam(paramType = "query", name = "unionid", value = "微信返回值透传", required = true, dataType = "String")
 			})
 	@PostMapping("login")
-	public ResponseBean<LoginRes> login(String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
+	public ResponseBean<Object> login(String phone, String captcha, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
+		
+		if(!UserAPI.messageCodeMap.containsKey(phone)) {
+			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
+		}
+		
+		MessageCode  m=UserAPI.messageCodeMap.get(phone);
+		//如果验证码过期
+		if(TimeUtil.ifPastDue(m.getTime())) {
+			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_PAST_DUE,"验证码过期");
+		}
+		
+		if(!m.getCode().equals(captcha)) {
+			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_MISTAKE,"验证码错误");
+		}
+		
+		UserLogin up = userRepository.findByUserName(phone);
+		if(null != up) {
+			return bind(up.getId(), openid, nickname, sex, language, city, province, country, headimgurl, unionid);
+		}
+		
+		//验证成功 移除当前验证码
+		UserAPI.messageCodeMap.remove(phone);
 		
 		Optional<UserLogin> user = userRepository.findByOpenid(openid);
 		
