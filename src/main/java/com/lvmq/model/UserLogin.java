@@ -2,7 +2,6 @@ package com.lvmq.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -56,16 +55,13 @@ public class UserLogin {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public UserLogin(String openid, String headPortrait, String newerMission, String nickname, long gold, String userName, String password, String inviteCode) {
+	public UserLogin(String openid, String headPortrait, String newerMission, String nickname, long gold) {
 		super();
 		this.openid = openid;
 		this.headPortrait = headPortrait;
 		this.name = nickname;
 		this.newerMission = newerMission;
 		this.gold = gold;
-		this.userName = userName;
-		this.passwd = password;
-		this.inviteCode = inviteCode;
 	}
 
 

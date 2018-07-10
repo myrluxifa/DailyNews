@@ -1,6 +1,7 @@
 package com.lvmq.api;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,14 +15,18 @@ import com.lvmq.api.res.LoginRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
+import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
+import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.util.MD5;
 import com.lvmq.util.TimeUtil;
+import com.lvmq.util.Util;
 import com.lvmq.weixin.Weixin;
 
 import io.swagger.annotations.Api;
@@ -42,42 +47,97 @@ public class WeixinAPI {
 	
 	@Autowired
 	private GoldLogRepository goldLogRepository;
-
-	/*@ApiOperation(value = "绑定微信", notes = "", httpMethod = "POST")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "code", value = "用户授权后返回的Code", required = true, dataType = "String[]"),
-			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户Id", required = true, dataType = "String")
-			})
-	@PostMapping("bind")
-	public ResponseBean<Object> bind(String[] code, String[] state, String userId) throws UnsupportedEncodingException {
-		
-		Map<String, Object> map = Weixin.getAccessToken(code[0]);
-		
-		Optional<UserLogin> user = userRepository.findById(userId);
-		
-		if(user.isPresent()) {
-			if(org.springframework.util.StringUtils.isEmpty(user.get().getOpenid())) {
-				UserLogin uu = user.get();
-				uu.setOpenid(map.get("openid").toString());
-				
-				String[] states = uu.getNewerMission().split("\\|");
-				uu.setNewerMission((Integer.valueOf(states[0]) + 1) + "|" + states[1] + "|" + states[2] + "|" + states[3]);
-				
-				userRepository.save(uu);
-				
-				//增加金币
-				GoldLog gl = new GoldLog(userId, uu.getGold() + 100, 100, uu.getGold(), Consts.GoldLog.Type.BIND_WEIXIN);
-				goldLogRepository.save(gl);
-				
-				return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "微信绑定成功~");
-			}else {
-				return new ResponseBean<Object>(Code.FAIL, Code.FAIL, "您已经绑定过微信~");				
-			}
-		}else {
-			return new ResponseBean<Object>(Code.FAIL, Code.FAIL, "用户不存在~");
-		}
-	}*/
 	
+	@Autowired
+	private GoldRewardsRepository goldRewardsRepository;
+	
+	@Autowired
+	private BalanceLogRepository balanceLogRepository;
+	
+	@ApiOperation(value = "绑定手机号", notes = "", httpMethod = "POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = false, dataType = "String")
+			})
+	@PostMapping("bindphone")
+	public ResponseBean<Object> bindphone(String userId, String phone, String password, String captcha, String inviteCode) {
+		
+		if(!UserAPI.messageCodeMap.containsKey(phone)) {
+			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
+		}
+		
+		MessageCode  m=UserAPI.messageCodeMap.get(phone);
+		//如果验证码过期
+		if(TimeUtil.ifPastDue(m.getTime())) {
+			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_PAST_DUE,"验证码过期");
+		}
+		
+		if(!m.getCode().equals(captcha)) {
+			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_MISTAKE,"验证码错误");
+		}
+		
+		//验证成功 移除当前验证码
+		UserAPI.messageCodeMap.remove(phone);
+		
+		Optional<UserLogin> u = userRepository.findById(userId);
+		
+		UserLogin ul = u.get();
+		ul.setUserName(phone);
+		ul.setPasswd(MD5.getMD5(password));
+		
+		UserLogin user = userRepository.save(ul);
+		
+		if(!Util.isBlank(inviteCode)) {
+			
+			//给邀请人添加邀请数量
+			UserLogin inviteUser=userRepository.findByMyInviteCode(inviteCode);
+			if(inviteUser!=null) {
+				if(inviteUser.getFirstInvite().equals("0")) {
+					String money=goldRewardsRepository.findByType(Consts.BalanceLog.Type.FIRST_INVITE).getMoney();
+					
+					inviteUser.setBalance(String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)));
+					//首次召徒获得现金奖励
+					inviteUser.setFirstInvite("1");
+					balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
+				}
+				inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
+				if(!Util.isBlank(inviteUser.getInviteCode())) {
+					UserLogin masterMasetUser=userRepository.findByMyInviteCode(inviteUser.getInviteCode());
+					if(masterMasetUser.getGrandCnt()<2) {
+						masterMasetUser.setGrandCnt(masterMasetUser.getGrandCnt()+1);
+						user.setMasterMaster(masterMasetUser.getId());
+						userRepository.save(user);
+					}
+				}
+				userRepository.save(inviteUser);
+				
+				String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
+				int updateGold=(int) (Integer.valueOf(invite_gold)+user.getGold());
+				
+				long userGold=user.getGold();
+				
+				user.setGold(Long.valueOf(updateGold));
+				userRepository.save(user);
+				
+				GoldLog goldLogInvite=new GoldLog();
+				goldLogInvite.setUserId(user.getId());
+				goldLogInvite.setType(Consts.GoldLog.Type.SET_INVITE);
+				goldLogInvite.setNum(Integer.valueOf(invite_gold));
+				goldLogInvite.setOldNum(userGold);
+				goldLogInvite.setNewNum(Integer.valueOf(updateGold));
+				goldLogInvite.setCreateUser(user.getId());
+				goldLogInvite.setCreateTime(new Date());
+				goldLogRepository.save(goldLogInvite);
+			}
+			
+		}
+		
+		return null;
+	}
+
 	@ApiOperation(value = "绑定微信", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
@@ -140,38 +200,8 @@ public class WeixinAPI {
 		}
 	}
 	
-	/*
 	@ApiOperation(value = "微信登录", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "code", value = "用户授权后返回的Code", required = true, dataType = "String[]")
-			})
-	@PostMapping("login")
-	public ResponseBean<LoginRes> login(String[] code, String[] state, String userId) throws UnsupportedEncodingException {
-		
-		Map<String, Object> map = Weixin.getAccessToken(code[0]);
-		
-		Optional<UserLogin> user = userRepository.findById(userId);
-		
-		UserLogin userLogin;
-		if(user.isPresent()) {
-			userLogin = user.get();			
-		}else {
-			userLogin = userLoginService.save(new UserLogin(map.get("openid").toString()));		
-			
-			//增加金币
-			GoldLog gl = new GoldLog(userLogin.getId(), userLogin.getGold() + 100, 100, userLogin.getGold(), Consts.GoldLog.Type.BIND_WEIXIN);
-			goldLogRepository.save(gl);
-		}
-		
-		return new ResponseBean<>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin));
-	}*/
-	
-	@ApiOperation(value = "微信登录", notes = "", httpMethod = "POST")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = false, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "openid", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "nickname", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "sex", value = "微信返回值透传", required = true, dataType = "String"),
@@ -183,45 +213,15 @@ public class WeixinAPI {
 			@ApiImplicitParam(paramType = "query", name = "unionid", value = "微信返回值透传", required = true, dataType = "String")
 			})
 	@PostMapping("login")
-	public ResponseBean<Object> login(String phone, String captcha, String password, String inviteCode, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
-		
-		if(!StringUtils.isEmpty(phone) && !StringUtils.isEmpty(captcha)) {
-			if(!UserAPI.messageCodeMap.containsKey(phone)) {
-				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
-			}
-			
-			MessageCode  m=UserAPI.messageCodeMap.get(phone);
-			//如果验证码过期
-			if(TimeUtil.ifPastDue(m.getTime())) {
-				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_PAST_DUE,"验证码过期");
-			}
-			
-			if(!m.getCode().equals(captcha)) {
-				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_MISTAKE,"验证码错误");
-			}
-			
-			//验证成功 移除当前验证码
-			UserAPI.messageCodeMap.remove(phone);
-			
-			UserLogin up = userRepository.findByUserName(phone);
-			if(null != up) {
-				bind(up.getId(), openid, nickname, sex, language, city, province, country, headimgurl, unionid);
-				up = userRepository.findByUserName(phone);
-				return new ResponseBean<>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(up));
-			}
-		}
+	public ResponseBean<LoginRes> login(String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
 		
 		Optional<UserLogin> user = userRepository.findByOpenid(openid);
 		
 		UserLogin userLogin;
 		if(user.isPresent()) {
 			userLogin = user.get();
-			if(!StringUtils.isEmpty(phone) && !StringUtils.isEmpty(captcha)) {
-				userLogin.setUserName(phone);
-				userLogin = userRepository.save(userLogin);				
-			}
 		}else {
-			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100, phone, MD5.getMD5(password), inviteCode));		
+			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100));		
 			
 			//增加金币
 			GoldLog gl = new GoldLog(userLogin.getId(), userLogin.getGold(), 100, userLogin.getGold() - 100, Consts.GoldLog.Type.BIND_WEIXIN);
