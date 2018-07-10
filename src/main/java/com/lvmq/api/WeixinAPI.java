@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lvmq.api.res.LoginRes;
@@ -25,6 +26,7 @@ import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.util.MD5;
+import com.lvmq.util.SMS;
 import com.lvmq.util.TimeUtil;
 import com.lvmq.util.Util;
 import com.lvmq.weixin.Weixin;
@@ -53,6 +55,27 @@ public class WeixinAPI {
 	
 	@Autowired
 	private BalanceLogRepository balanceLogRepository;
+	
+	@ApiOperation(value = "发送验证码")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, dataType = "String")
+	})
+	@RequestMapping(value="/sendCaptcha",method=RequestMethod.POST)
+	public ResponseBean sendRegisterCode(String phone) {
+		try {
+			boolean tag = false;
+			if(userLoginService.countByUserName(phone)>0) {
+				tag = true;
+			}
+			
+			String code=Util.getRandom6();
+			SMS.singleSendSms(phone, code, Consts.SmsConfig.TEMPLATECODE);
+			UserAPI.messageCodeMap.put(phone, new MessageCode(code));
+			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", tag);
+		}catch(Exception e) {
+			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"失败");
+		}
+	}
 	
 	@ApiOperation(value = "绑定手机号", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
