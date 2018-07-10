@@ -60,10 +60,19 @@ public class WeixinAPI {
 		@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = true, dataType = "String"),
 		@ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String"),
 		@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = true, dataType = "String"),
-		@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = false, dataType = "String")
+		@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = false, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "openid", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "nickname", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "sex", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "language", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "city", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "province", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "country", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "headimgurl", value = "微信返回值透传", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "unionid", value = "微信返回值透传", required = true, dataType = "String")
 			})
 	@PostMapping("bindphone")
-	public ResponseBean<Object> bindphone(String userId, String phone, String password, String captcha, String inviteCode) {
+	public ResponseBean<Object> bindphone(String userId, String phone, String password, String captcha, String inviteCode, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
 		
 		if(!UserAPI.messageCodeMap.containsKey(phone)) {
 			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
@@ -82,15 +91,34 @@ public class WeixinAPI {
 		//验证成功 移除当前验证码
 		UserAPI.messageCodeMap.remove(phone);
 		
-		Optional<UserLogin> u = userRepository.findById(userId);
+		UserLogin userbyphone = userRepository.findByUserName(phone);
 		
-		UserLogin ul = u.get();
-		ul.setUserName(phone);
-		ul.setPasswd(MD5.getMD5(password));
 		
-		UserLogin user = userRepository.save(ul);
+		UserLogin user;
 		
-		if(!Util.isBlank(inviteCode)) {
+		if(null != userbyphone) {
+			bind(userbyphone.getId(), openid, nickname, sex, language, city, province, country, headimgurl, unionid);
+			
+			Optional<UserLogin> uuu = userRepository.findById(userbyphone.getId());
+			
+			userRepository.deleteById(userId);
+			
+			userbyphone.setPasswd(password);
+			
+			user = userRepository.save(userbyphone);
+		} else {
+			Optional<UserLogin> u = userRepository.findById(userId);
+			
+			UserLogin ul = u.get();
+			ul.setUserName(phone);
+			ul.setPasswd(MD5.getMD5(password));
+			
+			user = userRepository.save(ul);
+		}
+		
+		
+		
+		if(!Util.isBlank(inviteCode) && Util.isBlank(user.getInviteCode())) {
 			
 			//给邀请人添加邀请数量
 			UserLogin inviteUser=userRepository.findByMyInviteCode(inviteCode);
@@ -135,7 +163,7 @@ public class WeixinAPI {
 			
 		}
 		
-		return null;
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS, new LoginRes(user));
 	}
 
 	@ApiOperation(value = "绑定微信", notes = "", httpMethod = "POST")
