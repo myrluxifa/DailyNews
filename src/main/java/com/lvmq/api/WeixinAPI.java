@@ -167,8 +167,8 @@ public class WeixinAPI {
 	
 	@ApiOperation(value = "微信登录", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = false, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "openid", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "nickname", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "sex", value = "微信返回值透传", required = true, dataType = "String"),
@@ -215,7 +215,7 @@ public class WeixinAPI {
 			userLogin = user.get();
 			if(!StringUtils.isEmpty(phone) && !StringUtils.isEmpty(captcha)) {
 				userLogin.setUserName(phone);
-				userRepository.save(userLogin);				
+				userLogin = userRepository.save(userLogin);				
 			}
 		}else {
 			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100, phone));		
