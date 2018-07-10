@@ -171,6 +171,7 @@ public class WeixinAPI {
 			@ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", required = false, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "captcha", value = "验证码", required = false, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "inviteCode", value = "邀请码", required = false, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "openid", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "nickname", value = "微信返回值透传", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "sex", value = "微信返回值透传", required = true, dataType = "String"),
@@ -182,7 +183,7 @@ public class WeixinAPI {
 			@ApiImplicitParam(paramType = "query", name = "unionid", value = "微信返回值透传", required = true, dataType = "String")
 			})
 	@PostMapping("login")
-	public ResponseBean<Object> login(String phone, String captcha, String password, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
+	public ResponseBean<Object> login(String phone, String captcha, String password, String inviteCode, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
 		
 		if(!StringUtils.isEmpty(phone) && !StringUtils.isEmpty(captcha)) {
 			if(!UserAPI.messageCodeMap.containsKey(phone)) {
@@ -220,7 +221,7 @@ public class WeixinAPI {
 				userLogin = userRepository.save(userLogin);				
 			}
 		}else {
-			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100, phone, MD5.getMD5(password)));		
+			userLogin = userLoginService.save(new UserLogin(openid, headimgurl, "1|0|0|0", nickname, 100, phone, MD5.getMD5(password), inviteCode));		
 			
 			//增加金币
 			GoldLog gl = new GoldLog(userLogin.getId(), userLogin.getGold(), 100, userLogin.getGold() - 100, Consts.GoldLog.Type.BIND_WEIXIN);
