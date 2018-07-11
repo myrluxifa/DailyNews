@@ -76,7 +76,9 @@ public class ShareAPI extends BaseAPI{
 			
 			Map<String, Object> result = new HashMap<>();
 			result.put("count", Code.SHARE.MAX_TIMES - count);
-			result.put("lastTime", DateUtils.formatDate(new Date(lastTime), "HH:mm:ss"));
+			long tt = Calendar.getInstance().getTimeInMillis() / 1000 - lastTime / 1000 ;
+			tt = tt < 0 ? 0 : tt;
+			result.put("lastTime", tt);
 			
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, result);
 		} catch (Exception e) {
