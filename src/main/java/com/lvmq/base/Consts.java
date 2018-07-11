@@ -69,6 +69,8 @@ public class Consts {
 			public static final String EASY_MONEY_SHARE="119";
 			/** 日常任务 阅读奖励 **/
 			public static final String DAY_MISSION_READ = "120";
+			/** 日常任务 分享奖励 **/
+			public static final String DAY_MISSION_SHARE = "121";
 			
 		}
 		
@@ -117,6 +119,8 @@ public class Consts {
 				return "轻松赚钱分享奖励";
 			case Type.DAY_MISSION_READ:
 				return "日常任务阅读奖励";
+			case Type.DAY_MISSION_SHARE:
+				return "日常任务分享奖励";
 				default:
 					return "神秘奖励";
 			}

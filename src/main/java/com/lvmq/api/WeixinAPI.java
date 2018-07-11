@@ -120,13 +120,11 @@ public class WeixinAPI {
 		UserLogin user;
 		
 		if(null != userbyphone) {
-			bind(userbyphone.getId(), openid, nickname, sex, language, city, province, country, headimgurl, unionid);
-			
-			Optional<UserLogin> uuu = userRepository.findById(userbyphone.getId());
+			userbyphone.setName(nickname);
+			userbyphone.setHeadPortrait(headimgurl);
+			userbyphone.setOpenid(openid);
 			
 			userRepository.deleteById(userId);
-			
-			userbyphone.setPasswd(password);
 			
 			user = userRepository.save(userbyphone);
 		} else {
