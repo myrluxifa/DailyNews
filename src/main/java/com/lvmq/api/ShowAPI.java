@@ -49,8 +49,7 @@ public class ShowAPI extends BaseAPI {
 			}
 			
 			//金币奖励
-			List<String> goldTypeList=Arrays.asList(Consts.GoldLog.Type.MASTER_READ_REWARDS);
-			int goldSum=goldLogRepository.sumNumByTypeInAndUserId(goldTypeList,userId);
+			int goldSum=goldLogRepository.sumNumByUserId(userId);
 			
 			double  fee= income + (double)goldSum/Consts.GOLD_RATIO;
 			
