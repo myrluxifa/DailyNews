@@ -23,6 +23,7 @@ import com.lvmq.repository.OfficialRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.util.MD5;
+import com.lvmq.util.NumberUtils;
 import com.lvmq.util.Util;
 
 @Component
@@ -54,7 +55,8 @@ public class UserLoginServiceImpl implements UserLoginService{
 	
 	@Override
 	public LoginRes findByUserId(String id, int cnt) {
-		return new LoginRes( userLoginRepository.findById(id).get(), cnt);
+		this.getUserEarnings(id);
+		return new LoginRes( userLoginRepository.findById(id).get(), cnt,this.getUserEarnings(id));
 		
 	}
 
@@ -176,9 +178,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 	
 	
 	public String getUserEarnings(String userId) {
-		String bsum=balanceLogRepository.sumNumByUserId(userId);
-		int gsum=(int) (goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO);
-		return String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum));
+		double bsum=Double.valueOf(balanceLogRepository.sumNumByUserId(userId));
+		double gsum=(double) goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO;
+		return String.valueOf(NumberUtils.feeFormat(bsum+gsum));
 	}
 	
 	

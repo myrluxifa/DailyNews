@@ -80,7 +80,7 @@ public class LoginRes {
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
 	}
 
-	public LoginRes(UserLogin userLogin, int cnt) {
+	public LoginRes(UserLogin userLogin, int cnt,String earnings) {
 		this.user_id = userLogin.getId();
 		this.phone = Optional.ofNullable(userLogin.getUserName()).map(user -> user).orElse("");
 		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
@@ -88,7 +88,7 @@ public class LoginRes {
 		this.gold = String.valueOf(userLogin.getGold());
 		this.balance = String.valueOf(userLogin.getBalance());
 //		this.earnings = String.valueOf(userLogin.getEarnings());
-		this.earnings = String.valueOf(NumberUtils.feeFormat(Double.valueOf(this.gold)/Double.valueOf(Consts.GOLD_RATIO) + Double.valueOf(this.balance)));
+		this.earnings = earnings;
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
 		this.newer_mission = userLogin.getNewerMission() == null ? "" : userLogin.getNewerMission();
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;

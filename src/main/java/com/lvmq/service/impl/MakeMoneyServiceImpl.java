@@ -36,7 +36,6 @@ import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.MakeMoneyLogRepository;
 import com.lvmq.repository.MakeMoneyRepository;
-import com.lvmq.repository.ReadRewardsRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.MakeMoneyService;
 import com.lvmq.util.ArrayUtil;

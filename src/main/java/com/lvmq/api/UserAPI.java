@@ -90,7 +90,9 @@ public class UserAPI {
 			//1元提现
 			int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userLogin.getId(), "1", Consts.Withdraw.State.PASS);
 			
-			return new ResponseBean<LoginRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin, cnt));
+			String earnings=userLoginService.getUserEarnings(userLogin.getId());
+			
+			return new ResponseBean<LoginRes>(Code.SUCCESS,Code.SUCCESS_CODE,"成功",new LoginRes(userLogin, cnt,earnings));
 		}else {
 			return new ResponseBean(Code.FAIL,Code.UNKOWN_CODE,"账号或密码错误"); 
 		}
@@ -247,6 +249,7 @@ public class UserAPI {
 		
 		//1元提现
 		int cnt = withdrawLogRepository.countByUserIdAndFeeAndState(userId, "1", Consts.Withdraw.State.PASS);
+		
 		
 		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功", userLoginService.findByUserId(userId, cnt));
 	}
