@@ -21,6 +21,12 @@ public interface GoldLogRepository extends JpaRepository<GoldLog, Long> {
 
 	Page<GoldLog> findByUserId(Pageable pageable, String userId);
 	
+	@Query(nativeQuery = true, value = " select * from (" + 
+			" select trigger_user_id, user_id, update_time, old_num, new_num, id, type, num, create_time, create_user, 'balance' remark from t_balance_log where user_id = ?1" + 
+			" union all" + 
+			" select trigger_user_id, user_id, update_time, old_num, new_num, id, type, num, create_time, create_user, 'gold' remark from t_gold_log where user_id = ?1" + 
+			" ) t order by t.create_time limit ?2, ?3")
+	List<GoldLog> goldAndBalance(String userId, Integer index, Integer size);
 	
 	@Query(value="select ifnull(sum(num),0) from t_gold_log where type=?1 and user_id=?2 and create_time>=?3 and create_time<?4",nativeQuery=true)
 	int sumNumByTypeAndUserIdAndCreateTimeBetween(String share, String userId, String startTime, String endTime);

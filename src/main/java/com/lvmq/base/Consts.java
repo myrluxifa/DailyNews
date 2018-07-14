@@ -139,6 +139,18 @@ public class Consts {
 			public static final String RED_PACKAGE_BY_READ="120";
 		}
 		
+		public static final String getTypeName(String id) {
+			switch(id) {
+			case Type.FIRST_INVITE:
+				return "首次邀请奖励";
+			case Type.EIGHT_DAY_REWARDS: 
+				return "徒弟前8天师傅奖励";
+			case Type.RED_PACKAGE_BY_READ: 
+				return "阅读红包";
+			default: return "神秘奖励";
+			}
+		}
+		
 	}
 	
 	public static class LikeLog{

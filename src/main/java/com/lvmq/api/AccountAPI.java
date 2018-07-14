@@ -47,15 +47,23 @@ public class AccountAPI extends BaseAPI {
 	@PostMapping("detail/page")
 	public ResponseBean<Object> page(String curPage, String pageSize, String userId) {
 		try {
-			Page<GoldLog> page = goldLogRepository.findByUserId(PagePlugin.pagePluginSort(Integer.valueOf(curPage),
-					Integer.valueOf(pageSize), Direction.DESC, "createTime"), userId);
+			
+			int index = Integer.valueOf(curPage) * Integer.valueOf(pageSize);
+			
+			List<GoldLog> page = goldLogRepository.goldAndBalance(userId, index, Integer.valueOf(pageSize));
 
 			List<AccountPageRes> result = new ArrayList<>();
 			for (GoldLog gl : page) {
 				AccountPageRes res = new AccountPageRes();
-				res.setName(Consts.GoldLog.getTypeName(gl.getType()));
+				if(gl.getRemark().equals("balance")) {
+					res.setName(Consts.BalanceLog.getTypeName(gl.getType()));	
+				}else {
+					res.setName(Consts.GoldLog.getTypeName(gl.getType()));					
+				}
 				res.setCnt(gl.getNum());
 				res.setTime(TimeUtil.format(gl.getCreateTime()));
+				
+				res.setType(gl.getRemark());
 				result.add(res);
 			}
 
