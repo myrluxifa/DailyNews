@@ -88,11 +88,12 @@ public class ShareAPI extends BaseAPI{
 
 	@ApiOperation(value="分享成功后调用", notes="分享成功后调用该接口，增加用户金币", httpMethod = "POST")
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
+		@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String"),
+		@ApiImplicitParam(paramType = "query", name = "fo", value = "分享到朋友圈N否Y是", required = true, dataType = "String")
 	})
 	@PostMapping("success")
 	@Transactional
-	public ResponseBean<Object> success(String userId) {
+	public ResponseBean<Object> success(String userId, String fo) {
 		try {
 			//截止时间
 			Calendar calendar = Calendar.getInstance();
@@ -137,8 +138,10 @@ public class ShareAPI extends BaseAPI{
 			gl.setUserId(userId);
 			goldLogRepository.save(gl);
 			
-			//新手任务
-			newerMission.entry(Consts.NewerMission.Type.SHARE, userId);
+			if("Y".equalsIgnoreCase(fo)) {
+				//新手任务
+				newerMission.entry(Consts.NewerMission.Type.SHARE, userId);				
+			}
 			
 			// 日常任务 分享奖励
 			dayMissionService.updateDayMission(userId, Consts.DayMission.Type.SHARE);
