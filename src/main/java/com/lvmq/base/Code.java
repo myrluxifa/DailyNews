@@ -36,7 +36,7 @@ public class Code {
 	
 	public static class SHARE {
 		/**每天最多分享次数**/
-		public static int MAX_TIMES = 3;
+		public static int MAX_TIMES = 5;
 		/**分享间隔时间 秒**/
 		public static long INTERVAL_TIME = 60 * 60 * 4;
 		/**分享奖励金币数**/
