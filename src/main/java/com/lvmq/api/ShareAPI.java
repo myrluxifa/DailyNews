@@ -114,7 +114,7 @@ public class ShareAPI extends BaseAPI{
 			}
 			
 			//分享间隔判断
-			if(null != logs && logs.size() > 0) {
+			if(null != logs && logs.size() > 0 && !"Y".equalsIgnoreCase(fo)) {
 				if(Calendar.getInstance().getTimeInMillis() - logs.get(0).getCreateTime().getTime() < Code.SHARE.INTERVAL_TIME * 1000) {
 					return new ResponseBean<>(Code.FAIL, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.code, Code.SHARE.LESS_THAN_LIMITED_INTERVAL.msg);
 				}

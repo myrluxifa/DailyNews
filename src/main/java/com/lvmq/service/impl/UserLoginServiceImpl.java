@@ -54,9 +54,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 	}
 	
 	@Override
-	public LoginRes findByUserId(String id, int cnt) {
+	public LoginRes findByUserId(String id, int cnt, int tag) {
 		this.getUserEarnings(id);
-		return new LoginRes( userLoginRepository.findById(id).get(), cnt,this.getUserEarnings(id));
+		return new LoginRes( userLoginRepository.findById(id).get(), cnt, tag, this.getUserEarnings(id));
 		
 	}
 

@@ -33,6 +33,21 @@ public class LoginRes {
 	
 	private String name;
 
+	private boolean waitingWithdraw;
+	/**
+	 * @return the waitingWithdraw
+	 */
+	public boolean isWaitingWithdraw() {
+		return waitingWithdraw;
+	}
+
+	/**
+	 * @param waitingWithdraw the waitingWithdraw to set
+	 */
+	public void setWaitingWithdraw(boolean waitingWithdraw) {
+		this.waitingWithdraw = waitingWithdraw;
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -80,7 +95,7 @@ public class LoginRes {
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
 	}
 
-	public LoginRes(UserLogin userLogin, int cnt,String earnings) {
+	public LoginRes(UserLogin userLogin, int cnt, int tag, String earnings) {
 		this.user_id = userLogin.getId();
 		this.phone = Optional.ofNullable(userLogin.getUserName()).map(user -> user).orElse("");
 		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
@@ -94,6 +109,7 @@ public class LoginRes {
 		this.bindwx = StringUtils.isEmpty(userLogin.getOpenid()) ? false : true;
 		this.name = Optional.ofNullable(userLogin.getName()).map(name -> name).orElse("");
 		this.oneyuan = cnt > 0 ? true : false;
+		this.waitingWithdraw = tag > 0 ? true: false;
 	}
 
 	/**

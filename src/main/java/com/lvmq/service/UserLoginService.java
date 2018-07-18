@@ -14,7 +14,7 @@ public interface UserLoginService {
 	
 	LoginRes findByUserId(String userId);
 	
-	LoginRes findByUserId(String userId, int cnt);
+	LoginRes findByUserId(String userId, int cnt, int tag);
 	
 	Optional<UserLogin> login(UserLogin userLogin);
 	
@@ -31,4 +31,5 @@ public interface UserLoginService {
 	EveryDayShareRes shareEveryDay(String userId);
 	
 	String getOfficial(String type);
+
 }
