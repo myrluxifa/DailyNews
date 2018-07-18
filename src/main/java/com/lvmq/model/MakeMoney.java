@@ -1,5 +1,7 @@
 package com.lvmq.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -50,6 +52,8 @@ public class MakeMoney {
 	private int flag;
 	
 	private int timeLimit;
+	
+	private Date createTime;
 	
 
 	public String getId() {
@@ -204,6 +208,14 @@ public class MakeMoney {
 
 	public void setTimeLimit(int timeLimit) {
 		this.timeLimit = timeLimit;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 	
 	
