@@ -63,7 +63,13 @@ public class InviteAPI {
 			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"邀请码不存在");
 		}else if(flag==0) {
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
-		}else {
+		}else if(flag==-4) {
+			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"已填写邀请码");
+		}
+		else if(flag==-3) {
+			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"不能填写本人邀请码");
+		}
+		else {
 			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"失败");
 		}
 		
