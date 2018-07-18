@@ -72,6 +72,9 @@ public class Consts {
 			/** 日常任务 分享奖励 **/
 			public static final String DAY_MISSION_SHARE = "121";
 			
+			//填写邀请码邀请人获得奖励
+			public static final String SET_INVITE_MASTER="122";
+			
 		}
 		
 		/**分享奖励个数**/

@@ -195,9 +195,15 @@ public class InviteServiceImpl implements InviteService {
 			Optional<UserLogin> opt=userLoginRepository.findById(userId);
 			if(opt.isPresent()) {
 				UserLogin userLogin=opt.get();
+				if(!Util.isBlank(userLogin.getInviteCode())) {
+					return -4;
+				}
 				//给邀请人添加邀请数量
 				UserLogin inviteUser=userLoginRepository.findByMyInviteCode(inviteCode);
 				if(inviteUser!=null) {
+					if(inviteUser.getId().equals(userId)) {
+						return -3;
+					}
 					if(inviteUser.getFirstInvite().equals("0")) {
 						String money=goldRewardsRepository.findByType(Consts.BalanceLog.Type.FIRST_INVITE).getMoney();
 						
@@ -206,6 +212,22 @@ public class InviteServiceImpl implements InviteService {
 						inviteUser.setFirstInvite("1");
 						
 						balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
+					}else {
+						String master_invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE_MASTER).getGold();
+						Long oldNum=inviteUser.getGold();
+						long newNum=Long.valueOf(Integer.valueOf(master_invite_gold)+Integer.valueOf(String.valueOf(inviteUser.getGold())));
+						inviteUser.setGold(newNum);
+						
+						GoldLog gl=new GoldLog();
+						gl.setUserId(inviteUser.getId());
+						gl.setType(Consts.GoldLog.Type.SET_INVITE_MASTER);
+						gl.setNum(Integer.valueOf(master_invite_gold));
+						gl.setOldNum(oldNum);
+						gl.setNewNum(newNum);
+						gl.setCreateUser(inviteUser.getId());
+						gl.setTriggerUserId(userId);
+						gl.setCreateTime(new Date());
+						goldLogRepository.save(gl);
 					}
 					inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
 					if(!Util.isBlank(inviteUser.getInviteCode())) {

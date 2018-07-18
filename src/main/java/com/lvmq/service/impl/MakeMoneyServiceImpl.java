@@ -137,6 +137,12 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 						status=6;
 					}
 				}
+				MakeMoney m=makeMoney.get();
+				m.setCash(m.getCash()+"元");
+				if(m.getType().equals("0")) {
+					m.setLineOne(m.getLineOne()+"分钟");
+				}
+				m.setLineFour(m.getLineFour()+"元");
 				return new MakeMoneyDetailRes(makeMoney.get(), status,dateFormate.format(makeMoneyLog.get().getEndTime()));
 			}else {
 				return new MakeMoneyDetailRes(makeMoney.get(), 0,"");
