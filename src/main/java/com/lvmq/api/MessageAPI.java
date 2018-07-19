@@ -85,7 +85,7 @@ public class MessageAPI extends BaseAPI {
 			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", true);
 		}
 		
-		SysMessage sm = sysMessageRepository.findTop1ByFlagOrderByCreateTimeDesc("2");
+		SysMessage sm = sysMessageRepository.findTop1ByFlagOrderByCreateTimeDesc(2);
 		
 		if(null != sm && !sm.getId().equals(urm.getMessageId())) {
 			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", true);

@@ -10,6 +10,6 @@ public interface SysMessageRepository extends JpaRepository<SysMessage, String> 
 
 	Page<SysMessage> findByFlag(Pageable pagePluginSort, int i);
 
-	SysMessage findTop1ByFlagOrderByCreateTimeDesc(String string);
+	SysMessage findTop1ByFlagOrderByCreateTimeDesc(int i);
 
 }
