@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -37,6 +38,8 @@ import com.lvmq.base.Consts;
 import com.lvmq.idata.IDataAPI;
 import com.lvmq.idata.res.ToutiaoDataResponseDto;
 import com.lvmq.idata.res.ToutiaoResponseDto;
+import com.lvmq.idata.res.VideosDataResponseDto;
+import com.lvmq.idata.res.VideosResponseDto;
 import com.lvmq.model.AdvertInfo;
 import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
@@ -111,6 +114,8 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private NewerMissionAPI newerMission;
 	
+	
+	@Scheduled(cron="0 0,10 0,9 * * ? ")
 	@Override
 	public void getNewsFromIDataAPI() {
 		// TODO Auto-generated method stub
@@ -131,7 +136,17 @@ public class NewsServiceImpl implements NewsService {
 					for(ToutiaoDataResponseDto toutiao :toutiaoResponseDto.getData()) {
 						newsInfoArray.add(new NewsInfo(toutiao,catId));
 					}
+					try {
 					List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
+					}catch (Exception e) {
+						// TODO: handle exception
+						log.info(e.getMessage());
+					}
+					
+					if("true".equals(toutiaoResponseDto.getHasNext())) {
+						getNewsFromIDataAPIByPageToken(toutiaoResponseDto.getPageToken(),catId);
+						
+					}
 				}catch(Exception e) {
 					continue;
 				}
@@ -141,6 +156,63 @@ public class NewsServiceImpl implements NewsService {
 			log.info(e.getMessage());
 		}
 	}
+	
+	
+	public void getNewsFromIDataAPIByPageToken(String pageToken,String catId) {
+		// TODO Auto-generated method stub
+				try {
+					
+					
+						String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid="+catId+"&pageToken="+pageToken;
+						String json = IDataAPI.getRequestFromUrl(url);
+						log.info(json);
+						Gson gson=new Gson();
+						
+						ToutiaoResponseDto toutiaoResponseDto=gson.fromJson(json, ToutiaoResponseDto.class);
+						List<NewsInfo> newsInfoArray=new ArrayList<NewsInfo>();
+						for(ToutiaoDataResponseDto toutiao :toutiaoResponseDto.getData()) {
+							newsInfoArray.add(new NewsInfo(toutiao,catId));
+						}
+						List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
+						
+						if("true".equals(toutiaoResponseDto.getHasNext())) {
+							getNewsFromIDataAPIByPageToken2(toutiaoResponseDto.getPageToken(),catId);
+						}
+						//不能批量添加还需要判断视频重复问题
+						//videosInfoRepository.saveAll(videosInfoArray);
+						
+						
+				}catch(Exception e) {
+					log.info(e.getMessage());
+				}
+	}
+	
+	public void getNewsFromIDataAPIByPageToken2(String pageToken,String catId) {
+		// TODO Auto-generated method stub
+				try {
+					
+					
+					String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid="+catId+"&pageToken="+pageToken;
+					String json = IDataAPI.getRequestFromUrl(url);
+					log.info(json);
+					Gson gson=new Gson();
+					
+					ToutiaoResponseDto toutiaoResponseDto=gson.fromJson(json, ToutiaoResponseDto.class);
+					List<NewsInfo> newsInfoArray=new ArrayList<NewsInfo>();
+					for(ToutiaoDataResponseDto toutiao :toutiaoResponseDto.getData()) {
+						newsInfoArray.add(new NewsInfo(toutiao,catId));
+					}
+					List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
+					
+					if("true".equals(toutiaoResponseDto.getHasNext())) {
+						getNewsFromIDataAPIByPageToken(toutiaoResponseDto.getPageToken(),catId);
+					}
+						
+				}catch(Exception e) {
+					log.info(e.getMessage());
+				}
+	}
+	
 	
 	
 	@Override
