@@ -67,6 +67,7 @@ import com.lvmq.repository.ReadRewardsRepository;
 import com.lvmq.repository.RecallLogRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.service.NewsService;
+import com.lvmq.util.NumberUtils;
 import com.lvmq.util.TimeUtil;
 import com.lvmq.util.Util;
 
@@ -573,12 +574,12 @@ public class NewsServiceImpl implements NewsService {
 				b.setType(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ);
 				b.setOldNum(u.getBalance());
 				b.setNum(r.getHorMoney());
-				b.setNewNum(String.valueOf(Double.parseDouble(u.getBalance())+Double.parseDouble(r.getHorMoney())));
+				b.setNewNum(String.valueOf(NumberUtils.feeFormat(Double.parseDouble(u.getBalance()))+NumberUtils.feeFormat(Double.parseDouble(r.getHorMoney()))));
 				b.setUserId(userId);
 				b.setCreateUser(userId);
 				b.setCreateTime(new Date());
 				balanceLogRepository.save(b);
-				u.setBalance(String.valueOf(Double.parseDouble(u.getBalance())+Double.parseDouble(r.getHorMoney())));
+				u.setBalance(String.valueOf(NumberUtils.feeFormat(Double.parseDouble(u.getBalance()))+NumberUtils.feeFormat(Double.parseDouble(r.getHorMoney()))));
 				userLoginRepository.save(u);
 			}else {
 			
