@@ -8,4 +8,6 @@ public interface DayMissionService {
 
 	DayMission get(String userId);
 
+	void reward(String userId, String type, long reward);
+
 }
