@@ -17,6 +17,7 @@ import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
 import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.repository.GoldRewardsRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,6 +35,9 @@ public class ShowAPI extends BaseAPI {
 	@Autowired
 	private GoldLogRepository goldLogRepository;
 	
+	@Autowired
+	private GoldRewardsRepository goldRewardsRepository;
+	
 	@ApiOperation(value = "晒收入", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
@@ -47,6 +51,7 @@ public class ShowAPI extends BaseAPI {
 			for (BalanceLog log : logs) {
 				income += Double.valueOf(log.getNum());
 			}
+			
 			
 			//金币奖励
 			int goldSum=goldLogRepository.sumNumByUserId(userId);
