@@ -132,4 +132,13 @@ public class DayMissionServiceImpl implements DayMissionService {
 		return dm;
 	}
 	
+	@Override
+	public void reward(String userId, String type, long reward) {
+		Optional<UserLogin> ouser = userLoginRepository.findById(userId);
+		UserLogin user = ouser.get();
+		GoldLog gl = new GoldLog(user.getId(), user.getGold() + reward, reward, user.getGold(), type);
+		gl = goldLogRepository.save(gl);
+		user.setGold(gl.getNewNum());
+		userLoginRepository.save(user);
+	}
 }

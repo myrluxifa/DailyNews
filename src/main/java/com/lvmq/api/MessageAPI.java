@@ -65,6 +65,10 @@ public class MessageAPI extends BaseAPI {
 					urm.setMessageId(lastid);
 					urm.setUserId(userId);
 					userReadMessageRepository.saveAndFlush(urm);
+				} else {
+					urm.setCreateTime(BigInteger.valueOf(Calendar.getInstance().getTimeInMillis()));
+					urm.setMessageId(msg.getId());
+					userReadMessageRepository.saveAndFlush(urm);
 				}
 			}
 		}

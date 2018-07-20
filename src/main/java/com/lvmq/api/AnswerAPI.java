@@ -15,6 +15,7 @@ import com.lvmq.model.Answer;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.AnswerRepository;
 import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -33,6 +34,9 @@ public class AnswerAPI extends BaseAPI {
 	
 	@Autowired
 	private UserLoginRepository userLoginRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	@ApiOperation(value = "答案提交", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
@@ -56,8 +60,10 @@ public class AnswerAPI extends BaseAPI {
 			
 			String[] states = uu.getNewerMission().split("\\|");
 			if(type == 0) {
+				dayMissionService.reward(userId, Consts.GoldLog.Type.QUESTIONNAIRE, Consts.NewerMission.REWARD[Consts.NewerMission.RewardType.QUESTIONNAIRE]);
 				uu.setNewerMission(states[0] + "|" + states[1] + "|" + (Integer.valueOf(states[2]) + 1) + "|" + states[3]);				
 			}else if(type == 1) {
+				dayMissionService.reward(userId, Consts.GoldLog.Type.ANSWER, Consts.NewerMission.REWARD[Consts.NewerMission.RewardType.ANSWER]);
 				uu.setNewerMission(states[0] + "|" + states[1] + "|" + states[2] + "|" + (Integer.valueOf(states[3]) + 1));			
 			}
 			
@@ -68,6 +74,7 @@ public class AnswerAPI extends BaseAPI {
 			ans.setUserId(userId);
 			
 			answerRepository.save(ans);
+			
 			
 			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "");
 		} catch (Exception e) {

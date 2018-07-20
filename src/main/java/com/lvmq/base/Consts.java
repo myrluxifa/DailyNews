@@ -75,6 +75,10 @@ public class Consts {
 			//填写邀请码邀请人获得奖励
 			public static final String SET_INVITE_MASTER="122";
 			
+			public static final String QUESTIONNAIRE = "123";
+			
+			public static final String ANSWER = "124";
+			
 		}
 		
 		/**分享奖励个数**/
@@ -124,6 +128,10 @@ public class Consts {
 				return "日常任务阅读奖励";
 			case Type.DAY_MISSION_SHARE:
 				return "日常任务分享奖励";
+			case Type.QUESTIONNAIRE:
+				return "问卷调查奖励";
+			case Type.ANSWER:
+				return "答题奖励";
 				default:
 					return "神秘奖励";
 			}
@@ -201,6 +209,16 @@ public class Consts {
 	public static final long GOLD_RATIO=1000;
 
 	public static class NewerMission{
+		
+		//日常任务奖励数量   {问卷调查|答题奖励}
+		public static final Long[] REWARD = {100l,100l};
+		
+		public static final class RewardType {
+			/** 问卷调查 **/
+			public static final int QUESTIONNAIRE = 0;
+			/** 答题奖励 **/
+			public static final int ANSWER = 1;
+		} 
 		
 		public static final class Type {
 			public static final String READ = "read";
