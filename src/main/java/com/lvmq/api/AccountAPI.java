@@ -18,6 +18,7 @@ import com.lvmq.model.AccessLog;
 import com.lvmq.model.GoldLog;
 import com.lvmq.repository.AccessLogRepository;
 import com.lvmq.repository.GoldLogRepository;
+import com.lvmq.util.NumberUtils;
 import com.lvmq.util.PagePlugin;
 import com.lvmq.util.TimeUtil;
 
@@ -57,10 +58,11 @@ public class AccountAPI extends BaseAPI {
 				AccountPageRes res = new AccountPageRes();
 				if(gl.getRemark().equals("balance")) {
 					res.setName(Consts.BalanceLog.getTypeName(gl.getType()));	
+					res.setCnt(String.valueOf(NumberUtils.feeFormat((double)gl.getNum()/100)));
 				}else {
-					res.setName(Consts.GoldLog.getTypeName(gl.getType()));					
+					res.setName(Consts.GoldLog.getTypeName(gl.getType()));	
+					res.setCnt(String.valueOf(gl.getNum()));
 				}
-				res.setCnt(gl.getNum());
 				res.setTime(TimeUtil.format(gl.getCreateTime()));
 				
 				res.setType(gl.getRemark());
@@ -97,7 +99,7 @@ public class AccountAPI extends BaseAPI {
 				AccountPageRes res = new AccountPageRes();
 				res.setName(Consts.AccessLog.getTypeName(al.getType()) + Consts.AccessLog.getStateName(al.getState()));
 				res.setType(Consts.AccessLog.getTypeName(al.getType()));
-				res.setCnt(Math.round(al.getFee()));
+				res.setCnt(String.valueOf(Math.round(al.getFee())));
 				res.setState(Consts.AccessLog.getStateName(al.getState()));
 				res.setTime(TimeUtil.format(al.getCreateTime()));
 				result.add(res);
@@ -119,7 +121,7 @@ class AccountPageRes {
 	@ApiModelProperty(name = "时间")
 	private String time = "";
 	@ApiModelProperty(name = "数量或金额")
-	private long cnt;
+	private String cnt;
 	@ApiModelProperty(name = "状态")
 	private String state = "";
 	@ApiModelProperty(name = "类型")
@@ -157,11 +159,11 @@ class AccountPageRes {
 		this.time = time;
 	}
 
-	public long getCnt() {
+	public String getCnt() {
 		return cnt;
 	}
 
-	public void setCnt(long cnt) {
+	public void setCnt(String cnt) {
 		this.cnt = cnt;
 	}
 

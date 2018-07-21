@@ -574,12 +574,12 @@ public class NewsServiceImpl implements NewsService {
 				b.setType(Consts.BalanceLog.Type.RED_PACKAGE_BY_READ);
 				b.setOldNum(u.getBalance());
 				b.setNum(r.getHorMoney());
-				b.setNewNum(String.valueOf(NumberUtils.feeFormat(Double.parseDouble(u.getBalance()))+NumberUtils.feeFormat(Double.parseDouble(r.getHorMoney()))));
+				b.setNewNum(NumberUtils.feeFormat(Double.parseDouble(u.getBalance())+Double.parseDouble(r.getHorMoney())));
 				b.setUserId(userId);
 				b.setCreateUser(userId);
 				b.setCreateTime(new Date());
 				balanceLogRepository.save(b);
-				u.setBalance(String.valueOf(NumberUtils.feeFormat(Double.parseDouble(u.getBalance()))+NumberUtils.feeFormat(Double.parseDouble(r.getHorMoney()))));
+				u.setBalance(NumberUtils.feeFormat(Double.parseDouble(u.getBalance())+Double.parseDouble(r.getHorMoney())));
 				userLoginRepository.save(u);
 			}else {
 			
@@ -629,7 +629,7 @@ public class NewsServiceImpl implements NewsService {
 									//满签直接取当天应奖励现金
 									else rewardsMoney=rewards[Integer.valueOf(day.toString())];
 									
-									masterUser.setBalance(String.valueOf(Double.parseDouble(rewardsMoney)+Double.parseDouble(masterUser.getBalance())));
+									masterUser.setBalance(NumberUtils.feeFormat(Double.parseDouble(rewardsMoney)+Double.parseDouble(masterUser.getBalance())));
 									
 									//插入奖励
 									balanceLogRepository.save(new BalanceLog(masterUser.getId(),
