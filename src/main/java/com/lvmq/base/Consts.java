@@ -79,6 +79,7 @@ public class Consts {
 			
 			public static final String ANSWER = "124";
 			
+			
 		}
 		
 		/**分享奖励个数**/
