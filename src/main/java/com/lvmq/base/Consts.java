@@ -203,7 +203,7 @@ public class Consts {
 	}
 	
 	public static final class Sign{
-		public static final String COIN = "4,6,10,15,20,25,30";
+		public static final String COIN = "8,18,38,58,88,88,188";
 	}
 	
 	public static final long GOLD_RATIO=1000;
