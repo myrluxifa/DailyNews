@@ -183,6 +183,10 @@ public class UserLoginServiceImpl implements UserLoginService{
 		return String.valueOf(NumberUtils.feeFormat(bsum+gsum));
 	}
 	
+	public static void main(String[] args) {
+		System.out.println(1008d/1000l);
+	}
+	
 	
 	public EveryDayShareRes shareEveryDay(String userId) {
 		String bsum=balanceLogRepository.sumNumByUserId(userId);
