@@ -194,34 +194,37 @@ public class MakeMoneyServiceImpl implements MakeMoneyService {
 	}
 	
 	
-	public  String readEasyMoneyShare(String token) {
+	public  String readEasyMoneyShare(String token,String read) {
 		Optional<EasyMoneyLog> op=easyMoneyLogRepository.findById(token);
-		
 		if(op.isPresent()) {
+			
 			EasyMoneyLog em=op.get();
-			if(em.getFlag()==0) {
+			//if(em.getFlag()==0) {
 				//int count=easyMoneyLogRepository.countByUserIdAndEmIdAndFlag(em.getUserId(), em.getEmId(), 2);
 				
 				//if(count==0) {
-					
-					Optional<UserLogin> uop=userLoginRepository.findById(em.getUserId());
-					if(uop.isPresent()) {
-						UserLogin ul=uop.get();
-						long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE).getGold());
-						//更新为已获得奖励状态
-						em.setFlag(2);
-						easyMoneyLogRepository.save(em);
-						//添加奖励
-						ul.setGold(ul.getGold()+gold);
-						userLoginRepository.save(ul);
-						//添加奖励日志
-						goldLogRepository.save(new GoldLog(em.getUserId(),ul.getGold()+gold , gold, ul.getGold(), Consts.GoldLog.Type.EASY_MONEY_SHARE));
-					}else {
-						em.setFlag(1);
-						easyMoneyLogRepository.save(em);
-					}
-				//}
+			
+			if("false".equals(read)) {
+				Optional<UserLogin> uop=userLoginRepository.findById(em.getUserId());
+				if(uop.isPresent()) {
+					UserLogin ul=uop.get();
+					long gold=Long.valueOf(goldRewardsRepository.findByType(Consts.GoldLog.Type.EASY_MONEY_SHARE).getGold());
+					//更新为已获得奖励状态
+					em.setFlag(2);
+					easyMoneyLogRepository.save(em);
+					//添加奖励
+					ul.setGold(ul.getGold()+gold);
+					userLoginRepository.save(ul);
+					//添加奖励日志
+					goldLogRepository.save(new GoldLog(em.getUserId(),ul.getGold()+gold , gold, ul.getGold(), Consts.GoldLog.Type.EASY_MONEY_SHARE));
+				}else {
+					em.setFlag(1);
+					easyMoneyLogRepository.save(em);
+				}
 			}
+					
+				//}
+			//}
 			Optional<EasyMoney> emoney=easyMoneyRepository.findById(em.getEmId());
 			if(emoney.isPresent()) {
 				return emoney.get().getTextare();

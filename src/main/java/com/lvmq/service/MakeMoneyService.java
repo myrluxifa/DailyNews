@@ -34,7 +34,7 @@ public interface MakeMoneyService {
 	 
 	 List<EasyMoneyTaskRes> easyMoneyTask(String userId,Pageable pageable);
 	 
-	 String readEasyMoneyShare(String token);
+	 String readEasyMoneyShare(String token,String read);
 	 
 	 List<MakeMoneyImgsRes> getMakeMoneyExample(String id);
 }

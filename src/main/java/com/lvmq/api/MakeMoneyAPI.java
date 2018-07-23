@@ -95,8 +95,8 @@ public class MakeMoneyAPI {
 	@CrossOrigin(origins="*", maxAge = 3600)
 	@ApiOperation(value="阅读轻松赚钱分享内容",notes="")
 	@RequestMapping(value="/readEasyMoneyShare",method=RequestMethod.POST)
-	public ResponseBean readEasyMoneyShare(String token) {
-		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.readEasyMoneyShare(token));
+	public ResponseBean readEasyMoneyShare(String token,String read) {
+		return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功",makeMoneyService.readEasyMoneyShare(token,read));
 	}
 	
 	
