@@ -234,7 +234,9 @@ public class UserAPI {
 			// 日常任务 邀请好友
 			if(!StringUtils.isEmpty(inviteCode)) {
 				UserLogin user = userLoginRepository.findByMyInviteCode(inviteCode);
-				DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);
+				if(null != user) {
+					DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);					
+				}
 			}
 			
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
