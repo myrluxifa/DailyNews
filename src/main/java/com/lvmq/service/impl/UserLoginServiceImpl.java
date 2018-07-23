@@ -186,12 +186,13 @@ public class UserLoginServiceImpl implements UserLoginService{
 	
 	public EveryDayShareRes shareEveryDay(String userId) {
 		String bsum=balanceLogRepository.sumNumByUserId(userId);
-		int gsum=(int) (goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO);
+		
+		double gsum=(double)goldLogRepository.sumNumByUserId(userId)/Consts.GOLD_RATIO;
 		
 		Optional<UserLogin> u=userLoginRepository.findById(userId);
 		if(u.isPresent()) {
 			UserLogin userLogin=u.get();
-			return new EveryDayShareRes(userLogin.getMyInviteCode(),userLogin.getHeadPortrait(),String.valueOf(Double.valueOf(bsum)+Double.valueOf(gsum)),userLogin.getUserName());
+			return new EveryDayShareRes(userLogin.getMyInviteCode(),userLogin.getHeadPortrait(),NumberUtils.feeFormat(Double.valueOf(bsum)+Double.valueOf(gsum)),userLogin.getUserName());
 		}
 		return new EveryDayShareRes();
 	}
