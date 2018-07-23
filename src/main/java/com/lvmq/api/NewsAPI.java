@@ -130,15 +130,15 @@ public class NewsAPI extends BaseAPI {
 	
 	
 	
-	@RequestMapping(value="/getNewsFromIDataAPI",method=RequestMethod.POST)
-	public void getNewsFromIDataAPI(){
-		newsService.getNewsFromIDataAPI();
-	}
-	
-	@RequestMapping(value="/getNewsFromIDataAPIByCatId",method=RequestMethod.POST)
-	public void getNewsFromIDataAPIByCatId(String catId){
-		newsService.getNewsFromIDataAPIByCatId(catId);
-	}
+//	@RequestMapping(value="/getNewsFromIDataAPI",method=RequestMethod.POST)
+//	public void getNewsFromIDataAPI(){
+//		newsService.getNewsFromIDataAPI();
+//	}
+//	
+//	@RequestMapping(value="/getNewsFromIDataAPIByCatId",method=RequestMethod.POST)
+//	public void getNewsFromIDataAPIByCatId(String catId){
+//		newsService.getNewsFromIDataAPIByCatId(catId);
+//	}
 	
 	
 	@ApiOperation(value = "获得评论列表", notes = "")
