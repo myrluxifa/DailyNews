@@ -44,7 +44,7 @@ public class MakeMoneyRes {
 		this.cash=m.getCash();
 		this.type=m.getType();
 		this.status=String.valueOf(status);
-		this.time=time;
+		this.time=String.valueOf(Integer.valueOf(time)/1000);
 	}
 	
 	
