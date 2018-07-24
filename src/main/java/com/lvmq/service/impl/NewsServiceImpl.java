@@ -379,8 +379,14 @@ public class NewsServiceImpl implements NewsService {
 				List<NewsByTypeRes> newsByTypeArray=new ArrayList<NewsByTypeRes>();
 				
 				List<NewsInfoRes> newsInfoResArray=new ArrayList<NewsInfoRes>();
-				
-				List<NewsInfo> newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
+				List<NewsInfo> newsInfoArray=new ArrayList<NewsInfo>();
+				if(Util.isBlank(userId)) {
+					newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
+
+				}else {
+					newsInfoArray=newsInfoRepository.findByCatIdByNativeQuery(userId, catId,page, pageSize);
+
+				}
 				
 				
 				for(NewsInfo newsInfo: newsInfoArray) {

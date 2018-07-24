@@ -28,9 +28,11 @@ import com.lvmq.base.Consts;
 import com.lvmq.model.DayMission;
 import com.lvmq.model.NewsComment;
 import com.lvmq.model.NewsInfo;
+import com.lvmq.model.NewsRemoveLog;
 import com.lvmq.model.UserLogin;
 import com.lvmq.repository.NewsInfoRepository;
 import com.lvmq.service.DayMissionService;
+import com.lvmq.service.NewsRemoveService;
 import com.lvmq.service.NewsService;
 
 import io.swagger.annotations.Api;
@@ -52,6 +54,9 @@ public class NewsAPI extends BaseAPI {
 	
 	@Autowired
 	private DayMissionService dayMissionService;
+	
+	@Autowired
+	private NewsRemoveService newsRemoveService;
 	
 	private static boolean freshKeyWordsTag = true;
 	private static long lastFreshTime = Calendar.getInstance().getTimeInMillis();
@@ -256,6 +261,17 @@ public class NewsAPI extends BaseAPI {
 	@RequestMapping(value="/getWonderfulNews",method=RequestMethod.POST)
 	public ResponseBean<NewsRes> getWonderfulNews(String newsPageSize,String adPageSize) {
 		return new ResponseBean<NewsRes>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", newsService.getWanderFulNews(newsPageSize,adPageSize));
+	}
+	
+	
+	@ApiOperation(value = "删除新闻", notes = "")
+	@RequestMapping(value="/removeNews",method=RequestMethod.POST)
+	public ResponseBean removeNews(String id,String userId) {
+		if(newsRemoveService.removeNews(id, userId)==true) {
+			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
+		}else {
+			return new ResponseBean(Code.FAIL, Code.FAIL, "失败");
+		}
 	}
 	
 	
