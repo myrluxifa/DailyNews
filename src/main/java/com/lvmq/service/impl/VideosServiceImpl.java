@@ -36,7 +36,8 @@ public class VideosServiceImpl implements VideosService {
 	@Autowired
 	private VideosInfoRepository videosInfoRepository;
 	
-	@Scheduled(cron="0 0 0/6 * * ? ")
+	//@Scheduled(cron="0 0 0/6 * * ? ")
+	@Scheduled(cron="0 58 10 * * ? ")
 	@SuppressWarnings("unchecked")
 	@Override
 	public void getVideosFromIDataAPI() {
@@ -44,7 +45,7 @@ public class VideosServiceImpl implements VideosService {
 		try {
 			
 			
-				String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&uid=95420323139_1595728444432398";
+				String url = "http://120.76.205.241:8000/video/le?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&kw=头条";
 				String json = IDataAPI.getRequestFromUrl(url);
 				log.info(json);
 				Gson gson=new Gson();
@@ -83,7 +84,7 @@ public class VideosServiceImpl implements VideosService {
 				try {
 					
 					
-						String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&uid=95420323139_1595728444432398"+"&pageToken="+pageToken;
+						String url = "http://120.76.205.241:8000/video/le?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&kw=头条"+"&pageToken="+pageToken;
 						String json = IDataAPI.getRequestFromUrl(url);
 						log.info(json);
 						Gson gson=new Gson();
@@ -119,7 +120,7 @@ public class VideosServiceImpl implements VideosService {
 				try {
 					
 					
-						String url = "http://api01.bitspaceman.com:8000/video/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&uid=95420323139_1595728444432398"+"&pageToken="+pageToken;
+						String url = "http://120.76.205.241:8000/video/le?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&kw=头条"+"&pageToken="+pageToken;
 						String json = IDataAPI.getRequestFromUrl(url);
 						log.info(json);
 						Gson gson=new Gson();

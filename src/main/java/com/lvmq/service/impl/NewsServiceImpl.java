@@ -384,7 +384,7 @@ public class NewsServiceImpl implements NewsService {
 					newsInfoArray=newsInfoRepository.findByCatId(com.lvmq.util.PagePlugin.pagePluginSort(page, pageSize,Direction.DESC, "publishDate"),catId);
 
 				}else {
-					newsInfoArray=newsInfoRepository.findByCatIdByNativeQuery(userId, catId,page, pageSize);
+					newsInfoArray=newsInfoRepository.findByCatIdByNativeQuery(userId, catId,Integer.valueOf(page) * Integer.valueOf(pageSize), pageSize);
 
 				}
 				

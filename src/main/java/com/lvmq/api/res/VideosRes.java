@@ -21,7 +21,7 @@ public class VideosRes {
 	
 	private String publishDate;
 	
-	//private List<String> videoUrls;
+	private List<String> videoUrls;
 
 	private String url;
 	
@@ -40,6 +40,7 @@ public class VideosRes {
 		this.description=videosInfo.getDescription();
 		this.publishDate=String.valueOf(videosInfo.getPublishDate().getTime());
 		this.url=videosInfo.getUrl();
+		this.videoUrls=ArrayUtil.stringToList(videosInfo.getVideoUrls());
 	}
 
 	public String getTitle() {
@@ -106,13 +107,13 @@ public class VideosRes {
 		this.url = url;
 	}
 
-//	public List<String> getVideoUrls() {
-//		return videoUrls;
-//	}
-//
-//	public void setVideoUrls(List<String> videoUrls) {
-//		this.videoUrls = videoUrls;
-//	}
+	public List<String> getVideoUrls() {
+		return videoUrls;
+	}
+
+	public void setVideoUrls(List<String> videoUrls) {
+		this.videoUrls = videoUrls;
+	}
 
 	
 	

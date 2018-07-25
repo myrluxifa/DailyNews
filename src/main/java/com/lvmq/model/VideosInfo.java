@@ -62,10 +62,10 @@ public class VideosInfo {
 		this.posterId=videosDataResponseDto.getPosterId();
 		this.catId=videosDataResponseDto.getCatId1();
 		this.durationMin=videosDataResponseDto.getDurationMin();
-		this.viewCount=Integer.valueOf(videosDataResponseDto.getViewCount());
+		this.viewCount=Integer.valueOf(videosDataResponseDto.getViewCount()==null?"0":videosDataResponseDto.getViewCount());
 		this.description=videosDataResponseDto.getDescription();
 		this.commentCount=videosDataResponseDto.getCommentCount();
-		this.publishDate=new Date(Long.valueOf(videosDataResponseDto.getPublishDate())*1000);
+		this.publishDate=new Date();
 		this.url=videosDataResponseDto.getUrl();
 		this.flag=0;
 		this.videoUrls=videosDataResponseDto.getVideoUrls()==null?"":ArrayUtil.arrayToString(videosDataResponseDto.getVideoUrls());
