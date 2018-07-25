@@ -10,6 +10,11 @@ import com.lvmq.api.res.InviteInfoRes;
 import com.lvmq.api.res.RecallRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
+import com.lvmq.base.Consts;
+import com.lvmq.model.DayMission;
+import com.lvmq.model.UserLogin;
+import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 import com.lvmq.service.InviteService;
 
 import io.swagger.annotations.Api;
@@ -25,6 +30,11 @@ public class InviteAPI {
 	@Autowired
 	private InviteService inviteService;
 	
+	@Autowired
+	private UserLoginRepository userLoginRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	@ApiOperation(value="广告（包含图片轮播和文字轮播）",notes="")
 	@RequestMapping(value="/getBanner",method=RequestMethod.POST)
@@ -62,6 +72,10 @@ public class InviteAPI {
 		if(flag==-1) {
 			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"邀请码不存在");
 		}else if(flag==0) {
+			UserLogin user = userLoginRepository.findByMyInviteCode(inviteCode);
+			if(null != user) {
+				DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);					
+			}
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
 		}else if(flag==-4) {
 			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"已填写邀请码");
