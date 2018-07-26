@@ -122,7 +122,7 @@ public class WithdrawAPI extends BaseAPI {
 				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), "1", Consts.Withdraw.State.DEFAULT, userId);
 				
 				String[] newer = ul.getNewerMission().split("\\|");
-				ul.setNewerMission(newer[0] + "|" + (newer[1] + 1)  + "|" + newer[2] + "|" + newer[3]);
+				ul.setNewerMission(newer[0] + "|" + (Integer.valueOf(newer[1]) + 1)  + "|" + newer[2] + "|" + newer[3]);
 				
 				userRepository.save(ul);
 			} 

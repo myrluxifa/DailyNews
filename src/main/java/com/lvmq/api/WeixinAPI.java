@@ -1,10 +1,12 @@
 package com.lvmq.api;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
+import com.lvmq.model.DayMission;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.MessageCode;
 import com.lvmq.model.UserLogin;
@@ -24,6 +27,7 @@ import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.util.MD5;
 import com.lvmq.util.SMS;
@@ -55,6 +59,9 @@ public class WeixinAPI {
 	
 	@Autowired
 	private BalanceLogRepository balanceLogRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	@ApiOperation(value = "发送验证码")
 	@ApiImplicitParams({
@@ -162,6 +169,9 @@ public class WeixinAPI {
 					}
 				}
 				userRepository.save(inviteUser);
+				
+				//日常任务 邀请好友
+				DayMission dm = dayMissionService.updateDayMission(inviteUser.getId(), Consts.DayMission.Type.INVITE);
 				
 				String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
 				int updateGold=(int) (Integer.valueOf(invite_gold)+user.getGold());
