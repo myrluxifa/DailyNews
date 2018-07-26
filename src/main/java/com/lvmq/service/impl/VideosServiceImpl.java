@@ -61,7 +61,6 @@ public class VideosServiceImpl implements VideosService {
 					}catch (Exception e) {
 						// TODO: handle exception
 						log.info(e.getMessage());
-						break;
 					}
 				}
 
