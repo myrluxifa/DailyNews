@@ -195,11 +195,20 @@ public class InviteServiceImpl implements InviteService {
 			Optional<UserLogin> opt=userLoginRepository.findById(userId);
 			if(opt.isPresent()) {
 				UserLogin userLogin=opt.get();
+				
+				
 				if(!Util.isBlank(userLogin.getInviteCode())) {
 					return -4;
 				}
 				//给邀请人添加邀请数量
-				UserLogin inviteUser=userLoginRepository.findByMyInviteCode(inviteCode);
+				UserLogin inviteUser=new UserLogin();
+				
+				if(inviteCode.length()>6) {
+					inviteUser=userLoginRepository.findByUserName(inviteCode);
+				}else {
+					inviteUser=userLoginRepository.findByMyInviteCode(inviteCode);
+				}
+				//给邀请人添加邀请数量
 				if(inviteUser!=null) {
 					if(inviteUser.getId().equals(userId)) {
 						return -3;
@@ -246,7 +255,7 @@ public class InviteServiceImpl implements InviteService {
 					long userGold=userLogin.getGold();
 					
 					userLogin.setGold(Long.valueOf(updateGold));
-					userLogin.setInviteCode(inviteCode);
+					userLogin.setInviteCode(inviteUser.getMyInviteCode());
 					userLoginRepository.save(userLogin);
 					
 					GoldLog goldLogInvite=new GoldLog();

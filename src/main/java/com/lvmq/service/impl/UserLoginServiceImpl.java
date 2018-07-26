@@ -100,6 +100,8 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		userLogin.setMyInviteCode(_myInviteCode);
 		
+		String inviteCode=userLogin.getInviteCode()==null?"":userLogin.getInviteCode();
+		userLogin.setInviteCode("");
 		UserLogin user=userLoginRepository.save(userLogin);
 		
 		GoldLog goldLog=new GoldLog();
@@ -113,10 +115,16 @@ public class UserLoginServiceImpl implements UserLoginService{
 		goldLogRepository.save(goldLog);
 		
 		
-		if(!Util.isBlank(userLogin.getInviteCode())) {
+		if(!Util.isBlank(inviteCode)) {
 			
 			//给邀请人添加邀请数量
-			UserLogin inviteUser=userLoginRepository.findByMyInviteCode(userLogin.getInviteCode());
+			UserLogin inviteUser=new UserLogin();
+			
+			if(inviteCode.length()>6) {
+				inviteUser=userLoginRepository.findByUserName(inviteCode);
+			}else {
+				inviteUser=userLoginRepository.findByMyInviteCode(inviteCode);
+			}
 			if(inviteUser!=null) {
 				if(inviteUser.getFirstInvite().equals("0")) {
 					String money=goldRewardsRepository.findByType(Consts.BalanceLog.Type.FIRST_INVITE).getMoney();
@@ -143,6 +151,7 @@ public class UserLoginServiceImpl implements UserLoginService{
 				long userGold=user.getGold();
 				
 				user.setGold(Long.valueOf(updateGold));
+				user.setInviteCode(inviteUser.getMyInviteCode());
 				userLoginRepository.save(user);
 				
 				GoldLog goldLogInvite=new GoldLog();
