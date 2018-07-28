@@ -3,6 +3,7 @@ package com.lvmq.api;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.utils.DateUtils;
@@ -44,13 +45,13 @@ public class DayMissionAPI extends BaseAPI {
 			
 			String today = DateUtils.formatDate(Calendar.getInstance().getTime(), "yyyyMMdd");
 			
-			DayMission dm = dayMissionRepository.findByUserIdAndMdate(userId, today);
+			List<DayMission> dms = dayMissionRepository.findByUserIdAndMdate(userId, today);
 			
-			if(null == dm) {
-				dm = dayMissionRepository.save(new DayMission(userId, today));
+			if(dms.size() == 0) {
+				dms.set(0, dayMissionRepository.save(new DayMission(userId, today)));
 			}
 			
-			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", dm.getParam());
+			return new ResponseBean<Object>(Code.SUCCESS, Code.SUCCESS, "成功", dms.get(0).getParam());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseBean<Object>(Code.FAIL, Code.FAIL, e.getMessage());

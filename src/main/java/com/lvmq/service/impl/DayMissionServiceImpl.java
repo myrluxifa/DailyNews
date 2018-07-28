@@ -1,6 +1,7 @@
 package com.lvmq.service.impl;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -85,13 +86,13 @@ public class DayMissionServiceImpl implements DayMissionService {
 	public DayMission get(String userId) {
 		String today =  DateUtils.formatDate(Calendar.getInstance().getTime(), "yyyyMMdd");
 		
-		DayMission dm = dayMissionRepository.findByUserIdAndMdate(userId, today);
+		List<DayMission> dms = dayMissionRepository.findByUserIdAndMdate(userId, today);
 		
-		if(null == dm) {
-			dm = dayMissionRepository.save(new DayMission(userId, today));
+		if(dms.size() == 0) {
+			dms.set(0, dayMissionRepository.save(new DayMission(userId, today)));
 		}
 		
-		return dm;
+		return dms.get(0);
 	}
 	
 	// 更新日常任务状态
@@ -101,10 +102,10 @@ public class DayMissionServiceImpl implements DayMissionService {
 		
 		String today =  DateUtils.formatDate(Calendar.getInstance().getTime(), "yyyyMMdd");
 		
-		DayMission dm = dayMissionRepository.findByUserIdAndMdate(userId, today);
+		List<DayMission> dms = dayMissionRepository.findByUserIdAndMdate(userId, today);
 		
-		if(null == dm) {
-			dm = dayMissionRepository.save(new DayMission(userId, today, assemble(type)));
+		if(dms.size() == 0) {
+			dms.set(0, dayMissionRepository.save(new DayMission(userId, today, assemble(type))));
 			Optional<UserLogin> ouser = userLoginRepository.findById(userId);
 			
 			UserLogin user = ouser.get();
@@ -113,7 +114,7 @@ public class DayMissionServiceImpl implements DayMissionService {
 			gl = goldLogRepository.save(gl);
 			user.setGold(gl.getNewNum());
 			userLoginRepository.save(user);
-		}else if("0".equals(paramValue(dm.getParam(), type)) || Consts.DayMission.Type.INVITE == type) {
+		}else if("0".equals(paramValue(dms.get(0).getParam(), type)) || Consts.DayMission.Type.INVITE == type) {
 			if(type == Consts.DayMission.Type.INVITE) {
 				type = Consts.DayMission.Type.OTHER_INVITE;
 			}
@@ -127,13 +128,13 @@ public class DayMissionServiceImpl implements DayMissionService {
 			userLoginRepository.save(user);
 		}
 		
-		dm.setParam(assemble(dm.getParam(), type));
+		dms.get(0).setParam(assemble(dms.get(0).getParam(), type));
 		
-		dayMissionRepository.saveAndFlush(dm);
+		dayMissionRepository.saveAndFlush(dms.get(0));
 		
 		
 	
-		return dm;
+		return dms.get(0);
 	}
 	
 	@Override
