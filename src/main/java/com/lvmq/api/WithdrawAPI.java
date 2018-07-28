@@ -18,10 +18,12 @@ import com.lvmq.api.res.WithdrawPageRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
+import com.lvmq.model.GoldLog;
 import com.lvmq.model.NewerMission;
 import com.lvmq.model.UserLogin;
 import com.lvmq.model.WithdrawLog;
 import com.lvmq.model.WxpubCaptcha;
+import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.NewerMissonRepository;
 import com.lvmq.repository.UserLoginRepository;
 import com.lvmq.repository.WithdrawLogRepository;
@@ -50,6 +52,9 @@ public class WithdrawAPI extends BaseAPI {
 	
 	@Autowired
 	private NewerMissonRepository oneyuanRepository;
+	
+	@Autowired
+	private GoldLogRepository goldLogRepository;
 
 	@ApiOperation(value = "可提现金额查询", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
@@ -125,6 +130,12 @@ public class WithdrawAPI extends BaseAPI {
 				ul.setNewerMission(newer[0] + "|" + (Integer.valueOf(newer[1]) + 1)  + "|" + newer[2] + "|" + newer[3]);
 				
 				userRepository.save(ul);
+				
+				// 加100金币
+				ul.setGold(ul.getGold() + 100);
+				
+				GoldLog gl = new GoldLog(userId, ul.getGold() - 100, 100, ul.getGold(), Consts.GoldLog.Type.ONEYUAN);
+				goldLogRepository.save(gl);
 			} 
 			// 非1元提现
 			else {
@@ -134,19 +145,20 @@ public class WithdrawAPI extends BaseAPI {
 				}
 				
 				log = new WithdrawLog(captcha, Calendar.getInstance().getTime(), fee, Consts.Withdraw.State.DEFAULT, userId);
+				
+				// 减掉金币及余额
+				if(Double.valueOf(ul.getBalance()) >= wfee) {
+					ul.setBalance(NumberUtils.format(Double.valueOf(ul.getBalance()) - wfee));
+				} else {
+					double mb = Double.valueOf(ul.getBalance());
+					
+					wfee -= mb;
+					
+					ul.setBalance("0");
+					ul.setGold(ul.getGold() - (long)(wfee * Consts.GOLD_RATIO));
+				}
 			}
 			
-			// 减掉金币及余额
-			if(Double.valueOf(ul.getBalance()) >= wfee) {
-				ul.setBalance(NumberUtils.format(Double.valueOf(ul.getBalance()) - wfee));
-			} else {
-				double mb = Double.valueOf(ul.getBalance());
-				
-				wfee -= mb;
-				
-				ul.setBalance("0");
-				ul.setGold(ul.getGold() - (long)(wfee * Consts.GOLD_RATIO));
-			}
 			
 			WxpubCaptcha wxpc = wxpubRepository.findTop1ByCaptchaOrderByCreateTimeDesc(captcha);
 			if(null == wxpc) {
