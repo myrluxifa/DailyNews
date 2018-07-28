@@ -72,10 +72,10 @@ public class InviteAPI {
 		if(flag==-1) {
 			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"邀请码不存在");
 		}else if(flag==0) {
-			UserLogin user = userLoginRepository.findByMyInviteCode(inviteCode);
-			if(null != user) {
-				DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);					
-			}
+//			UserLogin user = userLoginRepository.findByMyInviteCode(inviteCode);
+//			if(null != user) {
+//				DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);					
+//			}
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
 		}else if(flag==-4) {
 			return new ResponseBean(Code.FAIL,Code.SET_INVITE_FAIL,"已填写邀请码");

@@ -21,6 +21,7 @@ import com.lvmq.api.res.TudiArrayRes;
 import com.lvmq.api.res.TudiRes;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
+import com.lvmq.model.DayMission;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.InviteCharBanner;
 import com.lvmq.model.InviteImgBanner;
@@ -33,6 +34,7 @@ import com.lvmq.repository.InviteCharBannerRepository;
 import com.lvmq.repository.InviteImgBannerRepository;
 import com.lvmq.repository.RecallLogRepository;
 import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 import com.lvmq.service.InviteService;
 import com.lvmq.util.TimeUtil;
 import com.lvmq.util.Util;
@@ -61,6 +63,9 @@ public class InviteServiceImpl implements InviteService {
 	
 	@Autowired
 	private RecallLogRepository recallLogRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(InviteServiceImpl.class);
@@ -202,7 +207,7 @@ public class InviteServiceImpl implements InviteService {
 				}
 				//给邀请人添加邀请数量
 				UserLogin inviteUser=new UserLogin();
-				
+
 				if(inviteCode.length()>6) {
 					inviteUser=userLoginRepository.findByUserName(inviteCode);
 				}else {
@@ -222,12 +227,12 @@ public class InviteServiceImpl implements InviteService {
 						
 						balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
 					}else {
-						String master_invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE_MASTER).getGold();
-						Long oldNum=inviteUser.getGold();
-						long newNum=Long.valueOf(Integer.valueOf(master_invite_gold)+Integer.valueOf(String.valueOf(inviteUser.getGold())));
-						inviteUser.setGold(newNum);
+//						String master_invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE_MASTER).getGold();
+//						Long oldNum=inviteUser.getGold();
+//						long newNum=Long.valueOf(Integer.valueOf(master_invite_gold)+Integer.valueOf(String.valueOf(inviteUser.getGold())));
+//						inviteUser.setGold(newNum);
 						
-						GoldLog gl=new GoldLog();
+						/*GoldLog gl=new GoldLog();
 						gl.setUserId(inviteUser.getId());
 						gl.setType(Consts.GoldLog.Type.SET_INVITE_MASTER);
 						gl.setNum(Integer.valueOf(master_invite_gold));
@@ -236,7 +241,10 @@ public class InviteServiceImpl implements InviteService {
 						gl.setCreateUser(inviteUser.getId());
 						gl.setTriggerUserId(userId);
 						gl.setCreateTime(new Date());
-						goldLogRepository.save(gl);
+						goldLogRepository.save(gl);*/
+						
+						// 日常任务 邀请好友
+						DayMission dm = dayMissionService.updateDayMission(inviteUser.getId(), Consts.DayMission.Type.INVITE);					
 					}
 					inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
 					if(!Util.isBlank(inviteUser.getInviteCode())) {
@@ -267,6 +275,7 @@ public class InviteServiceImpl implements InviteService {
 					goldLogInvite.setCreateUser(userLogin.getId());
 					goldLogInvite.setCreateTime(new Date());
 					goldLogRepository.save(goldLogInvite);
+					
 					return 0;
 				}else {
 					return -1;

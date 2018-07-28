@@ -112,7 +112,7 @@ public class UserAPI {
 		try {
 			if(userLoginService.countByUserName(phone)>0) return new ResponseBean(Code.FAIL,Code.USER_ALREADY_EXISTS,"账号已存在");
 			
-			String code=Util.getRandom6();
+			String code="1";//Util.getRandom6();
 			SMS.singleSendSms(phone, code, Consts.SmsConfig.TEMPLATECODE);
 			messageCodeMap.put(phone, new MessageCode(code));
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");

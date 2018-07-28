@@ -105,7 +105,7 @@ public class DayMissionServiceImpl implements DayMissionService {
 		List<DayMission> dms = dayMissionRepository.findByUserIdAndMdate(userId, today);
 		
 		if(dms.size() == 0) {
-			dms.set(0, dayMissionRepository.save(new DayMission(userId, today, assemble(type))));
+			dms.add(0, dayMissionRepository.save(new DayMission(userId, today, assemble(type))));
 			Optional<UserLogin> ouser = userLoginRepository.findById(userId);
 			
 			UserLogin user = ouser.get();
