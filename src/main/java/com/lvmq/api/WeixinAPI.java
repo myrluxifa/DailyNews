@@ -147,7 +147,7 @@ public class WeixinAPI {
 		
 		
 		if(!Util.isBlank(inviteCode) && Util.isBlank(user.getInviteCode())) {
-			
+			boolean firstInvite = false;
 			//给邀请人添加邀请数量
 			UserLogin inviteUser=userRepository.findByMyInviteCode(inviteCode);
 			if(inviteUser!=null) {
@@ -158,6 +158,7 @@ public class WeixinAPI {
 					//首次召徒获得现金奖励
 					inviteUser.setFirstInvite("1");
 					balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
+					firstInvite = true;
 				}
 				inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
 				if(!Util.isBlank(inviteUser.getInviteCode())) {
@@ -170,8 +171,10 @@ public class WeixinAPI {
 				}
 				userRepository.save(inviteUser);
 				
-				//日常任务 邀请好友
-				DayMission dm = dayMissionService.updateDayMission(inviteUser.getId(), Consts.DayMission.Type.INVITE);
+				if(!firstInvite) {
+					//日常任务 邀请好友
+					DayMission dm = dayMissionService.updateDayMission(inviteUser.getId(), Consts.DayMission.Type.INVITE);					
+				}
 				
 				String invite_gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.SET_INVITE).getGold();
 				int updateGold=(int) (Integer.valueOf(invite_gold)+user.getGold());

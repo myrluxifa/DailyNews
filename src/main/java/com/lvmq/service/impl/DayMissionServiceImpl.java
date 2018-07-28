@@ -76,6 +76,7 @@ public class DayMissionServiceImpl implements DayMissionService {
 		case 2: return Consts.GoldLog.Type.DAY_MISSION_SHARE;
 		case 3: return Consts.GoldLog.Type.SHOW;
 		case 4: return Consts.GoldLog.Type.COMMENT;
+		case 5: return Consts.GoldLog.Type.DAY_MISSION_OTHER_INVITE;
 		default: return "ttglt";
 		}
 	}
@@ -112,7 +113,10 @@ public class DayMissionServiceImpl implements DayMissionService {
 			gl = goldLogRepository.save(gl);
 			user.setGold(gl.getNewNum());
 			userLoginRepository.save(user);
-		}else if("0".equals(paramValue(dm.getParam(), type))) {
+		}else if("0".equals(paramValue(dm.getParam(), type)) || Consts.DayMission.Type.INVITE == type) {
+			if(type == Consts.DayMission.Type.INVITE) {
+				type = Consts.DayMission.Type.OTHER_INVITE;
+			}
 			Optional<UserLogin> ouser = userLoginRepository.findById(userId);
 			
 			UserLogin user = ouser.get();

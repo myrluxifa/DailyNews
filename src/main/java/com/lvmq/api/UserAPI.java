@@ -231,14 +231,6 @@ public class UserAPI {
 			
 			userLoginService.save(new UserLogin(userName,MD5.getMD5(passwd),inviteCode));
 			
-			// 日常任务 邀请好友
-			if(!StringUtils.isEmpty(inviteCode)) {
-				UserLogin user = userLoginRepository.findByMyInviteCode(inviteCode);
-				if(null != user) {
-					DayMission dm = dayMissionService.updateDayMission(user.getId(), Consts.DayMission.Type.INVITE);					
-				}
-			}
-			
 			return new ResponseBean(Code.SUCCESS,Code.SUCCESS_CODE,"成功");
 		}catch (Exception e) {
 			// TODO: handle exception

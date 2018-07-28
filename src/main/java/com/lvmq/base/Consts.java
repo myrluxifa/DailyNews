@@ -81,6 +81,8 @@ public class Consts {
 			
 			/** 一元提现奖励 **/
 			public static final String ONEYUAN = "125";
+			/** 每天非首次邀请 **/
+			public static final String DAY_MISSION_OTHER_INVITE = "126";
 			
 			
 		}
@@ -140,6 +142,8 @@ public class Consts {
 				return "答题奖励";
 			case Type.ONEYUAN:
 				return "一元提现奖励";
+			case Type.DAY_MISSION_OTHER_INVITE:
+				return "每天非首次邀请奖励";
 				default:
 					return "神秘奖励";
 			}
@@ -252,7 +256,7 @@ public class Consts {
 	
 	public static final class DayMission {
 		//日常任务奖励数量
-		public static final Long[] REWARD = {1000l,100l,100l,100l,100l}; 
+		public static final Long[] REWARD = {100l,100l,100l,100l,100l,1000l}; 
 		
 		public static final class Type {
 			/** 邀请好友 **/
@@ -265,6 +269,8 @@ public class Consts {
 			public static final int SHOW = 3;
 			/** 评价 **/
 			public static final int COMMENT = 4;
+			/** 每天非首次邀请奖励 **/
+			public static final int OTHER_INVITE = 5;
 		}
 	}
 }

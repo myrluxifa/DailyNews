@@ -13,6 +13,7 @@ import com.lvmq.api.res.LoginRes;
 import com.lvmq.base.Argument;
 import com.lvmq.base.Consts;
 import com.lvmq.model.BalanceLog;
+import com.lvmq.model.DayMission;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.Official;
 import com.lvmq.model.UserLogin;
@@ -21,6 +22,7 @@ import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.GoldRewardsRepository;
 import com.lvmq.repository.OfficialRepository;
 import com.lvmq.repository.UserLoginRepository;
+import com.lvmq.service.DayMissionService;
 import com.lvmq.service.UserLoginService;
 import com.lvmq.util.MD5;
 import com.lvmq.util.NumberUtils;
@@ -43,6 +45,9 @@ public class UserLoginServiceImpl implements UserLoginService{
 	
 	@Autowired
 	private OfficialRepository officialRepository;
+	
+	@Autowired
+	private DayMissionService dayMissionService;
 	
 	public int countByUserName(String userName) {
 		return userLoginRepository.countByUserName(userName);
@@ -116,7 +121,7 @@ public class UserLoginServiceImpl implements UserLoginService{
 		
 		
 		if(!Util.isBlank(inviteCode)) {
-			
+			boolean firstInvite = false;
 			//给邀请人添加邀请数量
 			UserLogin inviteUser=new UserLogin();
 			
@@ -133,6 +138,7 @@ public class UserLoginServiceImpl implements UserLoginService{
 					//首次召徒获得现金奖励
 					inviteUser.setFirstInvite("1");
 					balanceLogRepository.save(new BalanceLog(inviteUser.getId(),money,inviteUser.getBalance(),String.valueOf(Double.valueOf(inviteUser.getBalance())+Double.valueOf(money)),Consts.BalanceLog.Type.FIRST_INVITE));
+					firstInvite = true;
 				}
 				inviteUser.setInviteCount(inviteUser.getInviteCount()+1);
 				if(!Util.isBlank(inviteUser.getInviteCode())) {
@@ -165,6 +171,11 @@ public class UserLoginServiceImpl implements UserLoginService{
 				goldLogRepository.save(goldLogInvite);
 			}
 			
+			
+			// 日常任务 邀请好友
+			if(!firstInvite) {
+				DayMission dm = dayMissionService.updateDayMission(inviteUser.getId(), Consts.DayMission.Type.INVITE);					
+			}
 		}
 		
 		return user;
