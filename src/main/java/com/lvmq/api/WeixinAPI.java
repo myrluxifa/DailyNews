@@ -104,6 +104,14 @@ public class WeixinAPI {
 	@PostMapping("bindphone")
 	public ResponseBean<Object> bindphone(String userId, String phone, String password, String captcha, String inviteCode, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
 		
+		if(!StringUtils.isEmpty(inviteCode)) {
+			UserLogin uin = userRepository.findByMyInviteCode(inviteCode);
+			
+			if(null == uin) {
+				return new ResponseBean(Code.FAIL,Code.FAIL,"失败","邀请码不存在");
+			}
+		}		
+		
 		if(!UserAPI.messageCodeMap.containsKey(phone)) {
 			return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
 		}

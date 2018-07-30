@@ -212,6 +212,15 @@ public class UserAPI {
 	@RequestMapping(value="/register",method=RequestMethod.POST)
 	public ResponseBean register(String userName,String passwd,String code,String inviteCode) {
 		try {
+			
+			if(!StringUtils.isEmpty(inviteCode)) {
+				UserLogin ul = userLoginRepository.findByMyInviteCode(inviteCode);
+				
+				if(null == ul) {
+					return new ResponseBean(Code.FAIL,Code.FAIL,"失败","邀请码不存在");
+				}				
+			}
+			
 			if(!messageCodeMap.containsKey(userName)) {
 				return new ResponseBean(Code.FAIL,Code.MESSAGE_CODE_UNFINDABLE,"验证码不存在");
 			}
