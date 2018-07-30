@@ -105,7 +105,7 @@ public class WeixinAPI {
 	public ResponseBean<Object> bindphone(String userId, String phone, String password, String captcha, String inviteCode, String openid, String nickname, String sex, String language, String city, String province, String country, String headimgurl, String unionid) throws UnsupportedEncodingException {
 		
 		if(!StringUtils.isEmpty(inviteCode)) {
-			UserLogin uin = userRepository.findByMyInviteCode(inviteCode);
+			UserLogin uin = userRepository.findByMyInviteCodeOrUserName(inviteCode, inviteCode);
 			
 			if(null == uin) {
 				return new ResponseBean(Code.FAIL,Code.FAIL,"失败","邀请码不存在");

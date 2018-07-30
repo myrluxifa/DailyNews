@@ -214,7 +214,7 @@ public class UserAPI {
 		try {
 			
 			if(!StringUtils.isEmpty(inviteCode)) {
-				UserLogin ul = userLoginRepository.findByMyInviteCode(inviteCode);
+				UserLogin ul = userLoginRepository.findByMyInviteCodeOrUserName(inviteCode, inviteCode);
 				
 				if(null == ul) {
 					return new ResponseBean(Code.FAIL,Code.FAIL,"失败","邀请码不存在");
