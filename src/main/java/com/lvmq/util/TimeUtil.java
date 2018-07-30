@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -40,13 +41,13 @@ public class TimeUtil {
 	
 	public static Date zeroForToday() {
 		long current=new Date().getTime();
-		long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset();
+		long zero=current - (current + TimeZone.getDefault().getRawOffset() )% (1000*3600*24);
 		return new Timestamp(zero);
 	}
 	
 	public static Date twelveForToday() {
-		long current=System.currentTimeMillis();
-		long twelve=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset()+24*60*60*1000-1;
+		long current=new Date().getTime();
+		long twelve=current-(current+TimeZone.getDefault().getRawOffset())%(1000*3600*24)+24*60*60*1000-1;
 		return new Timestamp(twelve);
 	}
 	
@@ -106,14 +107,18 @@ public class TimeUtil {
 	
 	
 	public static void main(String[] args) throws Exception {
-		
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		System.out.println(format.format(twelveForHour()));
-		System.out.println(format.format(zeroForHour()));
+		String zero=format.format(zeroForToday());
+		String twelve=format.format(twelveForToday());
+		
 		
 		long current=new Date().getTime();
-		long zero=current/(1000*3600*24)*(1000*3600*24)+24*3600*1000-TimeZone.getDefault().getRawOffset();
-		System.out.println(format.format(twelveForToday()));
+		
+		long s=current - (current + TimeZone.getDefault().getRawOffset() )% (1000*3600*24);
+		
+		long l=current-(current+TimeZone.getDefault().getRawOffset())%(1000*3600*24)+24*60*60*1000-1;
+		System.out.println(format.format(s));
+		System.out.println(format.format(l));
 	}
 
 	

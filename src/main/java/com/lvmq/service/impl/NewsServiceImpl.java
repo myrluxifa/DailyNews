@@ -116,7 +116,7 @@ public class NewsServiceImpl implements NewsService {
 	private NewerMissionAPI newerMission;
 	
 	
-	@Scheduled(cron="0 0 0,9 * * ? ")
+	@Scheduled(cron="0 0 9 * * ? ")
 	@Override
 	public void getNewsFromIDataAPI() {
 		// TODO Auto-generated method stub
