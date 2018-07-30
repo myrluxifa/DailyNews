@@ -68,7 +68,7 @@ public class InviteAPI {
 	@RequestMapping(value="/setInviteCode",method=RequestMethod.POST)
 	public ResponseBean setInviteCode(String userId,String inviteCode) {
 		
-		UserLogin uin = userLoginRepository.findByMyInviteCode(inviteCode);
+		UserLogin uin = userLoginRepository.findByMyInviteCodeOrUserName(inviteCode, inviteCode);
 		
 		if(null == uin) {
 			return new ResponseBean(Code.FAIL,Code.FAIL,"失败","邀请码不存在");
