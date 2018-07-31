@@ -30,7 +30,7 @@ public class DayShareServiceImpl implements DayShareService {
 		String today =  DateUtils.formatDate(Calendar.getInstance().getTime(), "yyyyMMdd");
 		DayShare ds = dayShareRepository.findTop1ByUserIdAndMdateOrderByCreateTimeDesc(userId, today);
 		if(!getTimes) {
-			DayShare ds1 = new DayShare(ds.getCnt() + 1, today, userId);			
+			DayShare ds1 = new DayShare(null == ds ? 1 : ds.getCnt() + 1, today, userId);			
 			return dayShareRepository.saveAndFlush(ds1);
 		} else {
 			return ds;
