@@ -104,7 +104,7 @@ public class DayShareAPI extends BaseAPI {
 			gl.setCreateUser(userId);
 			gl.setNewNum(user.getGold());
 			gl.setNum(Code.SHARE.REWARD_NUMBER);
-			gl.setType(Consts.GoldLog.Type.SHARE);
+			gl.setType(Consts.GoldLog.Type.DAY_SHARE);
 			gl.setUserId(userId);
 			goldLogRepository.save(gl);
 			

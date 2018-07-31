@@ -110,7 +110,7 @@ public class ShareAPI extends BaseAPI{
 			
 			//分享次数判断
 			if(null != logs && logs.size() >= 1) {
-				return new ResponseBean<>(Code.FAIL, Code.SHARE.MORE_THAN_LIMITED_TIMES.code, Code.SHARE.MORE_THAN_LIMITED_TIMES.msg);
+				return new ResponseBean<>(Code.FAIL, Code.SHARE.MORE_THAN_LIMITED_TIMES.code, "每天只能分享1次");
 			}
 			
 			if("Y".equalsIgnoreCase(fo)) {
