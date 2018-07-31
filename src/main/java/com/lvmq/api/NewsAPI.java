@@ -230,9 +230,6 @@ public class NewsAPI extends BaseAPI {
 		})
 	public ResponseBean readNews(String userId,String newsId) {
 		
-		// 日常任务 阅读奖励
-		DayMission dm = dayMissionService.updateDayMission(userId, Consts.DayMission.Type.READ);
-		
 		if(newsService.readNews(userId, newsId)) {
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
 		}else {
@@ -249,6 +246,10 @@ public class NewsAPI extends BaseAPI {
 		})
 	public ResponseBean getReward(String userId,String newsId,String ifReadPackage) {
 		if(newsService.getReward(newsId, userId,ifReadPackage)) {
+
+			// 日常任务 阅读奖励
+			DayMission dm = dayMissionService.updateDayMission(userId, Consts.DayMission.Type.READ);
+			
 			return new ResponseBean(Code.SUCCESS, Code.SUCCESS_CODE, "成功");
 		}else {
 			return new ResponseBean(Code.FAIL,Code.READ_CODE_FAIL,"失败");
