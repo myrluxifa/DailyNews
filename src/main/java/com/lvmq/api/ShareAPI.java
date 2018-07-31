@@ -141,10 +141,11 @@ public class ShareAPI extends BaseAPI{
 			if("Y".equalsIgnoreCase(fo)) {
 				//新手任务
 				newerMission.entry(Consts.NewerMission.Type.SHARE, userId);				
+			} else {
+				// 日常任务 分享奖励
+				dayMissionService.updateDayMission(userId, Consts.DayMission.Type.SHARE);				
 			}
 			
-			// 日常任务 分享奖励
-			dayMissionService.updateDayMission(userId, Consts.DayMission.Type.SHARE);
 			
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, null);
 		} catch (Exception e) {
