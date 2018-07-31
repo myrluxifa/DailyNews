@@ -83,6 +83,8 @@ public class Consts {
 			public static final String ONEYUAN = "125";
 			/** 每天非首次邀请 **/
 			public static final String DAY_MISSION_OTHER_INVITE = "126";
+			/** 每日分享奖励 **/
+			public static final String DAY_SHARE = "127";
 			
 			
 		}
@@ -99,7 +101,7 @@ public class Consts {
 		public static final String getTypeName(String id) {
 			switch(id) {
 			case Type.SHARE:
-				return "分享奖励";
+				return "每日分享奖励";
 			case Type.SIGN: 
 				return "签到奖励";
 			case Type.READ: 
@@ -144,6 +146,8 @@ public class Consts {
 				return "一元提现奖励";
 			case Type.DAY_MISSION_OTHER_INVITE:
 				return "每天非首次邀请奖励";
+			case Type.DAY_SHARE: 
+				return "每日分享奖励";
 				default:
 					return "神秘奖励";
 			}
