@@ -6,10 +6,6 @@ import com.lvmq.model.DayShare;
 
 public interface DayShareRepository extends JpaRepository<DayShare, String> {
 
-	DayShare findByUserIdAndMdate(String userId, String today);
-
-	int sumCntByUserIdAndMdate(String userId, String today);
-
 	DayShare findTop1ByUserIdAndMdateOrderByCreateTimeDesc(String userId, String today);
 
 }
