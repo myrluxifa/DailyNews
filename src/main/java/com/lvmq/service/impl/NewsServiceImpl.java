@@ -138,10 +138,11 @@ public class NewsServiceImpl implements NewsService {
 						newsInfoArray.add(new NewsInfo(toutiao,catId));
 					}
 					try {
-					List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
+						List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
 					}catch (Exception e) {
 						// TODO: handle exception
 						log.info(e.getMessage());
+						continue;
 					}
 					
 					if("true".equals(toutiaoResponseDto.getHasNext())) {
@@ -161,7 +162,7 @@ public class NewsServiceImpl implements NewsService {
 	
 	public void getNewsFromIDataAPIByPageToken(String pageToken,String catId) {
 		// TODO Auto-generated method stub
-				try {
+				
 					
 					
 						String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid="+catId+"&pageToken="+pageToken;
@@ -174,8 +175,12 @@ public class NewsServiceImpl implements NewsService {
 						for(ToutiaoDataResponseDto toutiao :toutiaoResponseDto.getData()) {
 							newsInfoArray.add(new NewsInfo(toutiao,catId));
 						}
-						List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
-						
+						try {
+							List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
+						}catch(Exception e) {
+							log.info(e.getMessage());
+							return;
+						}
 						if("true".equals(toutiaoResponseDto.getHasNext())) {
 							getNewsFromIDataAPIByPageToken2(toutiaoResponseDto.getPageToken(),catId);
 						}
@@ -183,14 +188,10 @@ public class NewsServiceImpl implements NewsService {
 						//videosInfoRepository.saveAll(videosInfoArray);
 						
 						
-				}catch(Exception e) {
-					log.info(e.getMessage());
-				}
 	}
 	
 	public void getNewsFromIDataAPIByPageToken2(String pageToken,String catId) {
 		// TODO Auto-generated method stub
-				try {
 					
 					
 					String url = "http://api01.bitspaceman.com:8000/news/toutiao?apikey=np5SpQ7QGzm7HgvX8Aw8APA5NDq6Bpj5m4eo4hX5qJFLm0G0Oqt31xJzjIEeJFTv&catid="+catId+"&pageToken="+pageToken;
@@ -203,15 +204,16 @@ public class NewsServiceImpl implements NewsService {
 					for(ToutiaoDataResponseDto toutiao :toutiaoResponseDto.getData()) {
 						newsInfoArray.add(new NewsInfo(toutiao,catId));
 					}
+					try {
 					List<NewsInfo> iter=(List<NewsInfo>) newsInfoRepository.saveAll(newsInfoArray);
-					
+					}catch(Exception e) {
+						log.info(e.getMessage());
+						return;
+					}
 					if("true".equals(toutiaoResponseDto.getHasNext())) {
 						getNewsFromIDataAPIByPageToken(toutiaoResponseDto.getPageToken(),catId);
 					}
 						
-				}catch(Exception e) {
-					log.info(e.getMessage());
-				}
 	}
 	
 	
