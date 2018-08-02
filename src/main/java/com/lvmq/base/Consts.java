@@ -168,6 +168,8 @@ public class Consts {
 			
 			/**每小时奖励红包**/
 			public static final String RED_PACKAGE_BY_READ="120";
+			
+			public static final String WITHDRAW = "121";
 		}
 		
 		public static final String getTypeName(String id) {
@@ -180,6 +182,8 @@ public class Consts {
 				return "徒弟前8天师傅奖励";
 			case Type.RED_PACKAGE_BY_READ: 
 				return "阅读红包";
+			case Type.WITHDRAW:
+				return "提现";
 			default: return "神秘奖励";
 			}
 		}

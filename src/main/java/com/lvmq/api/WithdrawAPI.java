@@ -18,11 +18,13 @@ import com.lvmq.api.res.WithdrawPageRes;
 import com.lvmq.api.res.base.ResponseBean;
 import com.lvmq.base.Code;
 import com.lvmq.base.Consts;
+import com.lvmq.model.BalanceLog;
 import com.lvmq.model.GoldLog;
 import com.lvmq.model.NewerMission;
 import com.lvmq.model.UserLogin;
 import com.lvmq.model.WithdrawLog;
 import com.lvmq.model.WxpubCaptcha;
+import com.lvmq.repository.BalanceLogRepository;
 import com.lvmq.repository.GoldLogRepository;
 import com.lvmq.repository.NewerMissonRepository;
 import com.lvmq.repository.UserLoginRepository;
@@ -55,6 +57,9 @@ public class WithdrawAPI extends BaseAPI {
 	
 	@Autowired
 	private GoldLogRepository goldLogRepository;
+	
+	@Autowired
+	private BalanceLogRepository balanceLogRepository;
 
 	@ApiOperation(value = "可提现金额查询", notes = "", httpMethod = "POST")
 	@ApiImplicitParams({
@@ -171,6 +176,8 @@ public class WithdrawAPI extends BaseAPI {
 			}
 			
 			
+			BalanceLog bl = new BalanceLog(userId, NumberUtils.format(wfee), NumberUtils.format(Double.valueOf(ul.getBalance()) + wfee), ul.getBalance(), Consts.BalanceLog.Type.WITHDRAW);
+			balanceLogRepository.save(bl);
 			withdrawLogRepository.save(log);
 			userRepository.save(ul);
 
