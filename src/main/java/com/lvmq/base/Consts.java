@@ -157,6 +157,10 @@ public class Consts {
 	
 	public static class BalanceLog{
 		public static final class Type{
+			
+			/**注册奖励**/
+			public static final String REGISTER = "105";
+			
 			public static final String FIRST_INVITE="106";
 			
 			//徒弟前8天师傅奖励
@@ -168,6 +172,8 @@ public class Consts {
 		
 		public static final String getTypeName(String id) {
 			switch(id) {
+			case Type.REGISTER: 
+				return "注册奖励";
 			case Type.FIRST_INVITE:
 				return "首次邀请奖励";
 			case Type.EIGHT_DAY_REWARDS: 

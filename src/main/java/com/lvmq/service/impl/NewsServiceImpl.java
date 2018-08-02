@@ -829,4 +829,16 @@ public class NewsServiceImpl implements NewsService {
 		
 		return new NewsRes(newsByTypeArray,ads);
 	}
+	
+	public int addViewCount(String id) {
+		Optional<NewsInfo> n=newsInfoRepository.findById(id);
+		if(n.isPresent()) {
+			NewsInfo newsInfo=n.get();
+			newsInfo.setViewCount(newsInfo.getViewCount()+1);
+			newsInfoRepository.save(newsInfo);
+			return newsInfo.getViewCount();
+		}else {
+			return 0;
+		}
+	}
 }

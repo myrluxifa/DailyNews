@@ -276,4 +276,11 @@ public class NewsAPI extends BaseAPI {
 	}
 	
 	
+	@ApiOperation(value = "增加阅读次数", notes = "")
+	@RequestMapping(value="/addViewCount",method=RequestMethod.POST)
+	public ResponseBean addViewCount(String id) {
+		return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, "成功",newsService.addViewCount(id) );
+	}
+	
+	
 }

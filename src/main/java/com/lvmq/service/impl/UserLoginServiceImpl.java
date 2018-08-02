@@ -77,6 +77,8 @@ public class UserLoginServiceImpl implements UserLoginService{
 		userLogin.setInviteCount(0);
 		//余额
 		userLogin.setBalance("0.00");
+		
+		userLogin.setGold(0l);
 		//收益
 		userLogin.setEarnings(0);
 		
@@ -88,13 +90,10 @@ public class UserLoginServiceImpl implements UserLoginService{
 			// 任务主页 新手任务状态
 			userLogin.setNewerMission("0|0|0|0");
 		
-		String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getGold();
+		//String gold=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getGold();
+		String balance=goldRewardsRepository.findByType(Consts.GoldLog.Type.REGISTER).getMoney();
 		
-		if(null != userLogin.getGold() && userLogin.getGold() > 0) {
-			userLogin.setGold(Long.valueOf(gold) + userLogin.getGold());		
-		}else {
-			userLogin.setGold(Long.valueOf(gold));			
-		}
+		userLogin.setBalance(balance);
 		
 		
 		
@@ -109,16 +108,24 @@ public class UserLoginServiceImpl implements UserLoginService{
 		userLogin.setInviteCode("");
 		UserLogin user=userLoginRepository.save(userLogin);
 		
-		GoldLog goldLog=new GoldLog();
-		goldLog.setUserId(user.getId());
-		goldLog.setType(Consts.GoldLog.Type.REGISTER);
-		goldLog.setNum(Integer.valueOf(gold));
-		goldLog.setOldNum(0);
-		goldLog.setNewNum(Integer.valueOf(gold));
-		goldLog.setCreateUser(user.getId());
-		goldLog.setCreateTime(new Date());
-		goldLogRepository.save(goldLog);
-		
+//		GoldLog goldLog=new GoldLog();
+//		goldLog.setUserId(user.getId());
+//		goldLog.setType(Consts.GoldLog.Type.REGISTER);
+//		goldLog.setNum(Integer.valueOf(gold));
+//		goldLog.setOldNum(0);
+//		goldLog.setNewNum(Integer.valueOf(gold));
+//		goldLog.setCreateUser(user.getId());
+//		goldLog.setCreateTime(new Date());
+//		goldLogRepository.save(goldLog);
+		BalanceLog balanceLog = new BalanceLog();
+		balanceLog.setUserId(user.getId());
+		balanceLog.setType(Consts.BalanceLog.Type.REGISTER);
+		balanceLog.setNum(balance);
+		balanceLog.setOldNum("0.00");
+		balanceLog.setNewNum(balance);
+		balanceLog.setCreateUser(user.getId());
+		balanceLog.setCreateTime(new Date());
+		balanceLogRepository.save(balanceLog);
 		
 		if(!Util.isBlank(inviteCode)) {
 			boolean firstInvite = false;

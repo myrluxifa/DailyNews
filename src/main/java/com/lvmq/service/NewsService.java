@@ -40,4 +40,6 @@ public interface NewsService {
 	 NewsCommentForDetailRes getCommentDetail(String commentId,String userId,int page,int pageSize);
 
 	void getNewsFromIDataAPIByCatId(String catId);
+	
+	int addViewCount(String id);
 }
