@@ -176,8 +176,8 @@ public class WithdrawAPI extends BaseAPI {
 			}
 			
 			
-			BalanceLog bl = new BalanceLog(userId, NumberUtils.format(wfee), NumberUtils.format(Double.valueOf(ul.getBalance()) + wfee), ul.getBalance(), Consts.BalanceLog.Type.WITHDRAW);
-			balanceLogRepository.save(bl);
+//			BalanceLog bl = new BalanceLog(userId, NumberUtils.format(wfee), NumberUtils.format(Double.valueOf(ul.getBalance()) + wfee), ul.getBalance(), Consts.BalanceLog.Type.WITHDRAW);
+//			balanceLogRepository.save(bl);
 			withdrawLogRepository.save(log);
 			userRepository.save(ul);
 
