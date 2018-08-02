@@ -68,8 +68,8 @@ public class WithdrawAPI extends BaseAPI {
 			
 			UserLogin ul = ouser.get();
 			
-			double  fee= Double.valueOf(ul.getBalance()) + (double)ul.getGold()/Consts.GOLD_RATIO;
-
+			//double  fee= Double.valueOf(ul.getBalance()) + (double)ul.getGold()/Consts.GOLD_RATIO;
+			double  fee= Double.valueOf(ul.getBalance());
 			return new ResponseBean<>(Code.SUCCESS, Code.SUCCESS_CODE, "成功", com.lvmq.util.NumberUtils.format(fee));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -94,7 +94,7 @@ public class WithdrawAPI extends BaseAPI {
 			
 			double wfee = Double.valueOf(fee);
 			
-			double  balance= Double.valueOf(ul.getBalance()) + (double)ul.getGold()/Consts.GOLD_RATIO;
+			double  balance= Double.valueOf(ul.getBalance())/* + (double)ul.getGold()/Consts.GOLD_RATIO*/;
 			
 			int tag = withdrawLogRepository.countByUserIdAndState(userId, Consts.Withdraw.State.DEFAULT);
 			
@@ -150,12 +150,13 @@ public class WithdrawAPI extends BaseAPI {
 				if(Double.valueOf(ul.getBalance()) >= wfee) {
 					ul.setBalance(NumberUtils.format(Double.valueOf(ul.getBalance()) - wfee));
 				} else {
-					double mb = Double.valueOf(ul.getBalance());
+					/*double mb = Double.valueOf(ul.getBalance());
 					
 					wfee -= mb;
 					
 					ul.setBalance("0");
-					ul.setGold(ul.getGold() - (long)(wfee * Consts.GOLD_RATIO));
+					ul.setGold(ul.getGold() - (long)(wfee * Consts.GOLD_RATIO));*/
+					return new ResponseBean<>(Code.FAIL, Code.FAIL, "余额不足~"); 
 				}
 			}
 			
