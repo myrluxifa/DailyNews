@@ -133,6 +133,7 @@ public class WithdrawAPI extends BaseAPI {
 				
 				// 加100金币
 				ul.setGold(ul.getGold() + 100);
+				ul.setBalance(NumberUtils.format(Double.valueOf(ul.getBalance()) - wfee));
 				
 				GoldLog gl = new GoldLog(userId, ul.getGold() - 100, 100, ul.getGold(), Consts.GoldLog.Type.ONEYUAN);
 				goldLogRepository.save(gl);
