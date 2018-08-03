@@ -101,7 +101,7 @@ public class LoginRes {
 		this.head_portrait = userLogin.getHeadPortrait() == null ? "" : userLogin.getHeadPortrait();
 		this.my_invite_code = userLogin.getMyInviteCode();
 		this.gold = String.valueOf(userLogin.getGold());
-		this.balance = String.valueOf(userLogin.getBalance());
+		this.balance = NumberUtils.feeFormat(Double.valueOf(userLogin.getBalance()));
 //		this.earnings = String.valueOf(userLogin.getEarnings());
 		this.earnings = earnings;
 		this.invite_code = userLogin.getInviteCode() == null ? "" : userLogin.getInviteCode();
